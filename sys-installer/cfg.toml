@@ -1,0 +1,16 @@
+[packages]
+chroot = [
+    "bc",
+    "dhcpcd",
+    "efibootmgr",
+    "grub",
+    "iproute2",
+    "iwd",
+    "kmod",
+    "neovim",
+    "procps-ng",
+    "wget",
+]
+user = [
+
+]
