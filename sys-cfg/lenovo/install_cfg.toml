@@ -1,0 +1,16 @@
+[host]
+mount_point = "/mnt/gentoo"
+[devices]
+root = {dev = "/dev/nvme0n1p2", mount_point = "/", fs = "ext4" }
+boot = {dev = "/dev/nvme0n1p1", mount_point = "/efi", fs = "vfat" }
+other = {home = {dev = "/dev/nvme0n1p4", mount_point = "/home", fs = "ext4"}, swap = {dev = "/dev/nvme0n1p3", mount_point = "swap", fs = "swap"}}
+[names]
+user = "gramar"
+host = "grentoo"
+[video]
+cards = ["amdgpu", "radeonsi"]
+[repo]
+address = "https://github.com/MarcusGrass/linux-utils.git"
+[workdirs]
+host = "/root/build"
+target = "build"

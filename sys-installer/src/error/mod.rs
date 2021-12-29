@@ -29,6 +29,14 @@ pub enum Error {
     FileReadError(PathBuf, std::io::Error),
     #[error("Failed to read file from {0:?}, to {1:?} cause: {2:?}")]
     FileCopyError(PathBuf, PathBuf, std::io::Error),
+    #[error("Failed to find file with a name that starts with {0} at path {1:?}")]
+    FileNotFoundInDirectory(String, PathBuf),
     #[error("Failed to read input from stdin")]
     StdinReadError,
+    #[error("Failed to parse fs type of device {0} to something usable type was {1}")]
+    DeviceParseError(String, String),
+    #[error(transparent)]
+    TomlParseError(#[from] toml::de::Error),
+    #[error("Failed to generate fstab")]
+    FstabGenerationError,
 }

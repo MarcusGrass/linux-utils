@@ -10,19 +10,19 @@ pub fn default_bar(len: u64) -> ProgressBar {
     pb
 }
 
-pub async fn then_increment<F, O>(future: F, pb: &ProgressBar) -> O
-where
-    F: Future<Output = O>,
-{
-    let res = future.await;
-    pb.inc(1);
-    res
-}
-
 pub async fn show_message_then_increment<F, O>(msg: String, future: F, pb: &ProgressBar) -> O
 where
     F: Future<Output = O>,
 {
     pb.set_message(msg);
     then_increment(future, pb).await
+}
+
+async fn then_increment<F, O>(future: F, pb: &ProgressBar) -> O
+where
+    F: Future<Output = O>,
+{
+    let res = future.await;
+    pb.inc(1);
+    res
 }

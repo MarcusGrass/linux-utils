@@ -47,7 +47,7 @@ pub(crate) fn root_stage_install_essential() -> Result<()> {
     let pgks = [
         "app-portage/gentoolkit",
         "app-portage/layman",
-        "app-admin/sudo",
+        "app-admin/doas",
         "net-misc/ntp",
         "net-analyzer/netcat",
         "app-shells/bash-completion",
@@ -58,7 +58,6 @@ pub(crate) fn root_stage_install_essential() -> Result<()> {
         "sys-power/cpupower",
         "x11-base/xorg-x11",
         "x11-terms/alacritty",
-        "x11-wm/dwm",
         "x11-misc/dmenu",
         "x11-misc/dunst",
         "x11-misc/xclip",
@@ -74,6 +73,7 @@ pub(crate) fn root_stage_install_essential() -> Result<()> {
         //"dev-util/idea-ultimate", get from custom overlay later
         "www-client/google-chrome",
         "net-wireless/blueman",
+        "media-fonts/source-pro",
     ];
     install_many(&pgks)?;
     Ok(())

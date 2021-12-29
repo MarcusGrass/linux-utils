@@ -1,12 +1,15 @@
+use crate::cfg::ParsedConfig;
 use crate::error::{Error, Result};
 use crate::native_interactions::cmd::{get_string_from_cmd, run_in_dir};
 use crate::native_interactions::progress::{default_bar, show_message_then_increment};
+use crate::opt::CfgPath;
 use crate::util::file_system::{copy_dir, copy_file, create_dir_if_not_exists};
 use std::path::{Path, PathBuf};
 
-pub(crate) async fn user_configure_system() -> Result<()> {
+pub(crate) async fn user_configure_system(path: &CfgPath) -> Result<()> {
+    let cfg = ParsedConfig::parse_from_path(&path.cfg).await?;
     let user = get_string_from_cmd("whoami", &[]).await?;
-    if user == "root" {
+    if user != cfg.user_name {
         return Err(Error::BadUserError);
     }
     let base = PathBuf::from("/home").join(&user);

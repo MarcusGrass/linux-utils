@@ -1,9 +1,8 @@
 use std::io::ErrorKind;
-use std::path::Path;
+use std::path::{Path, PathBuf};
 
 use tokio::io::AsyncWriteExt;
 
-use crate::error::Error::PathConversionError;
 use crate::error::{Error, Result};
 use crate::native_interactions::cmd::run_command;
 
@@ -72,9 +71,45 @@ pub(crate) async fn copy_file(source: impl AsRef<Path>, dest: impl AsRef<Path>) 
     }
 }
 
+pub(crate) async fn try_find_file(source: impl AsRef<Path>, name_start: &str) -> Result<PathBuf> {
+    match tokio::fs::read_dir(&source).await {
+        Ok(mut read_dir) => {
+            while let Ok(Some(next)) = read_dir.next_entry().await {
+                if let Some(name) = next.file_name().to_str() {
+                    if name.starts_with(name_start) {
+                        return Ok(next.path());
+                    }
+                } else {
+                    return Err(Error::PathConversionError(format!(
+                        "{:?}",
+                        next.file_name()
+                    )));
+                }
+            }
+            Err(Error::FileNotFoundInDirectory(
+                name_start.to_owned(),
+                source.as_ref().to_path_buf(),
+            ))
+        }
+        Err(e) => Err(Error::FileReadError(source.as_ref().to_path_buf(), e)),
+    }
+}
+
+pub(crate) async fn merge_dirs(source: impl AsRef<Path>, dest: impl AsRef<Path>) -> Result<()> {
+    if let (Some(src), Some(dest)) = (source.as_ref().to_str(), dest.as_ref().to_str()) {
+        run_command("rsync", &["-rb", &format!("{}/", src), dest]).await?;
+        Ok(())
+    } else {
+        Err(Error::PathConversionError(format!(
+            "{:?} and {:?}",
+            source.as_ref(),
+            dest.as_ref()
+        )))
+    }
+}
 pub(crate) async fn copy_dir(source: impl AsRef<Path>, dest: impl AsRef<Path>) -> Result<()> {
     if let (Some(src), Some(dest)) = (source.as_ref().to_str(), dest.as_ref().to_str()) {
-        run_command("rsync", &["-a", src, dest]).await?;
+        run_command("rsync", &["-rb", src, dest]).await?;
         Ok(())
     } else {
         Err(Error::PathConversionError(format!(
@@ -95,21 +130,5 @@ async fn file_exists(path: impl AsRef<Path>) -> Result<bool> {
                 return Err(Error::ReadMetadataError(path.as_ref().to_path_buf(), e));
             }
         }
-    }
-}
-
-pub(crate) async fn symlink_if_not_exists(
-    source: impl AsRef<Path>,
-    dest: impl AsRef<Path>,
-) -> Result<()> {
-    if let (Some(src), Some(dst)) = (source.as_ref().to_str(), dest.as_ref().to_str()) {
-        run_command("ln", &["-snfr", src, dst]).await?;
-        Ok(())
-    } else {
-        return Err(PathConversionError(format!(
-            "Source {:?}, dest {:?}",
-            source.as_ref(),
-            dest.as_ref()
-        )));
     }
 }

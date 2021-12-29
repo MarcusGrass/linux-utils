@@ -13,20 +13,21 @@ shopt -s cdspell
 alias off='shutdown -h now'
 
 # Convenience
-alias em='sudo emerge -a'
-alias syu='sudo emerge --sync && sudo emerge --quiet -avDN @World'
+alias sudo='doas'
+alias em='doas emerge -a'
+alias syu='doas emerge --sync && doas emerge --quiet -avDN @World'
 alias ls='ls --color=auto'
 alias xclip='xclip -se c'
 # alias ssh='. code/arch_config/bash/ssh.sh'
 alias ss='maim -s -u | xclip -selection clipboard -t image/png -i'
-alias sstatus='sudo systemctl status'
-alias srestart='sudo systemctl restart'
+alias sstatus='doas systemctl status'
+alias srestart='doas systemctl restart'
 
 # Bluetooth
-alias bt='sudo bluetoothctl'
-alias bt_re='sudo /bin/bash /home/gramar/code/arch_config/bash/bt_clear.sh'
-alias bt_con='sudo bluetoothctl -- connect 4C:87:5D:2C:57:6A'
-alias bt_dc='sudo bluetoothctl -- disconnect 4C:87:5D:2C:57:6A'
+alias bt='doas bluetoothctl'
+alias bt_re='doas /bin/bash /home/gramar/code/arch_config/bash/bt_clear.sh'
+alias bt_con='doas bluetoothctl -- connect 4C:87:5D:2C:57:6A'
+alias bt_dc='doas bluetoothctl -- disconnect 4C:87:5D:2C:57:6A'
 
 # Git
 alias git_reset_main='git fetch origin && git reset --hard origin/main'

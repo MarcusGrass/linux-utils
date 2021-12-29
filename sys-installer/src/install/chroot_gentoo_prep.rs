@@ -1,17 +1,20 @@
+use crate::cfg::ParsedConfig;
 use crate::error::Result;
 use crate::native_interactions::cmd::{
     get_string_from_cmd, read_number_from_stdin, run_command, run_in_dir,
 };
 use crate::native_interactions::emerge::{chroot_prep_install_essential, install_many};
 use crate::native_interactions::progress::{default_bar, show_message_then_increment};
+use crate::opt::CfgPath;
 use crate::util::file_system::{
-    copy_dir, copy_file, create_dir_if_not_exists, create_file_if_not_identical_exists,
+    copy_file, create_dir_if_not_exists, create_file_if_not_identical_exists, merge_dirs,
 };
 use std::os::unix::prelude::CommandExt;
 use std::path::PathBuf;
 
-pub(crate) async fn chroot_gentoo_prep() -> Result<()> {
-    let pb = default_bar(9);
+pub(crate) async fn chroot_gentoo_prep(cfg_path: &CfgPath) -> Result<()> {
+    let cfg = ParsedConfig::parse_from_path(&cfg_path.cfg).await?;
+    let pb = default_bar(10);
     pb.set_message("Emerging webrsync");
     run_command("emerge-webrsync", &[]).await?;
     pb.inc(1);
@@ -34,7 +37,7 @@ pub(crate) async fn chroot_gentoo_prep() -> Result<()> {
     install_many(&[cmd, "dev-vcs/git"])?;
     pb.inc(1);
     pb.set_message("Getting system cfg from git");
-    git_copy_system_cfg().await?;
+    git_copy_system_cfg(&cfg).await?;
     pb.inc(1);
     pb.set_message("Updating cpu flags conf from git conf");
     let flags = get_string_from_cmd(cmd, &[]).await?;
@@ -68,13 +71,22 @@ pub(crate) async fn chroot_gentoo_prep() -> Result<()> {
             ),
             create_file_if_not_identical_exists(
                 PathBuf::from("/etc/vconsole.conf"),
-                "KEYMAP=se-lat6\n".as_bytes(),
+                "KEYMAP=us\n".as_bytes(),
             ),
             create_file_if_not_identical_exists(
                 PathBuf::from("/etc/hostname"),
-                "grentoo\n".as_bytes(),
+                format!("{}\n", cfg.host_name).as_bytes(),
             ),
         ]),
+        &pb,
+    )
+    .await?;
+    show_message_then_increment(
+        "Configuring doas".to_owned(),
+        create_file_if_not_identical_exists(
+            PathBuf::from("/etc/doas.conf"),
+            "permit nopass :wheel\n".as_bytes(),
+        ),
         &pb,
     )
     .await?;
@@ -94,17 +106,12 @@ pub(crate) async fn chroot_gentoo_prep() -> Result<()> {
     Ok(())
 }
 
-async fn git_copy_system_cfg() -> Result<()> {
-    let build_path = PathBuf::from("/build");
+async fn git_copy_system_cfg(config: &ParsedConfig) -> Result<()> {
+    let build_path = PathBuf::from(&config.target_work_dir);
     create_dir_if_not_exists(&build_path).await?;
-    run_in_dir(
-        "git",
-        &["clone", "https://github.com/MarcusGrass/linux-utils.git"],
-        &build_path,
-    )
-    .await?;
+    run_in_dir("git", &["clone", &config.repo], &build_path).await?;
     let cfg_dir = &build_path.join("linux-utils");
-    copy_dir(cfg_dir.join("etc"), "/etc").await?;
+    merge_dirs(cfg_dir.join("etc"), "/etc").await?;
     copy_file(cfg_dir.join("root_bashrc"), "/root/.bashrc").await?;
     Ok(())
 }
