@@ -1,10 +1,9 @@
 use crate::cfg::ParsedConfig;
 use crate::error::Result;
-use crate::native_interactions::cmd::{
-    get_string_from_cmd, read_number_from_stdin, run_command, run_in_dir,
-};
-use crate::native_interactions::emerge::{chroot_prep_install_essential, install_many};
+use crate::native_interactions::cmd::{run_command, run_in_dir};
+use crate::native_interactions::emerge::{chroot_prep_install_essential, depclean, install_many};
 use crate::native_interactions::progress::{default_bar, show_message_then_increment};
+use crate::native_interactions::sys_info::{get_string_from_cmd, read_number_from_stdin};
 use crate::opt::CfgPath;
 use crate::util::file_system::{
     copy_file, create_dir_if_not_exists, create_file_if_not_identical_exists, merge_dirs,
@@ -29,23 +28,29 @@ pub(crate) async fn chroot_gentoo_prep(cfg_path: &CfgPath) -> Result<()> {
     pb.set_message(format!("Setting profile to {}", selected));
     run_command("eselect", &["profile", "set", &selected.to_string()]).await?;
     pb.inc(1);
-    pb.set_message("Updating world");
-    run_command("emerge", &["--update", "--deep", "--newuse", "@world"]).await?;
-    pb.inc(1);
     let cmd = "cpuid2cpuflags";
-    pb.set_message(format!("Installing {} and git", cmd));
-    install_many(&[cmd, "dev-vcs/git"])?;
+    pb.set_message(format!("Installing {}", cmd));
     pb.inc(1);
-    pb.set_message("Getting system cfg from git");
-    git_copy_system_cfg(&cfg).await?;
-    pb.inc(1);
-    pb.set_message("Updating cpu flags conf from git conf");
+    install_many(&[cmd])?;
+    pb.set_message("Updating cpu flags");
+    create_dir_if_not_exists("/etc/portage/package.use/").await?;
     let flags = get_string_from_cmd(cmd, &[]).await?;
     let content = format!("*/* {}\n", flags);
     create_file_if_not_identical_exists("/etc/portage/package.use/00cpu-flags", content.as_bytes())
         .await?;
     pb.inc(1);
-
+    pb.set_message("Updating world");
+    run_command("emerge", &["--update", "--deep", "--newuse", "@world"]).await?;
+    pb.inc(1);
+    pb.set_message("Cleaning deps");
+    depclean()?;
+    pb.inc(1);
+    pb.set_message("Installing git");
+    install_many(&["dev-vcs/git"])?;
+    pb.inc(1);
+    pb.set_message("Getting system cfg from git");
+    git_copy_system_cfg(&cfg).await?;
+    pb.inc(1);
     chroot_prep_install_essential()?;
     run_command(
         "ln",
@@ -78,15 +83,6 @@ pub(crate) async fn chroot_gentoo_prep(cfg_path: &CfgPath) -> Result<()> {
                 format!("{}\n", cfg.host_name).as_bytes(),
             ),
         ]),
-        &pb,
-    )
-    .await?;
-    show_message_then_increment(
-        "Configuring doas".to_owned(),
-        create_file_if_not_identical_exists(
-            PathBuf::from("/etc/doas.conf"),
-            "permit nopass :wheel\n".as_bytes(),
-        ),
         &pb,
     )
     .await?;

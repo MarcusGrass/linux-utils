@@ -14,6 +14,8 @@ pub struct ParsedConfig {
     pub(crate) other_devs: Vec<ParsedDevice>,
     pub(crate) user_name: String,
     pub(crate) host_name: String,
+    pub(crate) user_email: String,
+    pub(crate) git_user_name: String,
     pub(crate) video_cards: Vec<String>,
     pub(crate) repo: String,
     pub(crate) host_work_dir: String,
@@ -32,6 +34,8 @@ impl ParsedConfig {
         }
         let user_name = raw_cfg.names.user;
         let host_name = raw_cfg.names.host;
+        let user_email = raw_cfg.names.email;
+        let git_user_name = raw_cfg.names.git_user;
         let video_cards = raw_cfg.video.cards;
         let repo = raw_cfg.repo.address;
         let host_work_dir = raw_cfg.workdirs.host;
@@ -44,6 +48,8 @@ impl ParsedConfig {
             other_devs,
             user_name,
             host_name,
+            user_email,
+            git_user_name,
             video_cards,
             repo,
             host_work_dir,
@@ -113,6 +119,8 @@ impl Device {
 pub struct Names {
     pub(crate) user: String,
     pub(crate) host: String,
+    pub(crate) email: String,
+    pub(crate) git_user: String,
 }
 
 #[derive(serde::Deserialize, serde::Serialize)]

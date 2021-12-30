@@ -7,10 +7,12 @@ other = {home = {dev = "/dev/nvme0n1p4", mount_point = "/home", fs = "ext4"}, sw
 [names]
 user = "gramar"
 host = "grentoo"
+email = "marcus.grass@gmail.com"
+git_user = "MarcusGrass"
 [video]
 cards = ["amdgpu", "radeonsi"]
 [repo]
 address = "https://github.com/MarcusGrass/linux-utils.git"
 [workdirs]
 host = "/root/build"
-target = "build"
+target = "/build"

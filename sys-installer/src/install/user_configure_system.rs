@@ -1,7 +1,8 @@
 use crate::cfg::ParsedConfig;
 use crate::error::{Error, Result};
-use crate::native_interactions::cmd::{get_string_from_cmd, run_in_dir};
+use crate::native_interactions::cmd::{run_command, run_in_dir};
 use crate::native_interactions::progress::{default_bar, show_message_then_increment};
+use crate::native_interactions::sys_info::get_string_from_cmd;
 use crate::opt::CfgPath;
 use crate::util::file_system::{copy_dir, copy_file, create_dir_if_not_exists};
 use std::path::{Path, PathBuf};
@@ -16,6 +17,10 @@ pub(crate) async fn user_configure_system(path: &CfgPath) -> Result<()> {
     println!("Running for user {}", &user);
     create_dirs(&base).await?;
     git_copy_conf(&base).await?;
+    generate_rsa_keys(&cfg).await?;
+    update_git_conf(&cfg).await?;
+    start_systemd_user_services().await?;
+
     Ok(())
 }
 
@@ -156,5 +161,56 @@ async fn git_copy_conf(base: impl AsRef<Path>) -> Result<()> {
     )
     .await?;
     pb.finish_with_message("Copied user settings");
+    Ok(())
+}
+
+async fn generate_rsa_keys(cfg: &ParsedConfig) -> Result<()> {
+    run_command(
+        "ssh-keygen",
+        &[
+            "-t",
+            "rsa",
+            "-b",
+            "4096",
+            "-C",
+            &cfg.user_email,
+            "-f",
+            &format!("/home/{}/.ssh/id_rsa", cfg.user_name),
+            "-N",
+        ],
+    )
+    .await?;
+    Ok(())
+}
+
+async fn update_git_conf(cfg: &ParsedConfig) -> Result<()> {
+    run_command(
+        "git",
+        &["config", "--global", "user.email", &cfg.user_email],
+    )
+    .await?;
+    run_command(
+        "git",
+        &["config", "--global", "user.name", &cfg.git_user_name],
+    )
+    .await?;
+    run_command("git", &["config", "--global", "pull.rebase", "true"]).await?;
+    run_command("git", &["config", "--global", "push.default", "current"]).await?;
+    run_command("git", &["config", "--global", "rerere.enabled", "true"]).await?;
+    run_command("git", &["config", "--global", "init.defaultBranch", "main"]).await?;
+    Ok(())
+}
+
+async fn start_systemd_user_services() -> Result<()> {
+    run_command(
+        "systemctl",
+        &[
+            "--user",
+            "enable",
+            "pulseaudio.service",
+            "pulseaudio.socket",
+        ],
+    )
+    .await?;
     Ok(())
 }

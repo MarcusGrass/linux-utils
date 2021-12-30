@@ -1,11 +1,12 @@
 use crate::cfg::ParsedConfig;
 use crate::error::Error::PathConversionError;
 use crate::error::{Error, Result};
-use crate::native_interactions::cmd::{get_num_cpus, run_command, run_in_dir};
+use crate::native_interactions::cmd::{run_command, run_in_dir};
 use crate::native_interactions::device::{
     mount_filesystems, mount_pseudo_filesystems, recreate_filesystems, umount,
 };
 use crate::native_interactions::progress::{default_bar, show_message_then_increment};
+use crate::native_interactions::sys_info::get_num_cpus;
 use crate::opt::CfgPath;
 use crate::util::file_system::{
     append_to_file, copy_file, create_dir_if_not_exists, create_file_if_not_identical_exists,

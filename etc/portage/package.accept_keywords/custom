@@ -1,3 +1,7 @@
 net-im/slack ~amd64
-dev-util/idea-ultimate ~amd64
 x11-misc/autorandr ~amd64
+dev-util/idea-ultimate ~amd64
+dev-util/clion ~amd64
+sys-config/ltoize ~amd64
+app-portage/portage-bashrc-mv ~amd64
+app-shells/runtitle ~amd64

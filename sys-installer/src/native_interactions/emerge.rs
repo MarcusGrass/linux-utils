@@ -47,6 +47,9 @@ pub(crate) fn root_stage_install_essential() -> Result<()> {
     let pgks = [
         "app-portage/gentoolkit",
         "app-portage/layman",
+        "app-portage/eix",
+        "app-portage/repoman",
+        "app-eselect/eselect-repository",
         "app-admin/doas",
         "net-misc/ntp",
         "net-analyzer/netcat",
@@ -54,6 +57,7 @@ pub(crate) fn root_stage_install_essential() -> Result<()> {
         "app-admin/pass",
         "app-containers/docker",
         "app-containers/docker-compose",
+        "app-containers/docker-cli",
         "dev-vcs/git",
         "sys-power/cpupower",
         "x11-base/xorg-x11",
@@ -77,4 +81,25 @@ pub(crate) fn root_stage_install_essential() -> Result<()> {
     ];
     install_many(&pgks)?;
     Ok(())
+}
+
+pub(crate) fn depclean() -> Result<()> {
+    let mut cmd = std::process::Command::new("emerge");
+    cmd.stdout(Stdio::inherit());
+    cmd.stderr(Stdio::inherit());
+    cmd.stdin(Stdio::inherit());
+    match cmd.spawn() {
+        Ok(mut child) => {
+            if let Ok(exit) = child.wait() {
+                if exit.success() {
+                    Ok(())
+                } else {
+                    Err(Error::CommandExitError(format!("{:?}", cmd)))
+                }
+            } else {
+                Err(Error::CommandExitError(format!("{:?}", cmd)))
+            }
+        }
+        Err(e) => Err(Error::CommandStartError(format!("{:?}", cmd), e)),
+    }
 }

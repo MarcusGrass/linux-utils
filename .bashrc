@@ -15,7 +15,7 @@ alias off='shutdown -h now'
 # Convenience
 alias sudo='doas'
 alias em='doas emerge -a'
-alias syu='doas emerge --sync && doas emerge --quiet -avDN @World'
+alias syu='doas emerge --sync && doas emerge --quiet -avDN @world'
 alias ls='ls --color=auto'
 alias xclip='xclip -se c'
 # alias ssh='. code/arch_config/bash/ssh.sh'
