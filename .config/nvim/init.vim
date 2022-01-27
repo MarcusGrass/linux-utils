@@ -29,12 +29,11 @@ Plug 'hrsh7th/vim-vsnip'
 Plug 'nvim-lua/popup.nvim'
 Plug 'nvim-lua/plenary.nvim'
 Plug 'nvim-telescope/telescope.nvim'
+Plug 'nvim-treesitter/nvim-treesitter', {'do': ':TSUpdate'}
 
 " Directory
 Plug 'kyazdani42/nvim-web-devicons' " for file icons
 Plug 'kyazdani42/nvim-tree.lua'
-Plug 'preservim/nerdtree'
-
 
 " Autopair brackets etc
 Plug 'windwp/nvim-autopairs'
@@ -45,14 +44,16 @@ Plug 'akinsho/toggleterm.nvim'
 Plug 'kyazdani42/nvim-web-devicons'
 Plug 'romgrk/barbar.nvim'
 " Airline
-Plug 'vim-airline/vim-airline'
-Plug 'vim-airline/vim-airline-themes'
+Plug 'nvim-lualine/lualine.nvim'
+" Tag bar
+Plug 'stevearc/aerial.nvim'
 call plug#end()
-set clipboard^=unnamed,unnamedplus
-
 " =======================================
 " ===============General=================
 " =======================================
+
+" Shared clipboard with rest of system
+set clipboard^=unnamed,unnamedplus
 
 " TextEdit might fail if hidden is not set.
 set hidden
@@ -82,18 +83,54 @@ nnoremap <CR> :noh<CR><CR>
 " =======================================
 " ==========Convenience plugs============
 " =======================================
-
-" Start NERDTree. If a file is specified, move the cursor to its window.
-let NERDTreeShowHidden=1
+" TreeSitter
+lua <<EOF
+require'nvim-treesitter.configs'.setup {
+    highlight = {
+        enable = true,
+        disable = {},
+    },
+    ensure_installed = {
+        "toml",
+        "bash",
+        "json",
+        "yaml",
+        "python"
+    }
+}
+EOF
+" lualine
+lua <<EOF
+require('lualine').setup()
+EOF
+lua <<EOF
+require'nvim-tree'.setup {
+  open_on_setup       = true,
+  auto_close          = false,
+  open_on_tab         = true,
+  update_to_buf_dir   = {
+    enable = true,
+    auto_open = true,
+  },
+  git = {
+    enable = true,
+    ignore = true,
+    timeout = 500,
+  },
+}
+EOF
+" Maybe autostart unfocused
 autocmd StdinReadPre * let s:std_in=1
-autocmd VimEnter * NERDTree | if argc() > 0 || exists("s:std_in") | wincmd p | endif
-nnoremap <leader>r :NERDTreeFind<CR>
+autocmd VimEnter * NvimTreeToggle
+autocmd VimEnter * if argc() > 0 || exists("s:std_in") | wincmd p | endif
+
 " Toggleterm
 lua <<EOF
 
 require'toggleterm'.setup{
   shade_terminals = true,
-  close_on_exit = true
+  close_on_exit = true,
+  size = 60
 }
 
 function _G.set_terminal_keymaps()
@@ -109,14 +146,71 @@ end
 -- if you only want these mappings for toggle term use term://*toggleterm#* instead
 vim.cmd('autocmd! TermOpen term://* lua set_terminal_keymaps()')
 EOF
-nnoremap <C-t> :ToggleTerm<CR>
-nnoremap <F33> :TermExec cmd='cargo build'<CR>
-nnoremap <F29> :TermExec cmd='cargo run'<CR>
-
+nnoremap <C-t> :ToggleTerm size=15<CR>
+nnoremap <F33> :TermExec size=15 cmd='cargo build'<CR>
+nnoremap <F29> :TermExec size=15 cmd='cargo build --release'<CR>
 "Bar bar
 nnoremap <silent> <Tab> :BufferNext<CR>
 nnoremap <silent> <S-Tab> :BufferPrevious<CR>
 nnoremap <silent> <C-c> :BufferClose<CR>
+
+" Telescope
+lua <<EOF
+local actions = require('telescope.actions')
+require('telescope').setup{
+  defaults = {
+    mappings = {
+      n = {
+        ["q"] = actions.close
+      },
+    },
+  }
+}
+EOF
+nnoremap <C-S-F> :Telescope live_grep<CR>
+nnoremap <C-G> :Telescope find_files<CR>
+"aerial
+nnoremap <C-s> :AerialToggle!<CR>
+
+lua <<EOF
+-- Call the setup function to change the default behavior
+require("aerial").setup({
+  -- Priority list of preferred backends for aerial.
+  -- This can be a filetype map (see :help aerial-filetype-map)
+  backends = { "lsp", "treesitter", "markdown" },
+
+  -- Enum: persist, close, auto, global
+  --   persist - aerial window will stay open until closed
+  --   close   - aerial window will close when original file is no longer visible
+  --   auto    - aerial window will stay open as long as there is a visible
+  --             buffer to attach to
+  --   global  - same as 'persist', and will always show symbols for the current buffer
+  close_behavior = "auto",
+
+  -- Set to false to remove the default keybindings for the aerial buffer
+  default_bindings = true,
+
+  -- Enum: prefer_right, prefer_left, right, left, float
+  -- Determines the default direction to open the aerial window. The 'prefer'
+  -- options will open the window in the other direction *if* there is a
+  -- different buffer in the way of the preferred direction
+  default_direction = "prefer_right",
+
+  -- Disable aerial on files with this many lines
+  disable_max_lines = 10000,
+
+  -- A list of all symbols to display. Set to false to display all symbols.
+  -- This can be a filetype map (see :help aerial-filetype-map)
+  -- To see all available values, see :help SymbolKind
+  filter_kind = false,
+  -- Automatically open aerial when entering supported buffers.
+  -- This can be a function (see :help aerial-open-automatic)
+  open_automatic = true,
+  -- Run this command after jumping to a symbol (false will disable)
+  post_jump_cmd = "normal! zz",
+
+})
+EOF
 " =======================================
 " ============Language server============
 " =======================================
@@ -139,19 +233,20 @@ lua <<EOF
 local nvim_lsp = require'lspconfig'
 
 local lsp_cfg_opts = { noremap=true, silent=true }
-local on_attach = function(client, bufnr)
+local do_attach = function(client, bufnr)
   -- Enable completion triggered by <c-x><c-o>
   vim.api.nvim_buf_set_option(bufnr, 'omnifunc', 'v:lua.vim.lsp.omnifunc')
 
   -- Mappings.
   -- See `:help vim.lsp.*` for documentation on any of the below functions
-  vim.api.nvim_buf_set_keymap(bufnr, 'n', 'ga', '<cmd>lua vim.lsp.buf.code_action()<CR>', lsp_cfg_opts)
-  vim.api.nvim_buf_set_keymap(bufnr, 'n', 'gd', '<cmd>lua vim.lsp.buf.definition()<CR>', lsp_cfg_opts)
+  vim.api.nvim_buf_set_keymap(bufnr, 'n', 'ga', '<cmd>lua require(\'telescope.builtin\').lsp_code_actions()<CR>', lsp_cfg_opts)
+  vim.api.nvim_buf_set_keymap(bufnr, 'n', 'gA', '<cmd>lua require(\'telescope.builtin\').lsp_range_code_actions()<CR>', lsp_cfg_opts)
+  vim.api.nvim_buf_set_keymap(bufnr, 'n', 'gd', '<cmd>lua require(\'telescope.builtin\').lsp_definitions()<CR>', lsp_cfg_opts)
   vim.api.nvim_buf_set_keymap(bufnr, 'n', 'gD', '<cmd>lua vim.lsp.buf.declaration()<CR>', lsp_cfg_opts)
-  vim.api.nvim_buf_set_keymap(bufnr, 'n', 'gr', '<cmd>lua vim.lsp.buf.references()<CR>', lsp_cfg_opts)
-  vim.api.nvim_buf_set_keymap(bufnr, 'n', 'gi', '<cmd>lua vim.lsp.buf.implementation()<CR>', lsp_cfg_opts)
-  vim.api.nvim_buf_set_keymap(bufnr, 'n', 'gW', '<cmd>lua vim.lsp.buf.workspace_symbol()<CR>', lsp_cfg_opts)
-  vim.api.nvim_buf_set_keymap(bufnr, 'n', 'g0', '<cmd>lua vim.lsp.buf.document_symbol()<CR>', lsp_cfg_opts)
+  vim.api.nvim_buf_set_keymap(bufnr, 'n', 'gr', '<cmd>lua require(\'telescope.builtin\').lsp_references()<CR>', lsp_cfg_opts)
+  vim.api.nvim_buf_set_keymap(bufnr, 'n', 'gi', '<cmd>lua require(\'telescope.builtin\').lsp_implementations()<CR>', lsp_cfg_opts)
+  vim.api.nvim_buf_set_keymap(bufnr, 'n', 'gW', '<cmd>lua require(\'telescope.builtin\').lsp_workspace_symbols()<CR>', lsp_cfg_opts)
+  vim.api.nvim_buf_set_keymap(bufnr, 'n', 'g0', '<cmd>lua require(\'telescope.builtin\').lsp_document_symbols()<CR>', lsp_cfg_opts)
   vim.api.nvim_buf_set_keymap(bufnr, 'n', '<S-r>', '<cmd>lua vim.lsp.buf.rename()<CR>', lsp_cfg_opts)
   vim.api.nvim_buf_set_keymap(bufnr, 'n', 'K', '<cmd>lua vim.lsp.buf.hover()<CR>', lsp_cfg_opts)
   vim.api.nvim_buf_set_keymap(bufnr, 'n', '<C-k>', '<cmd>lua vim.lsp.buf.signature_help()<CR>', lsp_cfg_opts)
@@ -159,9 +254,8 @@ local on_attach = function(client, bufnr)
   vim.api.nvim_buf_set_keymap(bufnr, 'n', '<space>wr', '<cmd>lua vim.lsp.buf.remove_workspace_folder()<CR>', lsp_cfg_opts)
   vim.api.nvim_buf_set_keymap(bufnr, 'n', '<space>wl', '<cmd>lua print(vim.inspect(vim.lsp.buf.list_workspace_folders()))<CR>', lsp_cfg_opts)
   vim.api.nvim_buf_set_keymap(bufnr, 'n', '<space>D', '<cmd>lua vim.lsp.buf.type_definition()<CR>', lsp_cfg_opts)
-  vim.api.nvim_buf_set_keymap(bufnr, 'n', '<space>ca', '<cmd>lua vim.lsp.buf.code_action()<CR>', lsp_cfg_opts)
+  require("aerial").on_attach(client, bufnr)
 end
-
 local opts = {
     tools = { -- rust-tools options
         autoSetHints = true,
