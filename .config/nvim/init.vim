@@ -35,6 +35,7 @@ Plug 'kyazdani42/nvim-web-devicons' " for file icons
 Plug 'kyazdani42/nvim-tree.lua'
 Plug 'preservim/nerdtree'
 
+
 " Autopair brackets etc
 Plug 'windwp/nvim-autopairs'
 
@@ -43,8 +44,9 @@ Plug 'akinsho/toggleterm.nvim'
 " Tabs
 Plug 'kyazdani42/nvim-web-devicons'
 Plug 'romgrk/barbar.nvim'
-" Rename
-Plug 'neoclide/rename.nvim'
+" Airline
+Plug 'vim-airline/vim-airline'
+Plug 'vim-airline/vim-airline-themes'
 call plug#end()
 set clipboard^=unnamed,unnamedplus
 
@@ -54,11 +56,8 @@ set clipboard^=unnamed,unnamedplus
 
 " TextEdit might fail if hidden is not set.
 set hidden
-
-" Font
-set guifont=Source\ Code\ Pro\ Medium:h13
-
 set lazyredraw
+set mouse=n
 
 set scrolljump=10                  " Scroll more than one line
 set scrolloff=5                   " Minimum lines to keep above or below the cursor when scrolling
@@ -88,6 +87,7 @@ nnoremap <CR> :noh<CR><CR>
 let NERDTreeShowHidden=1
 autocmd StdinReadPre * let s:std_in=1
 autocmd VimEnter * NERDTree | if argc() > 0 || exists("s:std_in") | wincmd p | endif
+nnoremap <leader>r :NERDTreeFind<CR>
 " Toggleterm
 lua <<EOF
 
@@ -110,7 +110,8 @@ end
 vim.cmd('autocmd! TermOpen term://* lua set_terminal_keymaps()')
 EOF
 nnoremap <C-t> :ToggleTerm<CR>
-
+nnoremap <F33> :TermExec cmd='cargo build'<CR>
+nnoremap <F29> :TermExec cmd='cargo run'<CR>
 
 "Bar bar
 nnoremap <silent> <Tab> :BufferNext<CR>
@@ -135,9 +136,31 @@ set shortmess+=c
 " rust-tools will configure and enable certain LSP features for us.
 " See https://github.com/simrat39/rust-tools.nvim#configuration
 lua <<EOF
-
 local nvim_lsp = require'lspconfig'
 
+local lsp_cfg_opts = { noremap=true, silent=true }
+local on_attach = function(client, bufnr)
+  -- Enable completion triggered by <c-x><c-o>
+  vim.api.nvim_buf_set_option(bufnr, 'omnifunc', 'v:lua.vim.lsp.omnifunc')
+
+  -- Mappings.
+  -- See `:help vim.lsp.*` for documentation on any of the below functions
+  vim.api.nvim_buf_set_keymap(bufnr, 'n', 'ga', '<cmd>lua vim.lsp.buf.code_action()<CR>', lsp_cfg_opts)
+  vim.api.nvim_buf_set_keymap(bufnr, 'n', 'gd', '<cmd>lua vim.lsp.buf.definition()<CR>', lsp_cfg_opts)
+  vim.api.nvim_buf_set_keymap(bufnr, 'n', 'gD', '<cmd>lua vim.lsp.buf.declaration()<CR>', lsp_cfg_opts)
+  vim.api.nvim_buf_set_keymap(bufnr, 'n', 'gr', '<cmd>lua vim.lsp.buf.references()<CR>', lsp_cfg_opts)
+  vim.api.nvim_buf_set_keymap(bufnr, 'n', 'gi', '<cmd>lua vim.lsp.buf.implementation()<CR>', lsp_cfg_opts)
+  vim.api.nvim_buf_set_keymap(bufnr, 'n', 'gW', '<cmd>lua vim.lsp.buf.workspace_symbol()<CR>', lsp_cfg_opts)
+  vim.api.nvim_buf_set_keymap(bufnr, 'n', 'g0', '<cmd>lua vim.lsp.buf.document_symbol()<CR>', lsp_cfg_opts)
+  vim.api.nvim_buf_set_keymap(bufnr, 'n', '<S-r>', '<cmd>lua vim.lsp.buf.rename()<CR>', lsp_cfg_opts)
+  vim.api.nvim_buf_set_keymap(bufnr, 'n', 'K', '<cmd>lua vim.lsp.buf.hover()<CR>', lsp_cfg_opts)
+  vim.api.nvim_buf_set_keymap(bufnr, 'n', '<C-k>', '<cmd>lua vim.lsp.buf.signature_help()<CR>', lsp_cfg_opts)
+  vim.api.nvim_buf_set_keymap(bufnr, 'n', '<space>wa', '<cmd>lua vim.lsp.buf.add_workspace_folder()<CR>', lsp_cfg_opts)
+  vim.api.nvim_buf_set_keymap(bufnr, 'n', '<space>wr', '<cmd>lua vim.lsp.buf.remove_workspace_folder()<CR>', lsp_cfg_opts)
+  vim.api.nvim_buf_set_keymap(bufnr, 'n', '<space>wl', '<cmd>lua print(vim.inspect(vim.lsp.buf.list_workspace_folders()))<CR>', lsp_cfg_opts)
+  vim.api.nvim_buf_set_keymap(bufnr, 'n', '<space>D', '<cmd>lua vim.lsp.buf.type_definition()<CR>', lsp_cfg_opts)
+  vim.api.nvim_buf_set_keymap(bufnr, 'n', '<space>ca', '<cmd>lua vim.lsp.buf.code_action()<CR>', lsp_cfg_opts)
+end
 
 local opts = {
     tools = { -- rust-tools options
@@ -155,7 +178,7 @@ local opts = {
     -- see https://github.com/neovim/nvim-lspconfig/blob/master/doc/server_configurations.md#rust_analyzer
     server = {
         -- on_attach is a callback called when the language server attachs to the buffer
-        -- on_attach = on_attach,
+        on_attach = on_attach,
         settings = {
             -- to enable rust-analyzer settings visit:
             -- https://github.com/rust-analyzer/rust-analyzer/blob/master/docs/user/generated_config.adoc
@@ -168,9 +191,9 @@ local opts = {
         }
     },
 }
+require('rust-tools').setup(opts)
 require('nvim-autopairs').setup{}
 
-require('rust-tools').setup(opts)
 EOF
 
 " Setup Completion
@@ -211,18 +234,6 @@ cmp.setup({
   },
 })
 EOF
-
-" Code navigation shortcuts
-nnoremap <silent> <c-]> <cmd>lua vim.lsp.buf.definition()<CR>
-nnoremap <silent> K     <cmd>lua vim.lsp.buf.hover()<CR>
-nnoremap <silent> gD    <cmd>lua vim.lsp.buf.implementation()<CR>
-nnoremap <silent> <c-k> <cmd>lua vim.lsp.buf.signature_help()<CR>
-nnoremap <silent> 1gD   <cmd>lua vim.lsp.buf.type_definition()<CR>
-nnoremap <silent> gr    <cmd>lua vim.lsp.buf.references()<CR>
-nnoremap <silent> g0    <cmd>lua vim.lsp.buf.document_symbol()<CR>
-nnoremap <silent> gW    <cmd>lua vim.lsp.buf.workspace_symbol()<CR>
-nnoremap <silent> gd    <cmd>lua vim.lsp.buf.definition()<CR>
-nnoremap <silent> ga    <cmd>lua vim.lsp.buf.code_action()<CR>
 
 " Set updatetime for CursorHold
 " 300ms of no cursor movement to trigger CursorHold
