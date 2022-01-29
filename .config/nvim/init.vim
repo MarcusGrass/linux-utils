@@ -47,11 +47,17 @@ Plug 'romgrk/barbar.nvim'
 Plug 'nvim-lualine/lualine.nvim'
 " Tag bar
 Plug 'stevearc/aerial.nvim'
+" cargo.toml
+Plug 'saecki/crates.nvim', { 'tag': 'v0.1.0' }
+" gitgutter
+Plug 'airblade/vim-gitgutter'
 call plug#end()
 " =======================================
 " ===============General=================
 " =======================================
 
+" disable ex mode
+:map Q <nop>
 " Shared clipboard with rest of system
 set clipboard^=unnamed,unnamedplus
 
@@ -83,6 +89,10 @@ nnoremap <CR> :noh<CR><CR>
 " =======================================
 " ==========Convenience plugs============
 " =======================================
+" crates
+lua <<EOF
+require('crates').setup()
+EOF
 " TreeSitter
 lua <<EOF
 require'nvim-treesitter.configs'.setup {
@@ -101,8 +111,18 @@ require'nvim-treesitter.configs'.setup {
 EOF
 " lualine
 lua <<EOF
-require('lualine').setup()
+require('lualine').setup {
+  sections = {
+    lualine_a = {'mode'},
+    lualine_b = {'branch', 'diff', 'diagnostics'},
+    lualine_c = { {'filename', file_status = true, path = 2} },
+    lualine_x = {'encoding', 'fileformat', 'filetype'},
+    lualine_y = {'progress'},
+    lualine_z = {'location'}
+  },
+}
 EOF
+let g:nvim_tree_disable_window_picker = 1
 lua <<EOF
 require'nvim-tree'.setup {
   open_on_setup       = true,
@@ -116,6 +136,15 @@ require'nvim-tree'.setup {
     enable = true,
     ignore = true,
     timeout = 500,
+  },
+  diagnostics = {
+    enable = true,
+    icons = {
+      hint = "",
+      info = "",
+      warning = "",
+      error = "",
+    }
   },
 }
 EOF
@@ -147,7 +176,7 @@ end
 vim.cmd('autocmd! TermOpen term://* lua set_terminal_keymaps()')
 EOF
 nnoremap <C-t> :ToggleTerm size=15<CR>
-nnoremap <F33> :TermExec size=15 cmd='cargo build'<CR>
+nnoremap <F33> :TermExec size=15 cmd='cargo test -- --nocapture'<CR>
 nnoremap <F29> :TermExec size=15 cmd='cargo build --release'<CR>
 "Bar bar
 nnoremap <silent> <Tab> :BufferNext<CR>
@@ -272,7 +301,7 @@ local opts = {
     -- see https://github.com/neovim/nvim-lspconfig/blob/master/doc/server_configurations.md#rust_analyzer
     server = {
         -- on_attach is a callback called when the language server attachs to the buffer
-        on_attach = on_attach,
+        on_attach = do_attach,
         settings = {
             -- to enable rust-analyzer settings visit:
             -- https://github.com/rust-analyzer/rust-analyzer/blob/master/docs/user/generated_config.adoc
@@ -325,6 +354,7 @@ cmp.setup({
     { name = 'vsnip' },
     { name = 'path' },
     { name = 'buffer' },
+    { name = 'crates' },
   },
 })
 EOF
