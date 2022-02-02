@@ -45,17 +45,27 @@ Plug 'kyazdani42/nvim-web-devicons'
 Plug 'romgrk/barbar.nvim'
 " Airline
 Plug 'nvim-lualine/lualine.nvim'
+Plug 'arkav/lualine-lsp-progress'
 " Tag bar
 Plug 'stevearc/aerial.nvim'
 " cargo.toml
 Plug 'saecki/crates.nvim', { 'tag': 'v0.1.0' }
 " gitgutter
 Plug 'airblade/vim-gitgutter'
+" gitdiff
+Plug 'sindrets/diffview.nvim'
+" vim one theme
+Plug 'rakr/vim-one'
+" lsp status
+Plug 'nvim-lua/lsp-status.nvim'
 call plug#end()
 " =======================================
 " ===============General=================
 " =======================================
 
+set termguicolors
+colorscheme one
+set background=dark
 " disable ex mode
 :map Q <nop>
 " Shared clipboard with rest of system
@@ -82,6 +92,8 @@ set smartindent                   " Auto indent new lines
 set softtabstop=4                 " Number of spaces a <tab> counts for when inserting
 set tabstop=4                     " Number of spaces a <tab> counts for
 set number
+
+let mapleader = ' '
 
 " Disable highlight after search
 nnoremap <CR> :noh<CR><CR>
@@ -117,7 +129,7 @@ require('lualine').setup {
     lualine_b = {'branch', 'diff', 'diagnostics'},
     lualine_c = { {'filename', file_status = true, path = 2} },
     lualine_x = {'encoding', 'fileformat', 'filetype'},
-    lualine_y = {'progress'},
+    lualine_y = {'progress', {'lsp_progress', display_components = { { 'title', 'percentage' }},}},
     lualine_z = {'location'}
   },
 }
@@ -148,6 +160,8 @@ require'nvim-tree'.setup {
   },
 }
 EOF
+nnoremap <leader>nvr :NvimTreeRefresh<CR>
+nnoremap <leader>nvt :NvimTreeFocus<CR>
 " Maybe autostart unfocused
 autocmd StdinReadPre * let s:std_in=1
 autocmd VimEnter * NvimTreeToggle
@@ -183,6 +197,14 @@ nnoremap <silent> <Tab> :BufferNext<CR>
 nnoremap <silent> <S-Tab> :BufferPrevious<CR>
 nnoremap <silent> <C-c> :BufferClose<CR>
 
+" gitdiff
+
+lua <<EOF
+require'diffview'.setup()
+
+EOF
+
+"
 " Telescope
 lua <<EOF
 local actions = require('telescope.actions')
@@ -259,7 +281,12 @@ set shortmess+=c
 " rust-tools will configure and enable certain LSP features for us.
 " See https://github.com/simrat39/rust-tools.nvim#configuration
 lua <<EOF
+-- " lsp-status
+local lsp_status = require('lsp-status')
 local nvim_lsp = require'lspconfig'
+--- Python...
+
+lsp_status.register_progress()
 
 local lsp_cfg_opts = { noremap=true, silent=true }
 local do_attach = function(client, bufnr)
@@ -284,7 +311,11 @@ local do_attach = function(client, bufnr)
   vim.api.nvim_buf_set_keymap(bufnr, 'n', '<space>wl', '<cmd>lua print(vim.inspect(vim.lsp.buf.list_workspace_folders()))<CR>', lsp_cfg_opts)
   vim.api.nvim_buf_set_keymap(bufnr, 'n', '<space>D', '<cmd>lua vim.lsp.buf.type_definition()<CR>', lsp_cfg_opts)
   require("aerial").on_attach(client, bufnr)
+  lsp_status.on_attach(client)
 end
+nvim_lsp.pylsp.setup({
+    on_attach = do_attach
+})
 local opts = {
     tools = { -- rust-tools options
         autoSetHints = true,
@@ -306,6 +337,7 @@ local opts = {
             -- to enable rust-analyzer settings visit:
             -- https://github.com/rust-analyzer/rust-analyzer/blob/master/docs/user/generated_config.adoc
             ["rust-analyzer"] = {
+                capabilities = lsp_status.capabilities,
                 -- enable clippy on save
                 checkOnSave = {
                     command = "clippy"
@@ -318,8 +350,6 @@ require('rust-tools').setup(opts)
 require('nvim-autopairs').setup{}
 
 EOF
-
-" Setup Completion
 " See https://github.com/hrsh7th/nvim-cmp#basic-configuration
 lua <<EOF
 local cmp_autopairs = require('nvim-autopairs.completion.cmp')
