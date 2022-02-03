@@ -93,6 +93,8 @@ set softtabstop=4                 " Number of spaces a <tab> counts for when ins
 set tabstop=4                     " Number of spaces a <tab> counts for
 set number
 
+set matchpairs+=<:>
+
 let mapleader = ' '
 
 " Disable highlight after search
