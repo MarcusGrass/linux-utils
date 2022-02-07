@@ -1,7 +1,3 @@
-# Copyright (c) 2019 Derek Taylor
-# https://www.youtube.com/c/DistroTube#
-# https://gitlab.com/dwt1/
-# (Thanks Derek)
 # Configuration for Alacritty, the GPU enhanced terminal emulator.
 
 # Any items in the `env` entry below will be added as
@@ -14,7 +10,7 @@ env:
   # each instance of Alacritty. If it is not present, alacritty will
   # check the local terminfo database and use `alacritty` if it is
   # available, otherwise `xterm-256color` is used.
-  # TERM: xterm-256color
+  TERM: alacritty
 
 window:
   # Window dimensions (changes require restart)
@@ -38,8 +34,8 @@ window:
   # Blank space added around the window in pixels. This padding is scaled
   # by DPI and the specified value is always added at both opposing sides.
   padding:
-    x: 6
-    y: 6
+    x: 2
+    y: 3
 
   # Spread additional padding evenly around the terminal content.
   dynamic_padding: false
@@ -113,7 +109,7 @@ font:
     #   - (macOS) Menlo
     #   - (Linux/BSD) monospace
     #   - (Windows) Consolas
-    family: Source Code Pro
+    family: Jetbrains Mono Nerd Font
     # family: CodeNewRoman Nerd Font
     # family: RobotoMono Nerd Font
     # family: Hack
@@ -132,7 +128,7 @@ font:
     #
     # If the bold family is not specified, it will fall back to the
     # value specified for the normal font.
-    family: Source Code Pro
+    # family: Source Code Pro
     # family: CodeNewRoman Nerd Font
     # family: RobotoMono Nerd Font
     # family: Hack
@@ -151,7 +147,7 @@ font:
     #
     # If the italic family is not specified, it will fall back to the
     # value specified for the normal font.
-    family: Source Code Pro
+    # family: Source Code Pro
     # family: CodeNewRoman Nerd Font
     # family: RobotoMono Nerd Font
     # family: Hack
@@ -170,7 +166,7 @@ font:
     #
     # If the bold italic family is not specified, it will fall back to the
     # value specified for the normal font.
-    family: Source Code Pro
+    # family: Source Code Pro
     # family: CodeNewRoman Nerd Font
     # family: RobotoMono Nerd Font
     # family: Hack
@@ -184,7 +180,7 @@ font:
     style: Bold Italic
 
   # Point size
-  size: 12.0
+  size: 9
 
   # Offset is the extra space around each character. `offset.y` can be thought of
   # as modifying the line spacing, and `offset.x` as modifying the letter spacing.
@@ -220,8 +216,7 @@ draw_bold_text_with_bright_colors: true
 
 # COLOR SCHEMES
 schemes:
-  # Doom One
-  doom-one: &doom-one
+  custom: &custom
     primary:
       background: '#282c34'
       foreground: '#bbc2cf'
@@ -235,79 +230,13 @@ schemes:
       black:   '#1c1f24'
       red:     '#ff6c6b'
       green:   '#98be65'
-      yellow:  '#da8548'
-      blue:    '#51afef'
-      magenta: '#c678dd'
-      cyan:    '#5699af'
-      white:   '#202328'
     bright:
       black:   '#5b6268'
       red:     '#da8548'
       green:   '#4db5bd'
-      yellow:  '#ecbe7b'
-      blue:    '#3071db'   # This is 2257a0 in Doom Emacs but I lightened it.
-      magenta: '#a9a1e1'
-      cyan:    '#46d9ff'
-      white:   '#dfdfdf'
-
-  # Dracula
-  dracula: &dracula
-    colors:
-      primary:
-        background: '#282a36'
-        foreground: '#f8f8f2'
-      cursor:
-        text: CellBackground
-        cursor: CellForeground
-      vi_mode_cursor:
-        text: CellBackground
-        cursor: CellForeground
-      search:
-        matches:
-          foreground: '#44475a'
-          background: '#50fa7b'
-        focused_match:
-          foreground: '#44475a'
-          background: '#ffb86c'
-        bar:
-          background: '#282a36'
-          foreground: '#f8f8f2'
-      line_indicator:
-        foreground: None
-        background: None
-      selection:
-        text: CellForeground
-        background: '#44475a'
-      normal:
-        black:   '#000000'
-        red:     '#ff5555'
-        green:   '#50fa7b'
-        yellow:  '#f1fa8c'
-        blue:    '#bd93f9'
-        magenta: '#ff79c6'
-        cyan:    '#8be9fd'
-        white:   '#bfbfbf'
-      bright:
-        black:   '#4d4d4d'
-        red:     '#ff6e67'
-        green:   '#5af78e'
-        yellow:  '#f4f99d'
-        blue:    '#caa9fa'
-        magenta: '#ff92d0'
-        cyan:    '#9aedfe'
-        white:   '#e6e6e6'
-      dim:
-        black:   '#14151b'
-        red:     '#ff2222'
-        green:   '#1ef956'
-        yellow:  '#ebf85b'
-        blue:    '#4d5b86'
-        magenta: '#ff46b0'
-        cyan:    '#59dffc'
-        white:   '#e6e6d1'
 
 # Choose ONE color scheme from those available in the above list.
-colors: *doom-one
+colors: *custom
 
 # Visual Bell
 #
@@ -339,7 +268,7 @@ colors: *doom-one
 #
 # Window opacity as a floating point number from `0.0` to `1.0`.
 # The value `0.0` is completely transparent and `1.0` is opaque.
-background_opacity: 1.0
+#   background_opacity: 1.0
 # background_opacity: 0.80
 
 #selection:
@@ -598,3 +527,5 @@ key_bindings:
   - { key: PageDown,  mods: None,          action: ScrollPageDown, mode: ~Alt  }
   - { key: Home,      mods: Shift,         action: ScrollToTop,    mode: ~Alt  }
   - { key: End,       mods: Shift,         action: ScrollToBottom, mode: ~Alt  }
+  - { key: G,         mods: Control|Shift, chars: "\x1b[71;5u"                 }
+  - { key: F,         mods: Control|Shift, chars: "\x1b[70;5u"                  }
