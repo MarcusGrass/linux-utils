@@ -15,7 +15,12 @@ pub fn get_password() -> Result<String> {
     }
 }
 
-pub fn spawn_binary(bin: &str, args: Vec<&str>, input: Option<&str>) -> Result<Child> {
+pub struct ForkedProc {
+    inner: Child,
+    dbg_command: String,
+}
+
+pub fn spawn_binary(bin: &str, args: Vec<&str>, input: Option<&str>) -> Result<ForkedProc> {
     let mut child = std::process::Command::new(bin)
         .args(&args)
         .stdin(Stdio::piped())
@@ -40,21 +45,25 @@ pub fn spawn_binary(bin: &str, args: Vec<&str>, input: Option<&str>) -> Result<C
                 ))
             })?;
     }
-    Ok(child)
+    Ok(ForkedProc {
+        inner: child,
+        dbg_command: format!("{bin} {args:?}"),
+    })
 }
 
-pub fn await_children(children: Vec<Child>) -> Result<Vec<Output>> {
+pub fn await_children(children: Vec<ForkedProc>) -> Result<Vec<Output>> {
     let mut output = vec![];
     for child in children {
         let out = child
+            .inner
             .wait_with_output()
-            .map_err(|e| Error::Process(format!("Await child {e}")))?;
+            .map_err(|e| Error::Process(format!("Await child '{}' {e}", child.dbg_command)))?;
         if out.status.success() {
             output.push(out);
         } else {
             return Err(Error::Process(format!(
-                "Await child, status error {:?}",
-                out.status
+                "Await child, status error '{}' {:?}",
+                child.dbg_command, out.status
             )));
         }
     }

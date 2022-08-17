@@ -1,12 +1,12 @@
 use crate::device::{DeviceConfig, Devices};
 use crate::error::{Error, Result};
-use crate::process::{run_binary, spawn_binary};
+use crate::process::{run_binary, spawn_binary, ForkedProc};
 use crate::{await_children, debug};
 use nix::mount::MsFlags;
 use std::path::Path;
 use std::process::Child;
 
-pub fn init_cryptodisk(device_config: &DeviceConfig, crypt_password: &str) -> Result<Child> {
+pub fn init_cryptodisk(device_config: &DeviceConfig, crypt_password: &str) -> Result<ForkedProc> {
     debug!("Setting up device {:?}", device_config);
     spawn_binary(
         "cryptsetup",
@@ -20,7 +20,7 @@ pub fn init_cryptodisk(device_config: &DeviceConfig, crypt_password: &str) -> Re
     )
 }
 
-pub fn open_cryptodisk(device_config: &DeviceConfig, crypt_password: &str) -> Result<Child> {
+pub fn open_cryptodisk(device_config: &DeviceConfig, crypt_password: &str) -> Result<ForkedProc> {
     debug!("Opening device {:?}", device_config);
     spawn_binary(
         "cryptsetup",
