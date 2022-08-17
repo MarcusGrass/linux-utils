@@ -1,7 +1,7 @@
-use crate::debug;
 use crate::device::{DeviceConfig, Devices};
 use crate::error::{Error, Result};
 use crate::process::{run_binary, spawn_binary};
+use crate::{await_children, debug};
 use nix::mount::MsFlags;
 use std::path::Path;
 use std::process::Child;
@@ -60,51 +60,27 @@ pub fn mount_disks(config: &Devices) -> Result<()> {
     debug!("Mount point /mnt ready.");
     let no_data: Option<&str> = None;
     debug!("Mounting root");
-    nix::mount::mount(
-        Some(config.root.crypt_device_path().as_str()),
-        "/mnt",
-        Some("ext4"),
-        MsFlags::empty(),
-        no_data,
-    )
-    .map_err(|e| {
-        Error::Mount(format!(
-            "Failed to mount root crypt device {} at /mnt, {e}",
-            config.root.crypt_device_path()
-        ))
-    })?;
+    run_binary(
+        "mount",
+        vec!["mount", &config.root.crypt_device_path(), "/mnt"],
+        None,
+    )?;
     ensure_dir_or_try_create("/mnt/home")?;
-    debug!("Mounting home");
-    nix::mount::mount(
-        Some(config.home.crypt_device_path().as_str()),
-        "/mnt/home",
-        Some("ext4"),
-        MsFlags::empty(),
-        no_data,
-    )
-    .map_err(|e| {
-        Error::Mount(format!(
-            "Failed to mount home crypt device {} at /mnt/home, {e}",
-            config.home.crypt_device_path()
-        ))
-    })?;
     ensure_dir_or_try_create("/mnt/efi")?;
-    debug!("Mounting efi");
-    nix::mount::mount(
-        Some(config.efi.crypt_device_path().as_str()),
-        "/mnt/efi",
-        Some("vfat"),
-        MsFlags::empty(),
-        no_data,
-    )
-    .map_err(|e| {
-        Error::Mount(format!(
-            "Failed to mount home crypt device {} at /mnt/efi, {e}",
-            config.efi.device_path()
-        ))
-    })?;
+    debug!("Mounting home, efi, and swap");
+    let home = spawn_binary(
+        "mount",
+        vec!["mount", &config.home.crypt_device_path(), "/mnt/home"],
+        None,
+    )?;
+    let efi = spawn_binary(
+        "mount",
+        vec!["mount", &config.home.crypt_device_path(), "/mnt/home"],
+        None,
+    )?;
+    let swap = spawn_binary("swapon", vec![&config.swap.crypt_device_name], None)?;
+    await_children(vec![home, efi, swap])?;
     debug!("Mounting swap");
-    run_binary("swapon", vec![&config.swap.crypt_device_name], None)?;
 
     debug!("Disks mounted");
     Ok(())
