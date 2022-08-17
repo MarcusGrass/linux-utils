@@ -9,7 +9,12 @@ pub fn init_cryptodisk(device_config: &DeviceConfig, crypt_password: &str) -> Re
     debug!("Setting up device {:?}", device_config);
     run_binary(
         "cryptsetup",
-        vec!["luksFormat", "--type", "luks1"],
+        vec![
+            "luksFormat",
+            &device_config.device_path(),
+            "--type",
+            "luks1",
+        ],
         Some(crypt_password),
     )?;
     debug!("Successfully set up {:?}", device_config);
