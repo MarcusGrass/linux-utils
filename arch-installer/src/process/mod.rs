@@ -85,7 +85,7 @@ pub fn run_binary(bin: &str, args: Vec<&str>, input: Option<&str>) -> Result<Out
         Ok(output)
     } else {
         Err(Error::Process(format!(
-            "'{bin}' {:?} failed with exit code: {:?}, stduout: {:?}",
+            "command: '{bin} {:?}' failed with exit code: {:?}, stduout: {:?}",
             output.status.code(),
             args,
             String::from_utf8(output.stderr)
