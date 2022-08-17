@@ -73,7 +73,7 @@ pub fn mount_disks(config: &Devices) -> Result<()> {
         None,
     )?;
     let efi = spawn_binary("mount", vec![&config.efi.device_path(), "/mnt/efi"], None)?;
-    let swap = spawn_binary("swapon", vec![&config.swap.crypt_device_name], None)?;
+    let swap = spawn_binary("swapon", vec![&config.swap.crypt_device_path()], None)?;
     await_children(vec![home, efi, swap])?;
     debug!("Mounting swap");
 
