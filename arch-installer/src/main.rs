@@ -2,7 +2,7 @@ use crate::arch::pacstrap_and_enter;
 use crate::device::{DeviceConfig, Devices};
 use crate::disks::{create_filesystems, init_cryptodisk, mount_disks, open_cryptodisk};
 use crate::error::Result;
-use crate::process::get_password;
+use crate::process::{await_children, get_password};
 use structopt::StructOpt;
 
 mod arch;
@@ -76,12 +76,14 @@ fn run_stage_1(stage_1: Stage1Config) -> Result<()> {
         crypt_device_name: stage_1.swap_device_crypt_name,
     };
     let pwd = get_password()?;
-    init_cryptodisk(&root_config, &pwd)?;
-    init_cryptodisk(&home_config, &pwd)?;
-    init_cryptodisk(&swap_config, &pwd)?;
-    open_cryptodisk(&root_config, &pwd)?;
-    open_cryptodisk(&home_config, &pwd)?;
-    open_cryptodisk(&swap_config, &pwd)?;
+    let root_proc = init_cryptodisk(&root_config, &pwd)?;
+    let home_proc = init_cryptodisk(&home_config, &pwd)?;
+    let swap_proc = init_cryptodisk(&swap_config, &pwd)?;
+    await_children(vec![root_proc, home_proc, swap_proc])?;
+    let root_proc = open_cryptodisk(&root_config, &pwd)?;
+    let home_proc = open_cryptodisk(&home_config, &pwd)?;
+    let swap_proc = open_cryptodisk(&swap_config, &pwd)?;
+    await_children(vec![root_proc, home_proc, swap_proc])?;
     let devices = Devices {
         efi: efi_config,
         root: root_config,

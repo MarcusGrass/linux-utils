@@ -1,13 +1,14 @@
 use crate::debug;
 use crate::device::{DeviceConfig, Devices};
 use crate::error::{Error, Result};
-use crate::process::run_binary;
+use crate::process::{run_binary, spawn_binary};
 use nix::mount::MsFlags;
 use std::path::Path;
+use std::process::Child;
 
-pub fn init_cryptodisk(device_config: &DeviceConfig, crypt_password: &str) -> Result<()> {
+pub fn init_cryptodisk(device_config: &DeviceConfig, crypt_password: &str) -> Result<Child> {
     debug!("Setting up device {:?}", device_config);
-    run_binary(
+    spawn_binary(
         "cryptsetup",
         vec![
             "luksFormat",
@@ -16,14 +17,12 @@ pub fn init_cryptodisk(device_config: &DeviceConfig, crypt_password: &str) -> Re
             "luks1",
         ],
         Some(crypt_password),
-    )?;
-    debug!("Successfully set up {:?}", device_config);
-    Ok(())
+    )
 }
 
-pub fn open_cryptodisk(device_config: &DeviceConfig, crypt_password: &str) -> Result<()> {
+pub fn open_cryptodisk(device_config: &DeviceConfig, crypt_password: &str) -> Result<Child> {
     debug!("Opening device {:?}", device_config);
-    run_binary(
+    spawn_binary(
         "cryptsetup",
         vec![
             "open",
@@ -31,9 +30,7 @@ pub fn open_cryptodisk(device_config: &DeviceConfig, crypt_password: &str) -> Re
             &device_config.crypt_device_name,
         ],
         Some(crypt_password),
-    )?;
-    debug!("Successfully opened device {:?}", device_config);
-    Ok(())
+    )
 }
 
 pub fn create_filesystems(config: &Devices) -> Result<()> {
