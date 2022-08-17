@@ -58,7 +58,6 @@ pub fn mount_disks(config: &Devices) -> Result<()> {
     debug!("Mounting devices {config:?}");
     ensure_dir_or_try_create("/mnt")?;
     debug!("Mount point /mnt ready.");
-    let no_data: Option<&str> = None;
     debug!("Mounting root");
     run_binary(
         "mount",
@@ -73,11 +72,7 @@ pub fn mount_disks(config: &Devices) -> Result<()> {
         vec![&config.home.crypt_device_path(), "/mnt/home"],
         None,
     )?;
-    let efi = spawn_binary(
-        "mount",
-        vec![&config.home.crypt_device_path(), "/mnt/home"],
-        None,
-    )?;
+    let efi = spawn_binary("mount", vec![&config.efi.device_path(), "/mnt/efi"], None)?;
     let swap = spawn_binary("swapon", vec![&config.swap.crypt_device_name], None)?;
     await_children(vec![home, efi, swap])?;
     debug!("Mounting swap");
