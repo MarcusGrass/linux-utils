@@ -18,7 +18,7 @@ pub fn get_password() -> Result<String> {
 pub fn run_binary(bin: &str, args: Vec<&str>, input: Option<&str>) -> Result<Output> {
     let mut child = std::process::Command::new(bin)
         .args(args)
-        .stdin(Stdio::inherit())
+        .stdin(Stdio::piped())
         .stdout(Stdio::null())
         .stderr(Stdio::null())
         .spawn()
