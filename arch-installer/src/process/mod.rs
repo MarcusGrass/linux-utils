@@ -63,7 +63,7 @@ pub fn await_children(children: Vec<Child>) -> Result<Vec<Output>> {
 
 pub fn run_binary(bin: &str, args: Vec<&str>, input: Option<&str>) -> Result<Output> {
     let mut child = std::process::Command::new(bin)
-        .args(args)
+        .args(&args)
         .stdin(Stdio::piped())
         .stdout(Stdio::null())
         .stderr(Stdio::null())
@@ -85,8 +85,9 @@ pub fn run_binary(bin: &str, args: Vec<&str>, input: Option<&str>) -> Result<Out
         Ok(output)
     } else {
         Err(Error::Process(format!(
-            "'{bin}' failed with exit code: {:?}, stduout: {:?}",
+            "'{bin}' {:?} failed with exit code: {:?}, stduout: {:?}",
             output.status.code(),
+            args,
             String::from_utf8(output.stderr)
         )))
     }
