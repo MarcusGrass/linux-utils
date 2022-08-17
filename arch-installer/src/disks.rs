@@ -40,17 +40,29 @@ pub fn create_filesystems(config: &Devices) -> Result<()> {
         "mkfs.ext4",
         vec!["-F", &config.root.crypt_device_path()],
         None,
+        false,
     )?;
     debug!("Creating ext4 home");
     run_binary(
         "mkfs.ext4",
         vec!["-F", &config.home.crypt_device_path()],
         None,
+        false,
     )?;
     debug!("Creating Fat32 efi");
-    run_binary("mkfs.fat", vec!["-F32", &config.efi.device_path()], None)?;
+    run_binary(
+        "mkfs.fat",
+        vec!["-F32", &config.efi.device_path()],
+        None,
+        false,
+    )?;
     debug!("Creating swap");
-    run_binary("mkswap", vec![&config.swap.crypt_device_path()], None)?;
+    run_binary(
+        "mkswap",
+        vec![&config.swap.crypt_device_path()],
+        None,
+        false,
+    )?;
     Ok(())
 }
 
@@ -63,6 +75,7 @@ pub fn mount_disks(config: &Devices) -> Result<()> {
         "mount",
         vec![&config.root.crypt_device_path(), "/mnt"],
         None,
+        false,
     )?;
     ensure_dir_or_try_create("/mnt/home")?;
     ensure_dir_or_try_create("/mnt/efi")?;

@@ -4,9 +4,9 @@ use std::io::{Stderr, Write};
 use std::process::{Child, Output, Stdio};
 
 pub fn get_password() -> Result<String> {
-    let pwd = rpassword::prompt_password("Enter cryptodisk password:\n")
+    let pwd = rpassword::prompt_password("Enter cryptodisk password:")
         .map_err(|e| Error::Process(format!("Failed to get password from stdin {e}")))?;
-    let pwd2 = rpassword::prompt_password("Repeat cryptodisk password:\n")
+    let pwd2 = rpassword::prompt_password("Repeat cryptodisk password:")
         .map_err(|e| Error::Process(format!("Failed to get password from stdin {e}")))?;
     if pwd == pwd2 {
         Ok(pwd)
@@ -70,11 +70,20 @@ pub fn await_children(children: Vec<ForkedProc>) -> Result<Vec<Output>> {
     Ok(output)
 }
 
-pub fn run_binary(bin: &str, args: Vec<&str>, input: Option<&str>) -> Result<Output> {
+pub fn run_binary(
+    bin: &str,
+    args: Vec<&str>,
+    input: Option<&str>,
+    leak_stdout: bool,
+) -> Result<Output> {
     let mut child = std::process::Command::new(bin)
         .args(&args)
         .stdin(Stdio::piped())
-        .stdout(Stdio::null())
+        .stdout(if leak_stdout {
+            Stdio::inherit()
+        } else {
+            Stdio::null()
+        })
         .stderr(Stdio::null())
         .spawn()
         .map_err(|e| Error::Process(format!("Failed to spawn process {bin} {e}")))?;

@@ -10,9 +10,10 @@ pub fn pacstrap_and_enter() -> Result<()> {
         "pacstrap",
         vec!["/mnt", "base", "base-devel", "linux", "linux-firmware"],
         None,
+        true,
     )?;
     debug!("Generating fstab");
-    let fstab = run_binary("genfstab", vec!["-U", "-p", "/mnt"], None)?;
+    let fstab = run_binary("genfstab", vec!["-U", "-p", "/mnt"], None, false)?;
     debug!("Writing fstab");
     write_or_overwrite("/mnt/etc/fstab", fstab.stdout.as_ref())?;
     debug!("Entering arch-chroot");
