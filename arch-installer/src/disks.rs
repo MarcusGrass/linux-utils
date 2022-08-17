@@ -39,11 +39,23 @@ pub fn open_cryptodisk(device_config: &DeviceConfig, crypt_password: &str) -> Re
 pub fn create_filesystems(config: &Devices) -> Result<()> {
     debug!("Creating filesystems");
     debug!("Creating ext4 root");
-    run_binary("mkfs.ext4", vec![&config.root.crypt_device_path()], None)?;
+    run_binary(
+        "mkfs.ext4",
+        vec!["-F", &config.root.crypt_device_path()],
+        None,
+    )?;
     debug!("Creating ext4 home");
-    run_binary("mkfs.ext4", vec![&config.home.crypt_device_path()], None)?;
+    run_binary(
+        "mkfs.ext4",
+        vec!["-F", &config.home.crypt_device_path()],
+        None,
+    )?;
     debug!("Creating Fat32 efi");
-    run_binary("mkfs.fat", vec!["-F32", &config.efi.device_path()], None)?;
+    run_binary(
+        "mkfs.fat",
+        vec!["-F", "-F32", &config.efi.device_path()],
+        None,
+    )?;
     debug!("Creating swap");
     run_binary("mkswap", vec![&config.swap.crypt_device_path()], None)?;
     Ok(())

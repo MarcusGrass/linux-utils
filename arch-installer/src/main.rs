@@ -88,8 +88,8 @@ fn run_stage_1(stage_1: Stage1Config) -> Result<()> {
         swap: swap_config,
         home: home_config,
     };
-    mount_disks(&devices)?;
     create_filesystems(&devices)?;
+    mount_disks(&devices)?;
     pacstrap_and_enter()?;
     Ok(())
 }
