@@ -4,9 +4,9 @@ use std::io::{Stderr, Write};
 use std::process::{Output, Stdio};
 
 pub fn get_password() -> Result<String> {
-    let pwd = rpassword::prompt_password("Enter cryptodisk password")
+    let pwd = rpassword::prompt_password("Enter cryptodisk password:\n")
         .map_err(|e| Error::Process(format!("Failed to get password from stdin {e}")))?;
-    let pwd2 = rpassword::prompt_password("Repeat cryptodisk password")
+    let pwd2 = rpassword::prompt_password("Repeat cryptodisk password:\n")
         .map_err(|e| Error::Process(format!("Failed to get password from stdin {e}")))?;
     if pwd == pwd2 {
         Ok(pwd)
@@ -18,6 +18,7 @@ pub fn get_password() -> Result<String> {
 pub fn run_binary(bin: &str, args: Vec<&str>, input: Option<&str>) -> Result<Output> {
     let mut child = std::process::Command::new(bin)
         .args(args)
+        .stdin(Stdio::inherit())
         .stdout(Stdio::null())
         .stderr(Stdio::null())
         .spawn()
