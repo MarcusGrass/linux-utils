@@ -51,11 +51,7 @@ pub fn create_filesystems(config: &Devices) -> Result<()> {
         None,
     )?;
     debug!("Creating Fat32 efi");
-    run_binary(
-        "mkfs.fat",
-        vec!["-F", "-F32", &config.efi.device_path()],
-        None,
-    )?;
+    run_binary("mkfs.fat", vec!["-F32", &config.efi.device_path()], None)?;
     debug!("Creating swap");
     run_binary("mkswap", vec![&config.swap.crypt_device_path()], None)?;
     Ok(())
