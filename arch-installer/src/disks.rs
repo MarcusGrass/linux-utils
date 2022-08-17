@@ -63,8 +63,8 @@ pub fn mount_disks(config: &Devices) -> Result<()> {
     nix::mount::mount(
         Some(config.root.crypt_device_path().as_str()),
         "/mnt",
-        no_data,
-        MsFlags::empty(),
+        Some("ext4"),
+        MsFlags::MS_BIND,
         no_data,
     )
     .map_err(|e| {
@@ -78,8 +78,8 @@ pub fn mount_disks(config: &Devices) -> Result<()> {
     nix::mount::mount(
         Some(config.home.crypt_device_path().as_str()),
         "/mnt/home",
-        no_data,
-        MsFlags::empty(),
+        Some("ext4"),
+        MsFlags::MS_BIND,
         no_data,
     )
     .map_err(|e| {
@@ -94,7 +94,7 @@ pub fn mount_disks(config: &Devices) -> Result<()> {
         Some(config.efi.crypt_device_path().as_str()),
         "/mnt/efi",
         no_data,
-        MsFlags::empty(),
+        MsFlags::MS_BIND,
         no_data,
     )
     .map_err(|e| {

@@ -19,7 +19,7 @@ pub fn spawn_binary(bin: &str, args: Vec<&str>, input: Option<&str>) -> Result<C
     let mut child = std::process::Command::new(bin)
         .args(&args)
         .stdin(Stdio::piped())
-        .stdout(Stdio::null())
+        .stdout(Stdio::piped())
         .stderr(Stdio::null())
         .spawn()
         .map_err(|e| Error::Process(format!("Failed to spawn process {bin} {:?} {e}", args)))?;
