@@ -64,7 +64,7 @@ pub fn mount_disks(config: &Devices) -> Result<()> {
         Some(config.root.crypt_device_path().as_str()),
         "/mnt",
         Some("ext4"),
-        MsFlags::MS_BIND,
+        MsFlags::empty(),
         no_data,
     )
     .map_err(|e| {
@@ -79,13 +79,13 @@ pub fn mount_disks(config: &Devices) -> Result<()> {
         Some(config.home.crypt_device_path().as_str()),
         "/mnt/home",
         Some("ext4"),
-        MsFlags::MS_BIND,
+        MsFlags::empty(),
         no_data,
     )
     .map_err(|e| {
         Error::Mount(format!(
             "Failed to mount home crypt device {} at /mnt/home, {e}",
-            config.root.crypt_device_path()
+            config.home.crypt_device_path()
         ))
     })?;
     ensure_dir_or_try_create("/mnt/efi")?;
@@ -93,14 +93,14 @@ pub fn mount_disks(config: &Devices) -> Result<()> {
     nix::mount::mount(
         Some(config.efi.crypt_device_path().as_str()),
         "/mnt/efi",
-        no_data,
-        MsFlags::MS_BIND,
+        Some("vfat"),
+        MsFlags::empty(),
         no_data,
     )
     .map_err(|e| {
         Error::Mount(format!(
             "Failed to mount home crypt device {} at /mnt/efi, {e}",
-            config.root.crypt_device_path()
+            config.efi.device_path()
         ))
     })?;
     debug!("Mounting swap");
