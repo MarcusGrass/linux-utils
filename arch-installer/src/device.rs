@@ -33,3 +33,11 @@ pub struct Devices {
     pub swap: DeviceConfig,
     pub home: DeviceConfig,
 }
+
+#[derive(Debug, Clone, Eq, PartialEq)]
+pub struct InitializedDevices {
+    pub efi: InitializedDevice,
+    pub root: InitializedDevice,
+    pub swap: InitializedDevice,
+    pub home: InitializedDevice,
+}

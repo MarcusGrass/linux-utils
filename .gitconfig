@@ -1,0 +1,11 @@
+[user]
+        email = marcus.grass@gmail.com
+        name = gramar
+[pull]
+        rebase = true
+[push]
+        default = current
+[rerere]
+        enabled = true
+[init]
+        defaultBranch = main

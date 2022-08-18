@@ -1,6 +1,6 @@
 use crate::debug;
 use crate::error::{Error, Result};
-use std::io::{Stderr, Write};
+use std::io::Write;
 use std::process::{Child, Output, Stdio};
 
 pub fn get_password() -> Result<String> {

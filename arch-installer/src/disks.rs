@@ -1,10 +1,8 @@
 use crate::device::{DeviceConfig, Devices};
 use crate::error::{Error, Result};
 use crate::process::{run_binary, spawn_binary, ForkedProc};
-use crate::{await_children, debug};
-use nix::mount::MsFlags;
-use std::path::Path;
-use std::process::Child;
+use crate::{await_children, debug, Stage1Config};
+use std::path::{Path, PathBuf};
 
 pub fn init_cryptodisk(device_config: &DeviceConfig, crypt_password: &str) -> Result<ForkedProc> {
     debug!("Setting up device {:?}", device_config);
@@ -104,7 +102,7 @@ pub fn ensure_dir_or_try_create(path: impl AsRef<Path>) -> Result<()> {
         }
     } else {
         debug!("Creating dir {:?}", path.as_ref());
-        std::fs::create_dir(&path)
+        std::fs::create_dir_all(&path)
             .map_err(|e| Error::Fs(format!("Failed to create dir {:?} {e}", path.as_ref())))?;
     }
     Ok(())
@@ -122,10 +120,185 @@ pub fn write_or_overwrite(path: impl AsRef<Path>, content: &[u8]) -> Result<()> 
         debug!("Creating file {:?}", path.as_ref());
         std::fs::write(&path, content).map_err(|e| {
             Error::Fs(format!(
-                "Failed to write content into file {:?}",
+                "Failed to write content into file {:?} {e}",
                 path.as_ref()
             ))
         })?;
     }
+    Ok(())
+}
+
+pub fn dump_cfg(stage_1: &mut Stage1Config, pwd: &str) -> Result<()> {
+    stage_1.disk_pwd = Some(pwd.to_string());
+    write_or_overwrite(
+        "/mnt/tmp/stage1.json",
+        serde_json::to_string(stage_1)
+            .map_err(|e| Error::Parse(format!("Failed to serialize stage1 config {e}")))?
+            .as_bytes(),
+    )
+}
+
+pub struct Keyfiles {
+    pub root: String,
+    pub home: String,
+    pub swap: String,
+}
+
+pub fn generate_keyfiles(devices: &Devices, pw: &str) -> Result<Keyfiles> {
+    debug!("Generating keyfiles");
+    ensure_dir_or_try_create("/root")?;
+    ensure_dir_or_try_create("/etc/cryptsetup-keys.d")?;
+    let root_keyfile = "/root/croot.keyfile".to_owned();
+    generate_keyfile(&devices.root.device_path(), &root_keyfile, pw)?;
+    let home_keyfile = "/etc/cryptsetup-keys.d/home.key".to_owned();
+    let home_key_path = devices.home.device_path();
+    let swap_keyfile = "/etc/cryptsetup-keys.d/swap.key".to_owned();
+    let swap_key_path = devices.swap.device_path();
+    std::thread::scope(|scope| {
+        let res = scope.spawn(|| generate_keyfile(&home_key_path, &home_keyfile, pw));
+        let res2 = scope.spawn(|| generate_keyfile(&swap_key_path, &swap_keyfile, pw));
+        res.join().unwrap()?;
+        res2.join().unwrap()
+    })?;
+
+    Ok(Keyfiles {
+        root: root_keyfile,
+        home: home_keyfile,
+        swap: swap_keyfile,
+    })
+}
+
+fn generate_keyfile(label: &str, path: impl AsRef<Path>, pw: &str) -> Result<()> {
+    debug!("Creating cryptkey for {label}");
+    run_binary(
+        "dd",
+        vec![
+            "bs=512",
+            "count=4",
+            "if=/dev/random",
+            &format!("of={:?}", path.as_ref()),
+            "iflag=fullblock",
+        ],
+        None,
+        false,
+    )?;
+    run_binary(
+        "chmod",
+        vec!["000", &format!("{:?}", path.as_ref())],
+        None,
+        false,
+    )?;
+    debug!("Adding luksKey for {label}");
+    run_binary(
+        "cryptsetup",
+        vec!["-v", "luksAddKey", label, &format!("{:?}", path.as_ref())],
+        Some(pw),
+        false,
+    )?;
+    debug!("Key added for {label}");
+    Ok(())
+}
+
+struct ConfigSpec {
+    relative_source: String,
+    abs_target: String,
+}
+
+impl ConfigSpec {
+    fn replace(&self, cfg_dir: impl AsRef<Path>) -> Result<()> {
+        let pb = PathBuf::from(cfg_dir.as_ref()).join(&self.relative_source);
+        let parent = pb.parent().ok_or_else(|| {
+            Error::Fs(format!(
+                "Could not find parent dir to relative source {pb:?}"
+            ))
+        })?;
+        ensure_dir_or_try_create(parent)?;
+        let tgt = PathBuf::from(&self.abs_target);
+        let tgt_parent = tgt.parent().ok_or_else(|| {
+            Error::Fs(format!(
+                "Could not find parent dir to absolute destination {tgt:?}"
+            ))
+        })?;
+        ensure_dir_or_try_create(tgt_parent)?;
+        std::fs::copy(&pb, &tgt)
+            .map_err(|e| Error::Fs(format!("Failed to copy {:?} to {:?} {e}", pb, tgt)))?;
+        Ok(())
+    }
+}
+
+pub fn copy_user_config(username: &str, cfg_dir: &str) -> Result<()> {
+    let base_dirs = [
+        "/pictures/screenshots",
+        "/pictures/wps",
+        "/code/java",
+        "/code/python",
+        "/code/bash",
+        "/code/rust",
+        "/code/unclassified",
+        "/documents",
+        "/downloads/",
+        "/misc",
+    ];
+    for dir in base_dirs {
+        ensure_dir_or_try_create(&format!("/home/{}{}", username, dir))?;
+    }
+    run_binary(
+        "git",
+        vec![
+            "clone",
+            "https://github.com/MarcusGrass/linux-utils.git",
+            cfg_dir,
+        ],
+        None,
+        false,
+    )?;
+    let gitconfig = ".gitconfig";
+    let xprofile = ".xprofile";
+    let xinitrc = ".xinitrc";
+    let alacritty_yml = ".config/alacritty/alacritty.yml";
+    let dunst = ".config/dunst/dunstrc";
+    let gnupg = ".gnupg/gpg-agent.conf";
+    let ssh = ".ssh/config";
+    let configs = [
+        ConfigSpec {
+            relative_source: gitconfig.to_string(),
+            abs_target: format!("/home/{}/{}", username, gitconfig),
+        },
+        ConfigSpec {
+            relative_source: xprofile.to_string(),
+            abs_target: format!("/home/{}/{}", username, xprofile),
+        },
+        ConfigSpec {
+            relative_source: xinitrc.to_string(),
+            abs_target: format!("/home/{}/{}", username, xinitrc),
+        },
+        ConfigSpec {
+            relative_source: alacritty_yml.to_string(),
+            abs_target: format!("/home/{}/{}", username, alacritty_yml),
+        },
+        ConfigSpec {
+            relative_source: dunst.to_string(),
+            abs_target: format!("/home/{}/{}", username, dunst),
+        },
+        ConfigSpec {
+            relative_source: gnupg.to_string(),
+            abs_target: format!("/home/{}/{}", username, gnupg),
+        },
+        ConfigSpec {
+            relative_source: ssh.to_string(),
+            abs_target: format!("/home/{}/{}", username, ssh),
+        },
+    ];
+
+    std::thread::scope(|scope| {
+        let mut handles = vec![];
+        for config in &configs {
+            handles.push(scope.spawn(|| config.replace(&cfg_dir)));
+        }
+        for handle in handles {
+            handle.join().unwrap()?;
+        }
+        Ok(())
+    })?;
     Ok(())
 }

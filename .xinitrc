@@ -45,10 +45,10 @@ setxkbmap se
 # spotify&
 # zoom&
 # pavucontrol&
-feh --bg-fill $HOME/pictures/wps/wpbg.jpg || echo "Failed to set background with feh"
+# feh --bg-fill $HOME/pictures/wps/wpbg.jpg || echo "Failed to set background with feh"
 # Intellij needs this
 export _JAVA_AWT_WM_NONREPARENTING=1
 export AWT_TOOLKIT=MToolkit
 wmname LG3D
 # Run
-exec dbus-launch --sh-syncax --exit-with-session dwm
+# exec dbus-launch --sh-syncax --exit-with-session pgwm
