@@ -1,2 +1,2 @@
 [workspace]
-members = ["sys-installer", "arch-installer", "linux-compat"]
+members = ["sys-installer", "arch-installer", "arch-mirror-rank", "linux-compat"]

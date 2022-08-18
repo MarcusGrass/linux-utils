@@ -2,7 +2,7 @@ pub mod manipulate;
 
 use crate::device::{InitializedDevice, InitializedDevices};
 use crate::error::{Error, Result};
-use crate::{DeviceConfig, Devices};
+use crate::{debug, DeviceConfig, Devices};
 
 pub fn get_initialized_device_info(devices: Devices) -> Result<InitializedDevices> {
     let lsblk = get_lsblk_output()?;
@@ -16,6 +16,7 @@ fn get_lsblk_output() -> Result<String> {
         .map_err(|e| Error::Parse(format!("lsblk -f error {e}")))?;
     let output_str = String::from_utf8(output.stdout)
         .map_err(|e| Error::Parse(format!("Failed to convert lsblk output to utf8 {e}")))?;
+    debug!("Aquired device info");
     Ok(output_str)
 }
 

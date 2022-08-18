@@ -167,6 +167,7 @@ pub fn generate_keyfiles(devices: &Devices, pw: &str) -> Result<Keyfiles> {
         res.join().unwrap()?;
         res2.join().unwrap()
     })?;
+    debug!("Generated keyfiles");
 
     Ok(Keyfiles {
         root: root_keyfile,

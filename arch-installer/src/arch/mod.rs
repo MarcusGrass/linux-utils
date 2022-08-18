@@ -1,13 +1,18 @@
 use crate::disks::{ensure_dir_or_try_create, write_or_overwrite};
 use crate::error::Result;
 use crate::process::run_binary;
-use crate::{debug, Error};
+use crate::{debug, Devices, Error};
 use std::fmt::Write;
 use std::os::unix::process::CommandExt;
 
 pub fn pacstrap_and_enter() -> Result<()> {
     debug!("Running pacstrap");
-    run_binary("pacstrap", vec!["/mnt", "base"], None, true)?;
+    run_binary(
+        "pacstrap",
+        vec!["/mnt", "base", "base-devel", "linux", "linux-firmware"],
+        None,
+        true,
+    )?;
     debug!("Generating fstab");
     let fstab = run_binary("genfstab", vec!["-U", "-p", "/mnt"], None, false)?;
     debug!("Writing fstab");
@@ -19,18 +24,23 @@ pub fn pacstrap_and_enter() -> Result<()> {
 
 pub fn create_user(username: &str) -> Result<()> {
     run_binary("useradd", vec!["-m", username], None, false)?;
+    debug!("Added user {username}");
     Ok(())
 }
 
 pub fn create_hostname(hostname: &str) -> Result<()> {
-    write_or_overwrite("/etc/hosts", hostname.as_bytes())
+    write_or_overwrite("/etc/hostname", hostname.as_bytes())?;
+    debug!("Created and populated /etc/hostname");
+    Ok(())
 }
 
 pub fn create_hosts() -> Result<()> {
     write_or_overwrite(
         "/etc/hosts",
         "127.0.0.1\tlocalhost\n::1\tlocalhost\n".as_bytes(),
-    )
+    )?;
+    debug!("Created and populated /etc/hosts");
+    Ok(())
 }
 
 pub fn set_locale() -> Result<()> {
@@ -58,6 +68,7 @@ pub fn set_locale() -> Result<()> {
         false,
     )?;
     run_binary("hwclock", vec!["--systohc", "--utc"], None, false)?;
+    debug!("Generated locale and set hardware clock");
     Ok(())
 }
 
@@ -79,6 +90,7 @@ pub fn add_to_sudoers(username: &str) -> Result<()> {
     let _ = content.write_fmt(format_args!("{}    ALL=(ALL) NOPASSWD:ALL\n", username));
     std::fs::write("/etc/sudoers", content.as_bytes())
         .map_err(|e| Error::Fs(format!("Failed to write to /etc/sudoers {e}",)))?;
+    debug!("Added {username} to sudoers");
     Ok(())
 }
 
@@ -89,6 +101,7 @@ pub fn enable_services() -> Result<()> {
         None,
         false,
     )?;
+    debug!("Enabled services");
     Ok(())
 }
 
@@ -111,6 +124,7 @@ pub fn update_pacman_conf() -> Result<()> {
         }
     }
     write_or_overwrite("/etc/pacman.conf", new_content.as_bytes())?;
+    debug!("Updated /etc/pacman.conf");
     run_binary("pacman", vec!["-Syyuu"], None, true)?;
     Ok(())
 }
@@ -120,10 +134,6 @@ pub fn install_base_packages() -> Result<()> {
         "pacman",
         vec![
             "-S",
-            // Pacstrap is slow because of no parallel, so we move some master packages here
-            "base-devel",
-            "linux",
-            "linux-firmware",
             // Boot
             "grub",
             "efibootmgr",
@@ -189,6 +199,7 @@ pub fn install_base_packages() -> Result<()> {
         None,
         false,
     )?;
+    debug!("Installed base packages");
     Ok(())
 }
 
@@ -215,6 +226,7 @@ fn install_yay() -> Result<()> {
     std::fs::remove_dir_all(tmp_yay)
         .map_err(|e| Error::Fs(format!("Failed to clean up {tmp_yay} {e}")))?;
     res?;
+    debug!("Installed yay");
     Ok(())
 }
 
@@ -225,15 +237,48 @@ fn install_yay_packages() -> Result<()> {
         None,
         true,
     )?;
+    debug!("Installed yay packages");
     Ok(())
 }
 
 pub fn start_pulse() -> Result<()> {
     run_binary("pulseaudio", vec!["-D"], None, false)?;
+    debug!("Started pulse");
     Ok(())
 }
 
 pub fn install_rust() -> Result<()> {
     run_binary("rustup", vec!["toolchain", "install", "stable"], None, true)?;
+    debug!("Installed rust");
+    Ok(())
+}
+
+pub fn configure_grub(device: &str) -> Result<()> {
+    debug!("Configuring grub");
+    run_binary(
+        "grub-install",
+        vec![
+            "--target=x86_64-efi",
+            "--efi-directory=/efi",
+            "--bootloader-id=GRUB",
+            "--recheck",
+        ],
+        None,
+        false,
+    )?;
+    run_binary(
+        "grub-install",
+        vec!["--target=i386-pc", "--recheck", &format!("/dev/{device}")],
+        None,
+        false,
+    )?;
+    run_binary("mkinitcpio", vec!["-P"], None, true)?;
+    run_binary(
+        "grub-mkconfig",
+        vec!["-o", "/boot/grub/grub.cfg"],
+        None,
+        false,
+    )?;
+    debug!("Grub configured");
     Ok(())
 }

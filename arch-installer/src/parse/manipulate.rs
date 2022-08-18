@@ -1,7 +1,7 @@
 use crate::device::InitializedDevices;
 use crate::disks::{ensure_dir_or_try_create, Keyfiles};
 use crate::error::Result;
-use crate::Error;
+use crate::{debug, Error};
 use std::fmt::Write;
 
 pub fn update_default_grub(devices: &InitializedDevices, keyfiles: &Keyfiles) -> Result<()> {
@@ -47,6 +47,7 @@ pub fn update_default_grub(devices: &InitializedDevices, keyfiles: &Keyfiles) ->
     }
     std::fs::write(default_grub, new_content.as_bytes())
         .map_err(|e| Error::Fs(format!("Failed to dump new cfg to {} {e}", default_grub)))?;
+    debug!("Updated /etc/default/grub");
     Ok(())
 }
 
@@ -79,7 +80,7 @@ pub fn update_mkinitcpio(devices: &InitializedDevices, keyfiles: &Keyfiles) -> R
     );
     std::fs::write(hooks, hooks_content.as_bytes())
         .map_err(|e| Error::Fs(format!("Failed to write swap open hook to {} {e}", hooks)))?;
-
+    debug!("Wrote mkinitcpio hibernate hook");
     let install_content = format!(
         "build ()
 {{
@@ -101,6 +102,7 @@ HELPEOF
             install
         ))
     })?;
+    debug!("Wrote mkinitcpio hibernate install");
     let mkinitcpio = "/etc/mkinitcpio.conf";
     let content = std::fs::read_to_string(mkinitcpio)
         .map_err(|e| Error::Fs(format!("Failed to read {} {e}", mkinitcpio)))?;
@@ -136,6 +138,7 @@ HELPEOF
     }
     std::fs::write(mkinitcpio, new_content.as_bytes())
         .map_err(|e| Error::Fs(format!("Failed to write new content to {} {e}", mkinitcpio)))?;
+    debug!("Wrote mkinitcpio config");
     Ok(())
 }
 
@@ -149,5 +152,6 @@ pub fn update_fstab(devices: &InitializedDevices) -> Result<()> {
     ));
     std::fs::write(fstab, content.as_bytes())
         .map_err(|e| Error::Fs(format!("failed to write new content to {} {e}", fstab)))?;
+    debug!("Updated /etc/fstab");
     Ok(())
 }

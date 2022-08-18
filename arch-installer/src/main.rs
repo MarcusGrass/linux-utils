@@ -1,5 +1,5 @@
 use crate::arch::{
-    add_to_sudoers, create_hostname, create_hosts, create_user, enable_services,
+    add_to_sudoers, configure_grub, create_hostname, create_hosts, create_user, enable_services,
     install_base_packages, install_rust, install_yay_and_packages, pacstrap_and_enter, set_locale,
     start_pulse, update_pacman_conf,
 };
@@ -200,6 +200,7 @@ fn run_stage_2(stage_2: Stage2Config) -> Result<()> {
         services.join().unwrap()?;
         Ok(())
     })?;
+    configure_grub(&format!("/dev/{}", devices.root.cfg.root_device))?;
     info!("Stage 2 complete, set a root password, a user password for {}, exit chroot, umount -a, then reboot", stage_2.username);
     Ok(())
 }
