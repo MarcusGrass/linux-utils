@@ -314,3 +314,13 @@ pub fn copy_user_config(username: &str, cfg_dir: &str) -> Result<()> {
     })?;
     Ok(())
 }
+
+pub fn dump_install_files(username: &str) -> Result<()> {
+    std::fs::copy("/home/stage2.json", format!("/home/{username}/stage2.json"))
+        .map_err(|e| Error::Fs(format!("Failed to copy /home/stage2.json to user home {e}")))?;
+    std::fs::copy("/home/arch-installer-bin", format!("/home/{username}/arch-installer-bin"))
+        .map_err(|e| Error::Fs(format!("Failed to copy /home/arch-installer-bin to user home {e}")))?;
+    run_binary("chgrp", vec!["-R", username, &format!("/home/{username}")], None, false)?;
+    run_binary("chown", vec!["-R", username, &format!("/home/{username}")], None, false)?;
+    Ok(())
+}

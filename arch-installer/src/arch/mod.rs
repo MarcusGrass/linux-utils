@@ -294,3 +294,26 @@ pub fn configure_grub() -> Result<()> {
     debug!("Grub configured");
     Ok(())
 }
+
+pub fn get_user() -> Result<String> {
+    let out = run_binary("whoami", vec![], None, false)?;
+    let out_str = String::from_utf8(out.stdout)
+        .map_err(|e| Error::Parse(format!("Error parsing username from whoami output {e}")))?;
+    if &out_str == "root" {
+        Err(Error::Process(
+            "Attempting to run stage3 as root, should be run as user".to_string(),
+        ))
+    } else {
+        Ok(out_str.trim().to_string())
+    }
+}
+
+#[cfg(test)]
+mod tests {
+    use crate::arch::get_user;
+
+    #[test]
+    fn test_whoami() {
+        eprintln!("{:?}", get_user());
+    }
+}

@@ -1,12 +1,12 @@
 use crate::arch::{
     add_to_sudoers, configure_grub, create_hostname, create_hosts, create_user, enable_services,
-    finalize_set_locale, install_base_packages, install_rust, install_yay_and_packages,
+    finalize_set_locale, get_user, install_base_packages, install_rust, install_yay_and_packages,
     pacstrap_and_enter, partial_set_locale, start_pulse, update_pacman_conf,
 };
 use crate::device::{DeviceConfig, Devices, InitializedDevices};
 use crate::disks::{
-    copy_self, copy_user_config, create_filesystems, dump_cfg, generate_keyfiles, init_cryptodisk,
-    mount_disks, open_cryptodisk,
+    copy_self, copy_user_config, create_filesystems, dump_cfg, dump_install_files,
+    generate_keyfiles, init_cryptodisk, mount_disks, open_cryptodisk,
 };
 use crate::error::{Error, Result};
 use crate::parse::get_initialized_device_info;
@@ -128,18 +128,13 @@ impl Stage2Saved {
     }
 }
 
-#[derive(Debug, StructOpt)]
-pub struct Stage3Config {
-    username: String,
-}
-
 #[allow(clippy::large_enum_variant)]
 #[derive(Debug, StructOpt)]
 enum Installer {
     Stage1Saved(Stage1Saved),
     Stage1(Stage1Config),
     Stage2(Stage2Saved),
-    Stage3(Stage3Config),
+    Stage3,
 }
 
 fn main() -> Result<()> {
@@ -154,8 +149,8 @@ fn main() -> Result<()> {
         Installer::Stage2(stage_2) => {
             run_stage_2(stage_2.into_stage_2()?)?;
         }
-        Installer::Stage3(stage_3) => {
-            run_stage_3(stage_3)?;
+        Installer::Stage3 => {
+            run_stage_3()?;
         }
     }
     Ok(())
@@ -212,15 +207,17 @@ fn run_stage_2(stage_2: Stage2Config) -> Result<()> {
         Ok(())
     })?;
     configure_grub()?;
+    dump_install_files(&stage_2.username)?;
     info!("Stage 2 complete, set a root password, a user password for {}, exit chroot, umount -a, then reboot", stage_2.username);
     Ok(())
 }
 
-fn run_stage_3(stage_3: Stage3Config) -> Result<()> {
+fn run_stage_3() -> Result<()> {
+    let user = get_user()?;
     std::thread::scope(|scope| {
         let rust = scope.spawn(install_rust);
         let copy =
-            scope.spawn(|| copy_user_config(&stage_3.username, "/home/gramar/code/linux-utils"));
+            scope.spawn(|| copy_user_config(&user, &format!("/home/{user}/code/linux-utils")));
         let locale = scope.spawn(finalize_set_locale);
         let services = scope.spawn(enable_services);
         let install_yay = scope.spawn(install_yay_and_packages);
