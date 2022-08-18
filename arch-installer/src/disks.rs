@@ -176,7 +176,7 @@ pub fn generate_keyfiles(devices: &Devices, pw: &str) -> Result<Keyfiles> {
     })
 }
 
-fn generate_keyfile(label: &str, path: impl AsRef<Path>, pw: &str) -> Result<()> {
+fn generate_keyfile(label: &str, path: &str, pw: &str) -> Result<()> {
     debug!("Creating cryptkey for {label}");
     run_binary(
         "dd",
@@ -184,22 +184,17 @@ fn generate_keyfile(label: &str, path: impl AsRef<Path>, pw: &str) -> Result<()>
             "bs=512",
             "count=4",
             "if=/dev/random",
-            &format!("of={:?}", path.as_ref()),
+            &format!("of={}", path),
             "iflag=fullblock",
         ],
         None,
         false,
     )?;
-    run_binary(
-        "chmod",
-        vec!["000", &format!("{:?}", path.as_ref())],
-        None,
-        false,
-    )?;
+    run_binary("chmod", vec!["000", &format!("{}", path)], None, false)?;
     debug!("Adding luksKey for {label}");
     run_binary(
         "cryptsetup",
-        vec!["-v", "luksAddKey", label, &format!("{:?}", path.as_ref())],
+        vec!["-v", "luksAddKey", label, &format!("{}", path)],
         Some(pw),
         false,
     )?;
@@ -213,8 +208,8 @@ struct ConfigSpec {
 }
 
 impl ConfigSpec {
-    fn replace(&self, cfg_dir: impl AsRef<Path>) -> Result<()> {
-        let pb = PathBuf::from(cfg_dir.as_ref()).join(&self.relative_source);
+    fn replace(&self, cfg_dir: &str) -> Result<()> {
+        let pb = PathBuf::from(cfg_dir).join(&self.relative_source);
         let parent = pb.parent().ok_or_else(|| {
             Error::Fs(format!(
                 "Could not find parent dir to relative source {pb:?}"
