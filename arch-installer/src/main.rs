@@ -10,7 +10,9 @@ use crate::disks::{
 };
 use crate::error::{Error, Result};
 use crate::parse::get_initialized_device_info;
-use crate::parse::manipulate::{update_default_grub, update_fstab, update_mkinitcpio};
+use crate::parse::manipulate::{
+    update_cryptsetup, update_default_grub, update_fstab, update_mkinitcpio,
+};
 use crate::process::{await_children, get_password};
 use std::path::PathBuf;
 use structopt::StructOpt;
@@ -189,9 +191,11 @@ fn run_stage_2(stage_2: Stage2Config) -> Result<()> {
         let default_grub = scope.spawn(|| update_default_grub(&devices, &keyfiles));
         let mkinitcpio = scope.spawn(|| update_mkinitcpio(&devices, &keyfiles));
         let fstab = scope.spawn(|| update_fstab(&devices));
+        let cryptsetup = scope.spawn(|| update_cryptsetup(&devices));
         default_grub.join().unwrap()?;
         mkinitcpio.join().unwrap()?;
         fstab.join().unwrap()?;
+        cryptsetup.join().unwrap()?;
         Ok(())
     })?;
     std::thread::scope(|scope| {

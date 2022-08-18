@@ -133,6 +133,8 @@ HELPEOF
             for (idx, token) in tokens.into_iter().enumerate() {
                 if idx == tokens.len() - 1 {
                     let _ = line_content.write_fmt(format_args!("{})\n", token));
+                } else if idx == 0 {
+                    let _ = line_content.write_fmt(format_args!(" {} ", token));
                 } else {
                     let _ = line_content.write_fmt(format_args!("{} ", token));
                 }
@@ -159,5 +161,16 @@ pub fn update_fstab(devices: &InitializedDevices) -> Result<()> {
     std::fs::write(fstab, content.as_bytes())
         .map_err(|e| Error::Fs(format!("failed to write new content to {} {e}", fstab)))?;
     debug!("Updated /etc/fstab");
+    Ok(())
+}
+
+pub fn update_cryptsetup(devices: &InitializedDevices) -> Result<()> {
+    let crypttab = "/etc/crypttab";
+    let mut content = std::fs::read_to_string(crypttab)
+        .map_err(|e| Error::Fs(format!("Failed to read crypttab from {crypttab} {e}")))?;
+    let _ = content.write_fmt(format_args!(
+        "home\tUUID={}\t/etc/cryptsetup-keys.d/home.key",
+        devices.home.device_uuid
+    ));
     Ok(())
 }
