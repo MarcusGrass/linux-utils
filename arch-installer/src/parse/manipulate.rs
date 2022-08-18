@@ -29,7 +29,8 @@ pub fn update_default_grub(devices: &InitializedDevices, keyfiles: &Keyfiles) ->
             if !no_start.contains(&cryptdevice_str) {
                 no_start.insert_str(0, &cryptdevice_str);
             }
-            let _ = new_content.write_fmt(format_args!("GRUB_CMDLINE_LINUX\"{}\n", no_start));
+            no_start = no_start.trim().to_string();
+            let _ = new_content.write_fmt(format_args!("GRUB_CMDLINE_LINUX=\"{}\n", no_start));
             continue;
         } else if line.starts_with("GRUB_CMDLINE_LINUX_DEFAULT=") {
             let mut no_start = line.trim().replace("GRUB_CMDLINE_LINUX_DEFAULT=\"", "");
