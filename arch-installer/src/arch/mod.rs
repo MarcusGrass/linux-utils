@@ -48,7 +48,7 @@ pub fn create_hosts() -> Result<()> {
     Ok(())
 }
 
-pub fn set_locale() -> Result<()> {
+pub fn partial_set_locale() -> Result<()> {
     std::thread::scope(|scope| {
         let append = scope.spawn(append_default_locale);
         let set = scope.spawn(set_locale_conf);
@@ -66,6 +66,11 @@ pub fn set_locale() -> Result<()> {
         None,
         false,
     )?;
+    debug!("Partially generated locale");
+    Ok(())
+}
+
+pub fn finalize_set_locale() -> Result<()> {
     run_binary(
         "timedatectl",
         vec!["set-timezone", "Europe/Stockholm"],
@@ -101,8 +106,16 @@ pub fn add_to_sudoers(username: &str) -> Result<()> {
 
 pub fn enable_services() -> Result<()> {
     run_binary(
-        "systemctl",
-        vec!["enable", "--now", "iwd", "dhcpcd", "bluetooth", "ntpd"],
+        "sudo",
+        vec![
+            "systemctl",
+            "enable",
+            "--now",
+            "iwd",
+            "dhcpcd",
+            "bluetooth",
+            "ntpd",
+        ],
         None,
         false,
     )?;
@@ -202,7 +215,7 @@ pub fn install_base_packages() -> Result<()> {
             "--noconfirm",
         ],
         None,
-        false,
+        true,
     )?;
     debug!("Installed base packages");
     Ok(())

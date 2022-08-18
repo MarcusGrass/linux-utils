@@ -1,7 +1,7 @@
 use crate::arch::{
     add_to_sudoers, configure_grub, create_hostname, create_hosts, create_user, enable_services,
-    install_base_packages, install_rust, install_yay_and_packages, pacstrap_and_enter, set_locale,
-    start_pulse, update_pacman_conf,
+    finalize_set_locale, install_base_packages, install_rust, install_yay_and_packages,
+    pacstrap_and_enter, partial_set_locale, start_pulse, update_pacman_conf,
 };
 use crate::device::{DeviceConfig, Devices, InitializedDevices};
 use crate::disks::{
@@ -198,15 +198,13 @@ fn run_stage_2(stage_2: Stage2Config) -> Result<()> {
         let add_user = scope.spawn(|| create_user(&stage_2.username));
         let hostname = scope.spawn(|| create_hostname(&stage_2.hostname));
         let hosts = scope.spawn(create_hosts);
-        let locale = scope.spawn(set_locale);
+        let locale = scope.spawn(partial_set_locale);
         let sudoers = scope.spawn(|| add_to_sudoers(&stage_2.username));
-        let services = scope.spawn(enable_services);
         add_user.join().unwrap()?;
         hostname.join().unwrap()?;
         hosts.join().unwrap()?;
         locale.join().unwrap()?;
         sudoers.join().unwrap()?;
-        services.join().unwrap()?;
         Ok(())
     })?;
     configure_grub(&format!("/dev/{}", devices.root.cfg.root_device))?;
@@ -216,15 +214,19 @@ fn run_stage_2(stage_2: Stage2Config) -> Result<()> {
 
 fn run_stage_3(stage_3: Stage3Config) -> Result<()> {
     std::thread::scope(|scope| {
-        let install_yay = scope.spawn(install_yay_and_packages);
+        let rust = scope.spawn(install_rust);
         let copy =
             scope.spawn(|| copy_user_config(&stage_3.username, "/home/gramar/code/linux-utils"));
-        let rust = scope.spawn(install_rust);
+        let locale = scope.spawn(finalize_set_locale);
+        let services = scope.spawn(enable_services);
+        let install_yay = scope.spawn(install_yay_and_packages);
         let pulse = scope.spawn(start_pulse);
+        locale.join().unwrap()?;
         install_yay.join().unwrap()?;
         copy.join().unwrap()?;
         rust.join().unwrap()?;
         pulse.join().unwrap()?;
+        services.join().unwrap()?;
         Ok(())
     })?;
     info!("Done, remember to delete the old config");
