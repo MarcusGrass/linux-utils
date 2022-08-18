@@ -1,5 +1,5 @@
 use crate::device::InitializedDevices;
-use crate::disks::{ensure_dir_or_try_create, Keyfiles};
+use crate::disks::{ensure_dir_or_try_create, write_or_overwrite, Keyfiles};
 use crate::error::Result;
 use crate::{debug, Error};
 use std::fmt::Write;
@@ -14,8 +14,8 @@ pub fn update_default_grub(devices: &InitializedDevices, keyfiles: &Keyfiles) ->
         devices.root.device_uuid, devices.root.cfg.crypt_device_name
     );
     let root_str = format!("root={} ", devices.root.cfg.crypt_device_path());
-    let root_crypt_key = format!("cryptkey=rootfs:/root{} ", keyfiles.root);
-    let resume = &format!("{} ", devices.swap.cfg.crypt_device_path());
+    let root_crypt_key = format!("cryptkey=rootfs:{} ", keyfiles.root);
+    let resume = &format!("resume={} ", devices.swap.cfg.crypt_device_path());
     for line in content.lines() {
         if line.starts_with("GRUB_CMDLINE_LINUX=") {
             let trimmed = line.trim();
@@ -70,7 +70,7 @@ pub fn update_mkinitcpio(devices: &InitializedDevices, keyfiles: &Keyfiles) -> R
 
     mkdir crypto_key_device
     mount {} crypto_key_device
-    cryptsetup open --key-file crypto_key_device/{} {} {}
+    cryptsetup open --key-file crypto_key_device{} {} {}
     umount crypto_key_device
 }}",
         devices.root.cfg.crypt_device_path(),
@@ -114,12 +114,12 @@ HELPEOF
         } else if line.starts_with("HOOKS=") {
             let tokens = [
                 "keyboard",
-                "fsck",
                 "keymap",
                 "encrypt",
                 "openswap",
                 "resume",
                 "filesystems",
+                "fsck",
             ];
             let mut line_content = line.trim().to_string();
             for token in tokens {
@@ -169,8 +169,8 @@ pub fn update_cryptsetup(devices: &InitializedDevices) -> Result<()> {
     let mut content = std::fs::read_to_string(crypttab)
         .map_err(|e| Error::Fs(format!("Failed to read crypttab from {crypttab} {e}")))?;
     let _ = content.write_fmt(format_args!(
-        "home\tUUID={}\t/etc/cryptsetup-keys.d/home.key",
+        "chome\tUUID={}\t/etc/cryptsetup-keys.d/home.key",
         devices.home.device_uuid
     ));
-    Ok(())
+    write_or_overwrite(crypttab, content.as_bytes())
 }
