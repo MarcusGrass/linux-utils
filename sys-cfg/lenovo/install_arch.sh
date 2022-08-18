@@ -1,7 +1,6 @@
 #!/bin/sh
 # Ignores errors
 # Try delete old, doesn't matter if exists
-# dummy
 rm /tmp/arch-installer-bin
 # Try unmount old, doesn't matter if not mounted
 umount /mnt/home
