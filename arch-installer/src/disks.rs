@@ -138,6 +138,12 @@ pub fn dump_cfg(stage_1: &mut Stage1Config, pwd: &str) -> Result<()> {
     )
 }
 
+pub fn copy_self() -> Result<()> {
+    std::fs::copy("/tmp/arch-installer-bin", "/mnt/home/arch-installer-bin")
+        .map_err(|e| Error::Fs(format!("Failed to copy self to mounted disk {e}")))?;
+    Ok(())
+}
+
 pub struct Keyfiles {
     pub root: String,
     pub home: String,

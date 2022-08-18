@@ -5,7 +5,7 @@ use crate::arch::{
 };
 use crate::device::{DeviceConfig, Devices};
 use crate::disks::{
-    copy_user_config, create_filesystems, dump_cfg, generate_keyfiles, init_cryptodisk,
+    copy_self, copy_user_config, create_filesystems, dump_cfg, generate_keyfiles, init_cryptodisk,
     mount_disks, open_cryptodisk,
 };
 use crate::error::{Error, Result};
@@ -153,6 +153,7 @@ fn run_stage_1(mut stage_1: Stage1Config) -> Result<()> {
     create_filesystems(&devices)?;
     mount_disks(&devices)?;
     dump_cfg(&mut stage_1, &pwd)?;
+    copy_self()?;
     pacstrap_and_enter()?;
     Ok(())
 }
