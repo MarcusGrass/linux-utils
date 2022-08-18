@@ -77,7 +77,7 @@ pub fn finalize_set_locale() -> Result<()> {
         None,
         false,
     )?;
-    run_binary("hwclock", vec!["--systohc", "--utc"], None, false)?;
+    run_binary("sudo", vec!["hwclock", "--systohc", "--utc"], None, false)?;
     debug!("Generated locale and set hardware clock");
     Ok(())
 }
