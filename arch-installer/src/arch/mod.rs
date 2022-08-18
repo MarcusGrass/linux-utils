@@ -7,12 +7,7 @@ use std::os::unix::process::CommandExt;
 
 pub fn pacstrap_and_enter() -> Result<()> {
     debug!("Running pacstrap");
-    run_binary(
-        "pacstrap",
-        vec!["/mnt", "base", "base-devel", "linux", "linux-firmware"],
-        None,
-        true,
-    )?;
+    run_binary("pacstrap", vec!["/mnt", "base"], None, true)?;
     debug!("Generating fstab");
     let fstab = run_binary("genfstab", vec!["-U", "-p", "/mnt"], None, false)?;
     debug!("Writing fstab");
@@ -124,6 +119,11 @@ pub fn install_base_packages() -> Result<()> {
     run_binary(
         "pacman",
         vec![
+            "-S",
+            // Pacstrap is slow because of no parallel, so we move some master packages here
+            "base-devel",
+            "linux",
+            "linux-firmware",
             // Boot
             "grub",
             "efibootmgr",
