@@ -113,8 +113,9 @@ pub fn write_or_overwrite(path: impl AsRef<Path>, content: &[u8]) -> Result<()> 
         if meta.is_dir() {
             return Err(Error::Fs(format!("Dir exists at {:?}", path.as_ref())));
         } else {
-            std::fs::remove_file(&path)
-                .map_err(|e| Error::Fs(format!("Failed to remove pre-existing file at {e}")))?;
+            debug!("Overwriting file {:?}", path.as_ref());
+            std::fs::write(path, content)
+                .map_err(|e| Error::Fs(format!("Failed to write new content at {e}")))?;
         }
     } else {
         debug!("Creating file {:?}", path.as_ref());

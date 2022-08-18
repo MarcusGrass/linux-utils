@@ -5,10 +5,14 @@ rm /tmp/arch-installer-bin
 umount /mnt/home
 umount /mnt/efi
 umount /mnt
-swapoff /dev/mapper/cswap
+CRYPT_SWAP_NAME=cswap
+CRYPT_HOME_NAME=chome
+CRYPT_ROOT_NAME=croot
+swapoff /dev/mapper/$CRYPT_SWAP_NAME
 # Try closing old, doesn't matter if not mounted
-cryptsetup close cswap
-cryptsetup close chome
-cryptsetup close croot
+cryptsetup close $CRYPT_SWAP_NAME
+cryptsetup close $CRYPT_HOME_NAME
+cryptsetup close $CRYPT_ROOT_NAME
+ROOT_NAME=nvme0n1
 # Ready to run
-curl -L https://github.com/MarcusGrass/linux-utils/blob/main/arch-installer-bin?raw=true -o /tmp/arch-installer-bin && chmod +x /tmp/arch-installer-bin && /tmp/arch-installer-bin stage1 --efi-device-name nvme0n1 --efi-device-root nvme0n1p1 --home-device-crypt-name chome --home-device-name nvme0n1p4 --home-device-root nvme0n1 --root-device-crypt-name croot --root-device-name nvme0n1p2 --root-device-root nvme0n1 --swap-device-name nvme0n1p3 --swap-device-root nvme0n1 --swap-device-crypt-name cswap
+curl -L https://github.com/MarcusGrass/linux-utils/blob/main/arch-installer-bin?raw=true -o /tmp/arch-installer-bin && chmod +x /tmp/arch-installer-bin && /tmp/arch-installer-bin stage1 --efi-device-name nvme0n1p1 --efi-device-root $ROOT_NAME --home-device-crypt-name $CRYPT_HOME_NAME --home-device-name nvme0n1p4 --home-device-root $ROOT_NAME --root-device-crypt-name $CRYPT_ROOT_NAME --root-device-name nvme0n1p2 --root-device-root $ROOT_NAME --swap-device-name nvme0n1p3 --swap-device-root $ROOT_NAME --swap-device-crypt-name $CRYPT_SWAP_NAME
