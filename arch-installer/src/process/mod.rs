@@ -82,9 +82,9 @@ pub fn run_binary(
         .stdout(if leak_stdout {
             Stdio::inherit()
         } else {
-            Stdio::null()
+            Stdio::piped()
         })
-        .stderr(Stdio::null())
+        .stderr(Stdio::piped())
         .spawn()
         .map_err(|e| Error::Process(format!("Failed to spawn process {bin} {e}")))?;
     if let Some(input) = input {
@@ -108,5 +108,16 @@ pub fn run_binary(
             args,
             String::from_utf8(output.stderr)
         )))
+    }
+}
+
+#[cfg(test)]
+mod tests {
+    use crate::process::run_binary;
+
+    #[test]
+    fn test_spawn_with_output() {
+        let res = run_binary("echo", vec!["abc"], None, false).unwrap();
+        eprintln!("{:?}", String::from_utf8(res.stdout));
     }
 }

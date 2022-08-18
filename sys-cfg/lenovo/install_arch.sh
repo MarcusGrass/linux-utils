@@ -1,4 +1,5 @@
 #!/bin/sh
+# Ignores errors
 # Try delete old, doesn't matter if exists
 rm /tmp/arch-installer-bin
 # Try unmount old, doesn't matter if not mounted
