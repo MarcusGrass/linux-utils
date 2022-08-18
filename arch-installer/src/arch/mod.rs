@@ -105,14 +105,14 @@ pub fn update_pacman_conf() -> Result<()> {
     for line in content.lines() {
         if line.starts_with("[multilib]") {
             on_multilib = true;
-            new_content.push_str(line);
+            let _ = new_content.write_fmt(format_args!("{line}\n"));
         } else if on_multilib {
-            new_content.push_str(&line.replace('#', ""));
+            let _ = new_content.write_fmt(format_args!("{}\n", line.replace('#', "")));
             on_multilib = false;
         } else if content.starts_with("#ParallelDownloads") {
-            new_content.push_str("ParallelDownloads = 50\n");
+            let _ = new_content.write_fmt(format_args!("ParallelDownloads = 50\n"));
         } else {
-            new_content.push_str(line);
+            let _ = new_content.write_fmt(format_args!("{line}\n"));
         }
     }
     write_or_overwrite("/etc/pacman.conf", new_content.as_bytes())?;

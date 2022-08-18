@@ -42,7 +42,7 @@ pub fn update_default_grub(devices: &InitializedDevices, keyfiles: &Keyfiles) ->
         } else if line.starts_with("#GRUB_ENABLE_CRYPTODISK") {
             new_content.push_str("GRUB_ENABLE_CRYPTODISK=y\n");
         } else {
-            new_content.push_str(line);
+            let _ = new_content.write_fmt(format_args!("{line}\n"));
         }
     }
     std::fs::write(default_grub, new_content.as_bytes())
