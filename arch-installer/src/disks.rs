@@ -1,7 +1,7 @@
 use crate::device::{DeviceConfig, Devices};
 use crate::error::{Error, Result};
 use crate::process::{run_binary, spawn_binary, ForkedProc};
-use crate::{await_children, debug, Stage1Config};
+use crate::{await_children, debug, InitializedDevices, Stage1Config, Stage2Config};
 use std::path::{Path, PathBuf};
 
 pub fn init_cryptodisk(device_config: &DeviceConfig, crypt_password: &str) -> Result<ForkedProc> {
@@ -129,11 +129,20 @@ pub fn write_or_overwrite(path: impl AsRef<Path>, content: &[u8]) -> Result<()> 
     Ok(())
 }
 
-pub fn dump_cfg(stage_1: &mut Stage1Config, pwd: &str) -> Result<()> {
-    stage_1.disk_pwd = Some(pwd.to_string());
+pub fn dump_cfg(
+    stage_1: Stage1Config,
+    initialized_devices: InitializedDevices,
+    pwd: &str,
+) -> Result<()> {
+    let s2 = Stage2Config {
+        username: stage_1.username,
+        hostname: stage_1.hostname,
+        initialized_devices,
+        pwd: pwd.to_string(),
+    };
     write_or_overwrite(
-        "/mnt/home/stage1.json",
-        serde_json::to_string(stage_1)
+        "/mnt/home/stage2.json",
+        serde_json::to_string(&s2)
             .map_err(|e| Error::Parse(format!("Failed to serialize stage1 config {e}")))?
             .as_bytes(),
     )
@@ -151,16 +160,16 @@ pub struct Keyfiles {
     pub swap: String,
 }
 
-pub fn generate_keyfiles(devices: &Devices, pw: &str) -> Result<Keyfiles> {
+pub fn generate_keyfiles(devices: &InitializedDevices, pw: &str) -> Result<Keyfiles> {
     debug!("Generating keyfiles");
     ensure_dir_or_try_create("/root")?;
     ensure_dir_or_try_create("/etc/cryptsetup-keys.d")?;
     let root_keyfile = "/root/croot.keyfile".to_owned();
-    generate_keyfile(&devices.root.device_path(), &root_keyfile, pw)?;
+    generate_keyfile(&devices.root.cfg.device_path(), &root_keyfile, pw)?;
     let home_keyfile = "/etc/cryptsetup-keys.d/home.key".to_owned();
-    let home_key_path = devices.home.device_path();
+    let home_key_path = devices.home.cfg.device_path();
     let swap_keyfile = "/etc/cryptsetup-keys.d/swap.key".to_owned();
-    let swap_key_path = devices.swap.device_path();
+    let swap_key_path = devices.swap.cfg.device_path();
     std::thread::scope(|scope| {
         let res = scope.spawn(|| generate_keyfile(&home_key_path, &home_keyfile, pw));
         let res2 = scope.spawn(|| generate_keyfile(&swap_key_path, &swap_keyfile, pw));

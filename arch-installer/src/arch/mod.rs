@@ -18,7 +18,10 @@ pub fn pacstrap_and_enter() -> Result<()> {
     debug!("Writing fstab");
     write_or_overwrite("/mnt/etc/fstab", fstab.stdout.as_ref())?;
     debug!("Entering arch-chroot");
-    std::process::Command::new("arch-chroot").arg("/mnt").exec();
+    std::process::Command::new("arch-chroot")
+        .arg("/mnt")
+        .arg("/home/arch-installer-bin")
+        .exec();
     Ok(())
 }
 

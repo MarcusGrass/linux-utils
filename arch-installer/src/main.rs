@@ -3,7 +3,7 @@ use crate::arch::{
     install_base_packages, install_rust, install_yay_and_packages, pacstrap_and_enter, set_locale,
     start_pulse, update_pacman_conf,
 };
-use crate::device::{DeviceConfig, Devices};
+use crate::device::{DeviceConfig, Devices, InitializedDevices};
 use crate::disks::{
     copy_self, copy_user_config, create_filesystems, dump_cfg, generate_keyfiles, init_cryptodisk,
     mount_disks, open_cryptodisk,
@@ -25,6 +25,10 @@ mod process;
 
 #[derive(Debug, StructOpt, serde::Deserialize, serde::Serialize)]
 pub struct Stage1Config {
+    #[structopt(short)]
+    username: String,
+    #[structopt(short)]
+    hostname: String,
     #[structopt(long)]
     efi_device_root: String,
     #[structopt(long)]
@@ -47,7 +51,6 @@ pub struct Stage1Config {
     swap_device_name: String,
     #[structopt(long)]
     swap_device_crypt_name: String,
-    disk_pwd: Option<String>,
 }
 
 impl Stage1Config {
@@ -100,10 +103,27 @@ impl Stage1Saved {
     }
 }
 
-#[derive(Debug, StructOpt)]
+#[derive(Debug, serde::Serialize, serde::Deserialize)]
 pub struct Stage2Config {
     username: String,
     hostname: String,
+    initialized_devices: InitializedDevices,
+    pwd: String,
+}
+
+#[derive(Debug, StructOpt)]
+pub struct Stage2Saved {
+    cfg_path: String,
+}
+
+impl Stage2Saved {
+    fn into_stage_2(self) -> Result<Stage2Config> {
+        let bytes = std::fs::read(&self.cfg_path)
+            .map_err(|e| Error::Fs(format!("Failed to read stage2 from {} {e}", self.cfg_path)))?;
+        let s2 = serde_json::from_slice(&bytes)
+            .map_err(|e| Error::Parse(format!("Failed to deserialize stage2 {e}")))?;
+        Ok(s2)
+    }
 }
 
 #[derive(Debug, StructOpt)]
@@ -116,7 +136,7 @@ pub struct Stage3Config {
 enum Installer {
     Stage1Saved(Stage1Saved),
     Stage1(Stage1Config),
-    Stage2(Stage2Config),
+    Stage2(Stage2Saved),
     Stage3(Stage3Config),
 }
 
@@ -130,7 +150,7 @@ fn main() -> Result<()> {
             run_stage_1(stage_1)?;
         }
         Installer::Stage2(stage_2) => {
-            run_stage_2(stage_2)?;
+            run_stage_2(stage_2.into_stage_2()?)?;
         }
         Installer::Stage3(stage_3) => {
             run_stage_3(stage_3)?;
@@ -139,7 +159,7 @@ fn main() -> Result<()> {
     Ok(())
 }
 
-fn run_stage_1(mut stage_1: Stage1Config) -> Result<()> {
+fn run_stage_1(stage_1: Stage1Config) -> Result<()> {
     let devices = stage_1.as_devices();
     let pwd = get_password()?;
     let root_proc = init_cryptodisk(&devices.root, &pwd)?;
@@ -152,22 +172,18 @@ fn run_stage_1(mut stage_1: Stage1Config) -> Result<()> {
     await_children(vec![root_proc, home_proc, swap_proc])?;
     create_filesystems(&devices)?;
     mount_disks(&devices)?;
-    dump_cfg(&mut stage_1, &pwd)?;
     copy_self()?;
+    let devices = get_initialized_device_info(devices)?;
+    dump_cfg(stage_1, devices, &pwd)?;
     pacstrap_and_enter()?;
     Ok(())
 }
 
 fn run_stage_2(stage_2: Stage2Config) -> Result<()> {
-    let stage_1 = Stage1Saved {
-        cfg_path: PathBuf::from("/home/stage1.json"),
-    }
-    .into_stage_1()?;
-    let devices = stage_1.as_devices();
     update_pacman_conf()?;
-    let pw = &stage_1.disk_pwd.unwrap();
+    let devices = stage_2.initialized_devices;
+    let pw = &stage_2.pwd;
     let keyfiles = generate_keyfiles(&devices, pw)?;
-    let devices = get_initialized_device_info(devices.clone())?;
     install_base_packages()?;
     std::thread::scope(|scope| {
         let default_grub = scope.spawn(|| update_default_grub(&devices, &keyfiles));

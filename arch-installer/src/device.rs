@@ -1,6 +1,6 @@
 use structopt::StructOpt;
 
-#[derive(Debug, Clone, Eq, PartialEq, StructOpt)]
+#[derive(Debug, Clone, Eq, PartialEq, StructOpt, serde::Serialize, serde::Deserialize)]
 pub struct DeviceConfig {
     #[structopt(short)]
     pub(crate) root_device: String,
@@ -19,7 +19,7 @@ impl DeviceConfig {
     }
 }
 
-#[derive(Debug, Clone, Eq, PartialEq)]
+#[derive(Debug, Clone, Eq, PartialEq, serde::Serialize, serde::Deserialize)]
 pub struct InitializedDevice {
     pub(crate) cfg: DeviceConfig,
     pub(crate) device_uuid: String,
@@ -34,7 +34,7 @@ pub struct Devices {
     pub home: DeviceConfig,
 }
 
-#[derive(Debug, Clone, Eq, PartialEq)]
+#[derive(Debug, Clone, Eq, PartialEq, serde::Serialize, serde::Deserialize)]
 pub struct InitializedDevices {
     pub efi: InitializedDevice,
     pub root: InitializedDevice,
