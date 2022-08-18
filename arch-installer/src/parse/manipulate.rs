@@ -123,10 +123,13 @@ HELPEOF
             ];
             let mut line_content = line.trim().to_string();
             for token in tokens {
-                line_content = line_content.replace(&format!("{token} "), "");
+                if line_content.contains(token) {
+                    line_content = line_content.replace(token, "");
+                }
             }
-            // Remove trailing )
+            // Remove trailing ')'
             line_content.remove(line_content.len() - 1);
+            line_content = line_content.trim().to_string();
             for (idx, token) in tokens.into_iter().enumerate() {
                 if idx == tokens.len() - 1 {
                     let _ = line_content.write_fmt(format_args!("{})\n", token));
@@ -135,6 +138,8 @@ HELPEOF
                 }
             }
             new_content.push_str(&line_content);
+        } else {
+            let _ = new_content.write_fmt(format_args!("{line}\n"));
         }
     }
     std::fs::write(mkinitcpio, new_content.as_bytes())

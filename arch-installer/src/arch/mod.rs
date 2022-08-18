@@ -20,9 +20,9 @@ pub fn pacstrap_and_enter() -> Result<()> {
     debug!("Entering arch-chroot");
     std::process::Command::new("arch-chroot")
         .arg("/mnt")
-        .arg("/home/arch-installer-bin")
-        .arg("stage2")
-        .arg("/home/stage2.json")
+        .arg("/bin/bash")
+        .arg("-c")
+        .arg("/home/arch-installer-bin stage2 /home/stage2.json")
         .exec();
     Ok(())
 }
@@ -271,7 +271,7 @@ pub fn install_rust() -> Result<()> {
     Ok(())
 }
 
-pub fn configure_grub(device: &str) -> Result<()> {
+pub fn configure_grub() -> Result<()> {
     debug!("Configuring grub");
     run_binary(
         "grub-install",
@@ -281,12 +281,6 @@ pub fn configure_grub(device: &str) -> Result<()> {
             "--bootloader-id=GRUB",
             "--recheck",
         ],
-        None,
-        false,
-    )?;
-    run_binary(
-        "grub-install",
-        vec!["--target=i386-pc", "--recheck", &format!("/dev/{device}")],
         None,
         false,
     )?;

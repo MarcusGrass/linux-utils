@@ -207,7 +207,7 @@ fn run_stage_2(stage_2: Stage2Config) -> Result<()> {
         sudoers.join().unwrap()?;
         Ok(())
     })?;
-    configure_grub(&format!("/dev/{}", devices.root.cfg.root_device))?;
+    configure_grub()?;
     info!("Stage 2 complete, set a root password, a user password for {}, exit chroot, umount -a, then reboot", stage_2.username);
     Ok(())
 }
