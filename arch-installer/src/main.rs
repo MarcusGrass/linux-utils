@@ -208,7 +208,7 @@ fn run_stage_2(stage_2: Stage2Config) -> Result<()> {
     })?;
     configure_grub()?;
     dump_install_files(&stage_2.username)?;
-    info!("Stage 2 complete, set a root password, a user password for {}, exit chroot, umount -a, then reboot", stage_2.username);
+    info!("Stage 2 complete, set a root password, a user password for {}, exit chroot, umount -a, then reboot, don't forget to enable iwd and dhcpcd and connect to the internet on the next boot.", stage_2.username);
     Ok(())
 }
 
@@ -230,6 +230,8 @@ fn run_stage_3() -> Result<()> {
         services.join().unwrap()?;
         Ok(())
     })?;
-    info!("Done, remember to delete the old config");
+    info!(
+        "Done, remember to delete the old config at /home/stage2.json and /home/{user}/stage2.json, also install graphics drivers."
+    );
     Ok(())
 }
