@@ -21,6 +21,8 @@ pub fn pacstrap_and_enter() -> Result<()> {
     std::process::Command::new("arch-chroot")
         .arg("/mnt")
         .arg("/home/arch-installer-bin")
+        .arg("stage2")
+        .arg("/home/stage2.json")
         .exec();
     Ok(())
 }
