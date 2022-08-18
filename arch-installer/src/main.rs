@@ -216,5 +216,6 @@ fn run_stage_3(stage_3: Stage3Config) -> Result<()> {
         pulse.join().unwrap()?;
         Ok(())
     })?;
+    info!("Done, remember to delete the old config");
     Ok(())
 }
