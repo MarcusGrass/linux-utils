@@ -311,6 +311,12 @@ pub fn get_user() -> Result<String> {
     }
 }
 
+pub fn add_user_to_wheel(username: &str) -> Result<()> {
+    run_binary("usermod", vec!["-a", "-G", "wheel", username], None, false)?;
+    debug!("Added {username} to wheel");
+    Ok(())
+}
+
 #[cfg(test)]
 mod tests {
     use crate::arch::get_user;

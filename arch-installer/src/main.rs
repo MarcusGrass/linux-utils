@@ -1,7 +1,8 @@
 use crate::arch::{
-    add_to_sudoers, configure_grub, create_hostname, create_hosts, create_user, enable_services,
-    finalize_set_locale, get_user, install_base_packages, install_rust, install_yay_and_packages,
-    pacstrap_and_enter, partial_set_locale, start_pulse, update_pacman_conf,
+    add_to_sudoers, add_user_to_wheel, configure_grub, create_hostname, create_hosts, create_user,
+    enable_services, finalize_set_locale, get_user, install_base_packages, install_rust,
+    install_yay_and_packages, pacstrap_and_enter, partial_set_locale, start_pulse,
+    update_pacman_conf,
 };
 use crate::device::{DeviceConfig, Devices, InitializedDevices};
 use crate::disks::{
@@ -206,6 +207,7 @@ fn run_stage_2(stage_2: Stage2Config) -> Result<()> {
         sudoers.join().unwrap()?;
         Ok(())
     })?;
+    add_user_to_wheel(&stage_2.username)?;
     configure_grub()?;
     dump_install_files(&stage_2.username)?;
     info!("Stage 2 complete, set a root password, a user password for {}, exit chroot, umount -a, then reboot, don't forget to enable iwd and dhcpcd and connect to the internet on the next boot.", stage_2.username);

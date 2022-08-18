@@ -214,9 +214,17 @@ fn generate_keyfile(label: &str, path: &str, pw: &str) -> Result<()> {
 struct ConfigSpec {
     relative_source: String,
     abs_target: String,
+    with_sudo: bool,
 }
 
 impl ConfigSpec {
+    fn do_replace(&self, cfg_dir: &str) -> Result<()> {
+        if self.with_sudo {
+            self.replace_root(cfg_dir)
+        } else {
+            self.replace(cfg_dir)
+        }
+    }
     fn replace(&self, cfg_dir: &str) -> Result<()> {
         let pb = PathBuf::from(cfg_dir).join(&self.relative_source);
         let parent = pb.parent().ok_or_else(|| {
@@ -234,6 +242,36 @@ impl ConfigSpec {
         ensure_dir_or_try_create(tgt_parent)?;
         std::fs::copy(&pb, &tgt)
             .map_err(|e| Error::Fs(format!("Failed to copy {:?} to {:?} {e}", pb, tgt)))?;
+        Ok(())
+    }
+
+    fn replace_root(&self, cfg_dir: &str) -> Result<()> {
+        let pb = PathBuf::from(cfg_dir).join(&self.relative_source);
+        let parent = pb
+            .parent()
+            .ok_or_else(|| {
+                Error::Fs(format!(
+                    "Could not find parent dir to relative source {pb:?}"
+                ))
+            })?
+            .to_str()
+            .unwrap();
+        run_binary("sudo", vec!["-p", parent], None, false)?;
+        ensure_dir_or_try_create(parent)?;
+        let tgt = PathBuf::from(&self.abs_target);
+        let tgt_parent = tgt
+            .parent()
+            .ok_or_else(|| {
+                Error::Fs(format!(
+                    "Could not find parent dir to absolute destination {tgt:?}"
+                ))
+            })?
+            .to_str()
+            .unwrap();
+        run_binary("sudo", vec!["-p", tgt_parent], None, false)?;
+        let src = pb.to_str().unwrap();
+        let dest = tgt.to_str().unwrap();
+        run_binary("sudo", vec!["cp", src, dest], None, false)?;
         Ok(())
     }
 }
@@ -272,45 +310,77 @@ pub fn copy_user_config(username: &str, cfg_dir: &str) -> Result<()> {
     let dunst = ".config/dunst/dunstrc";
     let gnupg = ".gnupg/gpg-agent.conf";
     let ssh = ".ssh/config";
+    let blacklist = "etc/modprobe.d/user-blacklist.conf";
+    let xorg_keyboard_layout_conf = "etc/X11/xorg.conf.d/20-keyboard-layout.conf";
+    let xorg_screen_power_conf = "etc/X11/xorg.conf.d/30-screen-power.conf";
+    let doas_conf = "etc/doas.conf";
     let configs = [
         ConfigSpec {
             relative_source: gitconfig.to_string(),
             abs_target: format!("/home/{}/{}", username, gitconfig),
+            with_sudo: false,
         },
         ConfigSpec {
             relative_source: xprofile.to_string(),
             abs_target: format!("/home/{}/{}", username, xprofile),
+            with_sudo: false,
         },
         ConfigSpec {
             relative_source: xinitrc.to_string(),
             abs_target: format!("/home/{}/{}", username, xinitrc),
+            with_sudo: false,
         },
         ConfigSpec {
             relative_source: alacritty_yml.to_string(),
             abs_target: format!("/home/{}/{}", username, alacritty_yml),
+            with_sudo: false,
         },
         ConfigSpec {
             relative_source: dunst.to_string(),
             abs_target: format!("/home/{}/{}", username, dunst),
+            with_sudo: false,
         },
         ConfigSpec {
             relative_source: gnupg.to_string(),
             abs_target: format!("/home/{}/{}", username, gnupg),
+            with_sudo: false,
         },
         ConfigSpec {
             relative_source: ssh.to_string(),
             abs_target: format!("/home/{}/{}", username, ssh),
+            with_sudo: false,
         },
         ConfigSpec {
             relative_source: bashrc.to_string(),
             abs_target: format!("/home/{}/{}", username, bashrc),
+            with_sudo: false,
+        },
+        ConfigSpec {
+            relative_source: blacklist.to_string(),
+            abs_target: format!("/etc/{}", blacklist),
+            with_sudo: true,
+        },
+        ConfigSpec {
+            relative_source: xorg_keyboard_layout_conf.to_string(),
+            abs_target: format!("/etc/{}", xorg_keyboard_layout_conf),
+            with_sudo: true,
+        },
+        ConfigSpec {
+            relative_source: xorg_screen_power_conf.to_string(),
+            abs_target: format!("/etc/{}", xorg_screen_power_conf),
+            with_sudo: true,
+        },
+        ConfigSpec {
+            relative_source: doas_conf.to_string(),
+            abs_target: format!("/etc/{}", doas_conf),
+            with_sudo: true,
         },
     ];
 
     std::thread::scope(|scope| {
         let mut handles = vec![];
         for config in &configs {
-            handles.push(scope.spawn(|| config.replace(cfg_dir)));
+            handles.push(scope.spawn(|| config.do_replace(cfg_dir)));
         }
         for handle in handles {
             handle.join().unwrap()?;
