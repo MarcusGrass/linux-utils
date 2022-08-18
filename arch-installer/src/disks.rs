@@ -131,7 +131,7 @@ pub fn write_or_overwrite(path: impl AsRef<Path>, content: &[u8]) -> Result<()> 
 pub fn dump_cfg(stage_1: &mut Stage1Config, pwd: &str) -> Result<()> {
     stage_1.disk_pwd = Some(pwd.to_string());
     write_or_overwrite(
-        "/mnt/tmp/stage1.json",
+        "/mnt/home/stage1.json",
         serde_json::to_string(stage_1)
             .map_err(|e| Error::Parse(format!("Failed to serialize stage1 config {e}")))?
             .as_bytes(),

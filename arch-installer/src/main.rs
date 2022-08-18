@@ -159,7 +159,7 @@ fn run_stage_1(mut stage_1: Stage1Config) -> Result<()> {
 
 fn run_stage_2(stage_2: Stage2Config) -> Result<()> {
     let stage_1 = Stage1Saved {
-        cfg_path: PathBuf::from("/tmp/stage1.json"),
+        cfg_path: PathBuf::from("/home/stage1.json"),
     }
     .into_stage_1()?;
     let devices = stage_1.as_devices();
