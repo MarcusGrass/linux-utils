@@ -1,7 +1,7 @@
 use crate::disks::{ensure_dir_or_try_create, write_or_overwrite};
 use crate::error::Result;
 use crate::process::run_binary;
-use crate::{debug, Devices, Error};
+use crate::{debug, Error};
 use std::fmt::Write;
 use std::os::unix::process::CommandExt;
 
@@ -111,9 +111,9 @@ pub fn update_pacman_conf() -> Result<()> {
     let mut on_multilib = false;
     let mut new_content = String::new();
     for line in content.lines() {
-        if line.starts_with("[multilib]") {
+        if line.starts_with("#[multilib]") {
             on_multilib = true;
-            let _ = new_content.write_fmt(format_args!("{line}\n"));
+            let _ = new_content.write_fmt(format_args!("[multilib]\n"));
         } else if on_multilib {
             let _ = new_content.write_fmt(format_args!("{}\n", line.replace('#', "")));
             on_multilib = false;

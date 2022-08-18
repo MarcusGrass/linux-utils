@@ -166,16 +166,9 @@ fn run_stage_2(stage_2: Stage2Config) -> Result<()> {
     let devices = stage_1.as_devices();
     update_pacman_conf()?;
     let pw = &stage_1.disk_pwd.unwrap();
-    let (devices, keyfiles) = std::thread::scope(|scope| {
-        let initialized = scope.spawn(|| get_initialized_device_info(devices.clone()));
-        let install = scope.spawn(install_base_packages);
-        let create_keyfiles = scope.spawn(|| generate_keyfiles(&devices, pw));
-        install.join().unwrap()?;
-        Ok((
-            initialized.join().unwrap()?,
-            create_keyfiles.join().unwrap()?,
-        ))
-    })?;
+    let keyfiles = generate_keyfiles(&devices, pw)?;
+    let devices = get_initialized_device_info(devices.clone())?;
+    install_base_packages()?;
     std::thread::scope(|scope| {
         let default_grub = scope.spawn(|| update_default_grub(&devices, &keyfiles));
         let mkinitcpio = scope.spawn(|| update_mkinitcpio(&devices, &keyfiles));
