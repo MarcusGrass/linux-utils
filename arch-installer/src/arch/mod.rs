@@ -129,13 +129,13 @@ pub fn update_pacman_conf() -> Result<()> {
     let mut on_multilib = false;
     let mut new_content = String::new();
     for line in content.lines() {
-        if line.starts_with("#[multilib]") {
+        if line.trim().starts_with("#[multilib]") {
             on_multilib = true;
             let _ = new_content.write_fmt(format_args!("[multilib]\n"));
         } else if on_multilib {
             let _ = new_content.write_fmt(format_args!("{}\n", line.replace('#', "")));
             on_multilib = false;
-        } else if content.starts_with("#ParallelDownloads") {
+        } else if line.trim().starts_with("#ParallelDownloads") {
             let _ = new_content.write_fmt(format_args!("ParallelDownloads = 50\n"));
         } else {
             let _ = new_content.write_fmt(format_args!("{line}\n"));

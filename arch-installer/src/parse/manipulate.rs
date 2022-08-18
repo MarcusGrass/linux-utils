@@ -13,8 +13,8 @@ pub fn update_default_grub(devices: &InitializedDevices, keyfiles: &Keyfiles) ->
         "cryptdevice=UUID={}:{} ",
         devices.root.device_uuid, devices.root.cfg.crypt_device_name
     );
-    let root_str = format!("root={:?} ", devices.root.cfg.crypt_device_path());
-    let root_crypt_key = format!("cryptkey=rootfs:/root/{} ", keyfiles.root);
+    let root_str = format!("root={} ", devices.root.cfg.crypt_device_path());
+    let root_crypt_key = format!("cryptkey=rootfs:/root{} ", keyfiles.root);
     let resume = &format!("{} ", devices.swap.cfg.crypt_device_path());
     for line in content.lines() {
         if line.starts_with("GRUB_CMDLINE_LINUX=") {
