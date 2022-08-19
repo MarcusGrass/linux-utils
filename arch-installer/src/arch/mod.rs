@@ -136,7 +136,7 @@ pub fn update_pacman_conf() -> Result<()> {
             let _ = new_content.write_fmt(format_args!("{}\n", line.replace('#', "")));
             on_multilib = false;
         } else if line.trim().starts_with("#ParallelDownloads") {
-            let _ = new_content.write_fmt(format_args!("ParallelDownloads = 50\n"));
+            let _ = new_content.write_fmt(format_args!("ParallelDownloads = 25\n"));
         } else {
             let _ = new_content.write_fmt(format_args!("{line}\n"));
         }
