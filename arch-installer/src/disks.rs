@@ -256,7 +256,7 @@ impl ConfigSpec {
             })?
             .to_str()
             .unwrap();
-        run_binary("sudo", vec!["-p", parent], None, false)?;
+        run_binary("sudo", vec!["mkdir", "-p", parent], None, false)?;
         ensure_dir_or_try_create(parent)?;
         let tgt = PathBuf::from(&self.abs_target);
         let tgt_parent = tgt
