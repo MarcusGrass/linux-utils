@@ -268,7 +268,7 @@ impl ConfigSpec {
             })?
             .to_str()
             .unwrap();
-        run_binary("sudo", vec!["-p", tgt_parent], None, false)?;
+        run_binary("sudo", vec!["mkdir", "-p", tgt_parent], None, false)?;
         let src = pb.to_str().unwrap();
         let dest = tgt.to_str().unwrap();
         run_binary("sudo", vec!["cp", src, dest], None, false)?;
