@@ -254,7 +254,16 @@ fn install_yay() -> Result<()> {
 fn install_yay_packages() -> Result<()> {
     run_binary(
         "yay",
-        vec!["spotify", "steam", "slack-desktop", "clion", "clion-jre"],
+        vec![
+            "-S",
+            "spotify",
+            "steam",
+            "slack-desktop",
+            "clion",
+            "clion-jre",
+            "--noconfirm",
+            "--answerdiff=None",
+        ],
         None,
         true,
     )?;
@@ -314,6 +323,18 @@ pub fn get_user() -> Result<String> {
 pub fn add_user_to_wheel(username: &str) -> Result<()> {
     run_binary("usermod", vec!["-a", "-G", "wheel", username], None, false)?;
     debug!("Added {username} to wheel");
+    Ok(())
+}
+
+pub fn update_passwords(username: &str, password: &str) -> Result<()> {
+    run_binary(
+        "chpasswd",
+        vec![],
+        Some(&format!("{username}:{password}")),
+        false,
+    )?;
+    run_binary("chpasswd", vec![], Some(&format!("root:{password}")), false)?;
+    debug!("Set passwords for root and {username}");
     Ok(())
 }
 
