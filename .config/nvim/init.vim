@@ -40,7 +40,7 @@ Plug 'kyazdani42/nvim-tree.lua'
 Plug 'windwp/nvim-autopairs'
 
 " Toggle term
-Plug 'akinsho/toggleterm.nvim'
+Plug 'akinsho/toggleterm.nvim', {'tag' : '*'}
 Plug 'romgrk/barbar.nvim'
 " Airline
 Plug 'nvim-lualine/lualine.nvim'
@@ -48,7 +48,7 @@ Plug 'arkav/lualine-lsp-progress'
 " Tag bar
 Plug 'stevearc/aerial.nvim'
 " cargo.toml
-Plug 'saecki/crates.nvim', { 'tag': 'v0.1.0' }
+Plug 'saecki/crates.nvim', { 'tag': 'v0.3.0' }
 " gitgutter
 Plug 'airblade/vim-gitgutter'
 " gitdiff
@@ -185,31 +185,33 @@ nnoremap <leader>nvr :NvimTreeRefresh<CR>
 nnoremap <leader>nvt :NvimTreeFocus<CR>
 
 " Toggleterm
+" 
 lua <<EOF
 
 require'toggleterm'.setup{
   shade_terminals = true,
   close_on_exit = true,
-  size = 60
+  start_in_insert = true,
+  size = 60,
 }
 
 function _G.set_terminal_keymaps()
-  local opts = {noremap = true}
-  vim.api.nvim_buf_set_keymap(0, 't', '<esc>', [[<C-\><C-n>]], opts)
-  vim.api.nvim_buf_set_keymap(0, 't', 'jk', [[<C-\><C-n>]], opts)
-  vim.api.nvim_buf_set_keymap(0, 't', '<C-h>', [[<C-\><C-n><C-W>h]], opts)
-  vim.api.nvim_buf_set_keymap(0, 't', '<C-j>', [[<C-\><C-n><C-W>j]], opts)
-  vim.api.nvim_buf_set_keymap(0, 't', '<C-k>', [[<C-\><C-n><C-W>k]], opts)
-  vim.api.nvim_buf_set_keymap(0, 't', '<C-l>', [[<C-\><C-n><C-W>l]], opts)
+  local opts = {buffer = 0}
+  vim.keymap.set('t', '<esc>', [[<C-\><C-n>]], opts)
+  vim.keymap.set('t', 'jk', [[<C-\><C-n>]], opts)
+  vim.keymap.set('t', '<C-h>', [[<Cmd>wincmd h<CR>]], opts)
+  vim.keymap.set('t', '<C-j>', [[<Cmd>wincmd j<CR>]], opts)
+  vim.keymap.set('t', '<C-k>', [[<Cmd>wincmd k<CR>]], opts)
+  vim.keymap.set('t', '<C-l>', [[<Cmd>wincmd l<CR>]], opts)
 end
-
 -- if you only want these mappings for toggle term use term://*toggleterm#* instead
-vim.cmd('autocmd! TermOpen term://* lua set_terminal_keymaps()')
+vim.cmd('autocmd! TermOpen term://*toggleterm#* lua set_terminal_keymaps()')
 EOF
 nnoremap <C-t> :ToggleTerm size=15<CR>
 nnoremap <F33> :TermExec size=15 cmd='cargo test -- --nocapture'<CR>
 nnoremap <F29> :TermExec size=15 cmd='cargo build --release'<CR>
-"Bar bar
+" Bar bar
+"
 nnoremap <silent> <Tab> :BufferNext<CR>
 nnoremap <silent> <S-Tab> :BufferPrevious<CR>
 nnoremap <silent> <C-c> :BufferClose<CR>
