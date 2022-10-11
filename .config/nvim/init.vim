@@ -2,6 +2,7 @@ call plug#begin('~/.config/nvim/plugged')
 " Collection of common configurations for the Nvim LSP client
 Plug 'neovim/nvim-lspconfig'
 
+Plug 'ziglang/zig.vim'
 " Completion framework
 Plug 'hrsh7th/nvim-cmp'
 
@@ -40,8 +41,6 @@ Plug 'windwp/nvim-autopairs'
 
 " Toggle term
 Plug 'akinsho/toggleterm.nvim'
-" Tabs
-Plug 'kyazdani42/nvim-web-devicons'
 Plug 'romgrk/barbar.nvim'
 " Airline
 Plug 'nvim-lualine/lualine.nvim'
@@ -97,12 +96,32 @@ set matchpairs+=<:>
 
 let mapleader = ' '
 
+" Maybe autostart unfocused
+autocmd StdinReadPre * let s:std_in=1
+autocmd VimEnter * NvimTreeToggle
+autocmd VimEnter * if argc() > 0 || exists("s:std_in") | wincmd p | endif
+
 " Disable highlight after search
 nnoremap <CR> :noh<CR><CR>
 
 " =======================================
 " ==========Convenience plugs============
 " =======================================
+" gitgutter
+nnoremap <leader>j :GitGutterNextHunk<CR>
+nnoremap <leader>k :GitGutterPrevHunk<CR>
+
+lua <<EOF
+require'nvim-web-devicons'.setup {
+ -- globally enable different highlight colors per icon (default to true)
+ -- if set to false all icons will have the default icon's color
+ color_icons = true;
+ -- globally enable default icons (default to false)
+ -- will get overriden by `get_icons` option
+ default = true;
+}
+EOF
+
 " crates
 lua <<EOF
 require('crates').setup()
@@ -119,7 +138,9 @@ require'nvim-treesitter.configs'.setup {
         "bash",
         "json",
         "yaml",
-        "python"
+        "python",
+        "zig",
+        "rust",
     }
 }
 EOF
@@ -136,16 +157,11 @@ require('lualine').setup {
   },
 }
 EOF
-let g:nvim_tree_disable_window_picker = 1
 lua <<EOF
 require'nvim-tree'.setup {
   open_on_setup       = true,
-  auto_close          = false,
   open_on_tab         = true,
-  update_to_buf_dir   = {
-    enable = true,
-    auto_open = true,
-  },
+  
   git = {
     enable = true,
     ignore = true,
@@ -160,14 +176,13 @@ require'nvim-tree'.setup {
       error = "",
     }
   },
+  view = {
+      width = 30,
+  },
 }
 EOF
 nnoremap <leader>nvr :NvimTreeRefresh<CR>
 nnoremap <leader>nvt :NvimTreeFocus<CR>
-" Maybe autostart unfocused
-autocmd StdinReadPre * let s:std_in=1
-autocmd VimEnter * NvimTreeToggle
-autocmd VimEnter * if argc() > 0 || exists("s:std_in") | wincmd p | endif
 
 " Toggleterm
 lua <<EOF
@@ -219,51 +234,11 @@ require('telescope').setup{
     },
   }
 }
+require('telescope').load_extension('aerial')
 EOF
 nnoremap <C-S-F> :Telescope live_grep<CR>
 nnoremap <C-G> :Telescope find_files<CR>
-"aerial
-nnoremap <C-s> :AerialToggle!<CR>
 
-lua <<EOF
--- Call the setup function to change the default behavior
-require("aerial").setup({
-  -- Priority list of preferred backends for aerial.
-  -- This can be a filetype map (see :help aerial-filetype-map)
-  backends = { "lsp", "treesitter", "markdown" },
-
-  -- Enum: persist, close, auto, global
-  --   persist - aerial window will stay open until closed
-  --   close   - aerial window will close when original file is no longer visible
-  --   auto    - aerial window will stay open as long as there is a visible
-  --             buffer to attach to
-  --   global  - same as 'persist', and will always show symbols for the current buffer
-  close_behavior = "auto",
-
-  -- Set to false to remove the default keybindings for the aerial buffer
-  default_bindings = true,
-
-  -- Enum: prefer_right, prefer_left, right, left, float
-  -- Determines the default direction to open the aerial window. The 'prefer'
-  -- options will open the window in the other direction *if* there is a
-  -- different buffer in the way of the preferred direction
-  default_direction = "prefer_right",
-
-  -- Disable aerial on files with this many lines
-  disable_max_lines = 10000,
-
-  -- A list of all symbols to display. Set to false to display all symbols.
-  -- This can be a filetype map (see :help aerial-filetype-map)
-  -- To see all available values, see :help SymbolKind
-  filter_kind = false,
-  -- Automatically open aerial when entering supported buffers.
-  -- This can be a function (see :help aerial-open-automatic)
-  open_automatic = true,
-  -- Run this command after jumping to a symbol (false will disable)
-  post_jump_cmd = "normal! zz",
-
-})
-EOF
 " =======================================
 " ============Language server============
 " =======================================
@@ -318,10 +293,13 @@ end
 nvim_lsp.pylsp.setup({
     on_attach = do_attach
 })
+
+nvim_lsp.zls.setup({
+    on_attach = do_attach
+})
 local opts = {
     tools = { -- rust-tools options
         autoSetHints = true,
-        hover_with_actions = true,
         inlay_hints = {
             show_parameter_hints = false,
             parameter_hints_prefix = "",
@@ -350,8 +328,44 @@ local opts = {
 }
 require('rust-tools').setup(opts)
 require('nvim-autopairs').setup{}
-
 EOF
+
+nnoremap <C-s> :AerialToggle!<CR>
+
+lua <<EOF
+-- Call the setup function to change the default behavior
+require("aerial").setup({
+  -- Priority list of preferred backends for aerial.
+  -- This can be a filetype map (see :help aerial-filetype-map)
+  backends = { "lsp", "treesitter", "markdown" },
+
+  -- Set to false to remove the default keybindings for the aerial buffer
+  default_bindings = true,
+
+  -- Enum: prefer_right, prefer_left, right, left, float
+  -- Determines the default direction to open the aerial window. The 'prefer'
+  -- options will open the window in the other direction *if* there is a
+  -- different buffer in the way of the preferred direction
+  default_direction = "prefer_right",
+
+  -- Disable aerial on files with this many lines
+  disable_max_lines = 10000,
+
+  -- A list of all symbols to display. Set to false to display all symbols.
+  -- This can be a filetype map (see :help aerial-filetype-map)
+  -- To see all available values, see :help SymbolKind
+  filter_kind = false,
+  -- Automatically open aerial when entering supported buffers.
+  -- This can be a function (see :help aerial-open-automatic)
+  open_automatic = true,
+  -- Run this command after jumping to a symbol (false will disable)
+  post_jump_cmd = "normal! zz",
+
+})
+EOF
+
+
+
 " See https://github.com/hrsh7th/nvim-cmp#basic-configuration
 lua <<EOF
 local cmp_autopairs = require('nvim-autopairs.completion.cmp')
@@ -407,5 +421,4 @@ set signcolumn=yes:1
 
 " format on write
 autocmd BufWritePre *.rs lua vim.lsp.buf.formatting_sync(nil, 200)
-
 
