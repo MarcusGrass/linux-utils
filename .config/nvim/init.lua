@@ -1,0 +1,5 @@
+require "plugins"
+require "editor_cfg"
+require "plugin_cfg"
+require "key_bindings"
+require "auto"
