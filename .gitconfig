@@ -1,11 +1,14 @@
 [user]
-        email = marcus.grass@gmail.com
+        email = marcus.grass@protonmail.com
         name = gramar
+        signingkey = E31F6D1234CED320FD09C85BB21A903D84640F68
 [pull]
         rebase = true
 [push]
         default = current
 [rerere]
         enabled = true
-[init]
-        defaultBranch = main
+[core]
+        autocrlf = input
+[commit]
+        gpgsign = true
