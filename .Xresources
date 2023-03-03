@@ -4,3 +4,4 @@ XTerm*faceName: JetBrainsMono Nerd Font Mono:style=Regular:size=12:antialias=tru
 XTerm*cursorTheme: Adwaita
 Xcursor.size: 32
 XTerm*pointerShape: left_ptr
+XTerm*selectToClipboard: true
