@@ -1,0 +1,23 @@
+# Static cryptsetup and busybox for initramfs
+sys-fs/cryptsetup static static-libs -udev
+sys-fs/lvm2 static static-libs -udev
+sys-apps/busybox static static-libs -pam
+dev-libs/json-c static-libs
+dev-libs/popt static-libs
+sys-apps/util-linux static-libs
+app-crypt/argon2 static-libs
+dev-libs/openssl static-libs
+virtial/libcrypt static-libs
+sys-libs/libxcrypt static-libs
+
+# Graphite for some optimization optionslto for lto's sake
+sys-devel/gcc graphice lto
+
+# Neovim with lto
+app-editors/neovim lto
+
+# Git 
+dev-vcs/git blksha1 curl gpg
+
+# Browser
+www-client/firefox dbus lto pgo

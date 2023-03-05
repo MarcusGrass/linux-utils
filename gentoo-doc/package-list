@@ -1,0 +1,17 @@
+# Base
+app-editors/neovim
+net-misc/dhcpcd
+sys-boot/efibootmgr
+# sys-firmware/intel-microcode
+sys-fs/cryptsetup
+sys-apps/busybox
+sys-kernel/gentoo-sources
+sys-kernel/linux-firmware
+sys-apps/pciutils
+# clang for kernel lto
+sys-devel/clang
+sys-devel/llvm
+sys-devel/lld
+# mold
+sys-devel/mold
+
