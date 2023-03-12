@@ -1,0 +1,7 @@
+# Required
+net-im/slack ~amd64
+# Required
+dev-util/clion ~amd64
+# Required for fontawesome 6
+media-fonts/fontawesome ~amd64
+

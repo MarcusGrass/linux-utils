@@ -1,0 +1,66 @@
+# Don't blow up the disk with sys logs, cba setting up rotation
+app-admin/sysklogd logrotate
+
+# Static initramfs needs these static-libs
+app-crypt/argon2 static-libs
+
+# gpg smartcard support
+app-crypt/gnupg smartcard usb
+
+# Neovim with lto
+app-editors/neovim lto
+
+# Bash with pgo
+app-shells/bash pgo
+
+# Python optimized
+dev-lang/python lto pgo
+
+# Static initramfs needs these static-libs
+dev-libs/json-c static-libs
+dev-libs/openssl static-libs
+dev-libs/popt static-libs
+
+# Git with gpg support
+dev-vcs/git blksha1 curl gpg
+
+# Bluetooth pulse
+media-sound/pulseaudio bluetooth
+
+# Firefox dep
+media-libs/libvpx-1.12.0-r1 postproc
+
+# Needed to break firefox circular dependency
+media-libs/libsndfile minimal
+
+# Pulse spotify
+media-sound/spotify
+
+# Node lto
+net-libs/nodejs lto
+
+# Static initramfs needs static busybox, static busybox can't have the pam feature
+sys-apps/busybox static static-libs -pam
+sys-apps/util-linux static-libs
+
+# No systemd
+sys-apps/dbus elogind -systemd
+
+# Build gcc with LTO and graphite support
+sys-devel/gcc graphite lto
+
+# Just build intel microcode for host
+sys-firmware/intel-microcode hostonly
+
+# Needs this static for initramfs
+sys-fs/cryptsetup static static-libs -udev
+sys-fs/lvm2 static static-libs -udev
+sys-libs/libxcrypt static-libs
+virtual/libcrypt static-libs
+
+# Firefox optimized (allegedly pgo doubles compile time)
+www-client/firefox dbus lto pgo
+
+# elogind and udev support, no systemd, firefox needs xvfb
+x11-base/xorg-server xvfb elogind udev -systemd
+
