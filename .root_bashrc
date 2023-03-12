@@ -11,4 +11,5 @@ export PATH="$HOME/.local/bin:$PATH"
 shopt -s cdspell
 # System
 alias off='shutdown -h now'
+alias syyuu='emerge-webrsync && emerge --sync && emerge -avuDNU @world && emerge --depclean'
 PS1='[\u@\h \W]\$ '

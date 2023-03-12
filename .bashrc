@@ -9,7 +9,6 @@ export VISUAL=nvim
 export EDITOR="$VISUAL"
 export TERM=xterm-256color
 export PATH="$HOME/.local/bin:$HOME/.cargo/bin:$PATH"
-export XDG_CONFIG_HOME="$HOME/.config"
 shopt -s cdspell
 # System
 alias off='shutdown -h now'
