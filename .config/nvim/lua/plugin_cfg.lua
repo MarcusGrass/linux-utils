@@ -162,7 +162,6 @@ cmp.setup({
 
 --- File browser
 require'nvim-tree'.setup {
-    open_on_setup       = true,
     open_on_tab         = true,
 
     git = {
