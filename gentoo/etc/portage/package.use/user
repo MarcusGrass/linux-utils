@@ -37,7 +37,7 @@ gnome-base/gnome-keyring ssh-agent
 media-sound/pulseaudio bluetooth
 
 # Firefox dep
-media-libs/libvpx-1.12.0-r1 postproc
+media-libs/libvpx postproc
 
 # Get layers for vulkan
 media-libs/vulkan-loaders layers
