@@ -1,6 +1,9 @@
 # Don't blow up the disk with sys logs, cba setting up rotation
 app-admin/sysklogd logrotate
 
+# Dmenu integration for pass
+app-admin/pass dmenu
+
 # Static initramfs needs these static-libs
 app-crypt/argon2 static-libs
 
@@ -9,6 +12,9 @@ app-crypt/gnupg smartcard usb
 
 # Neovim with lto
 app-editors/neovim lto
+
+# Virt manager needs this
+app-emulation/libvirt pcap virt-network numa fuse macvtap vepa qemu
 
 # Bash with pgo
 app-shells/bash pgo
@@ -24,11 +30,17 @@ dev-libs/popt static-libs
 # Git with gpg support
 dev-vcs/git blksha1 curl gpg
 
+# Ssh-agent on gnome-keyring
+gnome-base/gnome-keyring ssh-agent
+
 # Bluetooth pulse
 media-sound/pulseaudio bluetooth
 
 # Firefox dep
 media-libs/libvpx-1.12.0-r1 postproc
+
+# Get layers for vulkan
+media-libs/vulkan-loaders layers
 
 # Needed to break firefox circular dependency
 media-libs/libsndfile minimal
@@ -36,8 +48,14 @@ media-libs/libsndfile minimal
 # Pulse spotify
 media-sound/spotify
 
+# Virt manager needs this
+net-dns/dnsmasq script
+
 # Node lto
 net-libs/nodejs lto
+
+# Virt manager needs this
+net-misc/spice-gtk usbredir
 
 # Static initramfs needs static busybox, static busybox can't have the pam feature
 sys-apps/busybox static static-libs -pam
