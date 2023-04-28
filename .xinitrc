@@ -33,6 +33,11 @@ if [ -d /etc/X11/xinit/xinitrc.d ] ; then
  unset f
 fi
 
+eval `dbus-launch --sh-syntax`
+# Gpg agent hangs a lot and wont die, and we need it to be dead before we start
+pkill -9 gpg-agent 
+eval `gpg-agent --daemon`
+
 setxkbmap se
 # autorandr home
 # twm&
@@ -41,14 +46,16 @@ setxkbmap se
 # evolution&
 # google-chrome-stable&
 # intellij-idea-ultimate-edition&
-# slack&
-# spotify&
+xscreensaver&
+firefox&
+slack&
+spotify&
 # zoom&
-# pavucontrol&
-# feh --bg-fill $HOME/pictures/wps/wpbg.jpg || echo "Failed to set background with feh"
+pavucontrol&
+feh --bg-fill $HOME/pictures/wps/wpbg.jpg || echo "Failed to set background with feh"
 # Intellij needs this
 export _JAVA_AWT_WM_NONREPARENTING=1
 export AWT_TOOLKIT=MToolkit
 wmname LG3D
 # Run
-# exec dbus-launch --sh-syncax --exit-with-session pgwm
+exec pgwm

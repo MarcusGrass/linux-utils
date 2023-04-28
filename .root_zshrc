@@ -1,0 +1,28 @@
+autoload -U compinit
+compinit
+
+zstyle ':completion::complete:*' use-cache 1
+
+export VISUAL=nvim
+export EDITOR="$VISUAL"
+export TERM=xterm-256color
+export PATH="/usr/lib/llvm/15/bin:$HOME/.local/bin:$HOME/.cargo/bin:$PATH"
+
+HISTFILE=~/.zsh_histfile
+HISTSIZE=10000
+SAVEHIST=10000000
+bindkey -e
+
+# System
+alias off='shutdown -h now'
+
+# Convenience
+alias vim='nvim'
+alias dirsize='du -hs * | sort -hr'
+alias nvim_edit='nvim ~/.config/nvim/init.vim'
+alias bash_edit='nvim ~/.bashrc'
+alias ls='ls -lah --color=auto'
+alias xclip='xclip -se c'
+alias ss='maim -s -u | xclip -selection clipboard -t image/png -i'
+
+PS1='%F{160}%B[%b%f%F{9}%B%n@%M %b%f%F{12}% %B%d%b%f%F{110}%B]#%b%f '
