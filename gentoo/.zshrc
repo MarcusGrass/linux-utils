@@ -6,7 +6,8 @@ zstyle ':completion::complete:*' use-cache 1
 export VISUAL=nvim
 export EDITOR="$VISUAL"
 export TERM=xterm-256color
-export PATH="$HOME/.local/bin:$HOME/.cargo/bin:$PATH"
+export ANDROID_HOME="$HOME/Android/Sdk"
+export PATH="$HOME/.local/bin:$HOME/.cargo/bin:$PATH:$HOME/misc/flutter/flutter/bin:$ANDROID_HOME/tools:$ANDROID_HOME/tools/bin"
 
 HISTFILE=~/.zsh_histfile
 HISTSIZE=10000
