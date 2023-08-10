@@ -3,15 +3,16 @@
 modal = true
 
 [ui]
-font-family = "JetBrainsMono Nerd Font Mono"
-hover-font-family = "JetBrainsMono Nerd Font Mono"
+font-family = "JetBrainsMonoNL Nerd Font Mono"
+hover-font-family = "JetBrainsMonoNL Nerd Font Mono"
 
 [editor]
-font-family = "JetBrainsMono Nerd Font Mono"
-autosave-interval = 100
-inlay-hint-font-family = "JetBrainsMono Nerd Font Mono"
-error-lens-font-family = "JetBrainsMono Nerd Font Mono"
-completion-lens-font-family = "JetBrainsMono Nerd Font Mono"
+font-family = "JetBrainsMonoNL Nerd Font Mono"
+autosave-interval = 500
+inlay-hint-font-family = "JetBrainsMonoNL Nerd Font Mono"
+error-lens-font-family = "JetBrainsMonoNL Nerd Font Mono"
+completion-lens-font-family = "JetBrainsMonoNL Nerd Font Mono"
+format-on-autosave = true
 
 [terminal]
-font-family = "JetBrainsMono Nerd Font Mono"
+font-family = "JetBrainsMonoNL Nerd Font Mono"

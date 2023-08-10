@@ -1,6 +1,6 @@
 XTerm*background: Grey19
 XTerm*foreground: LightCyan3
-XTerm*faceName: JetBrainsMono Nerd Font Mono:style=Regular:size=12:antialias=true
+XTerm*faceName: JetBrainsMonoNL Nerd Font Mono:style=Regular:size=12:antialias=true
 XTerm*cursorTheme: Adwaita
 Xcursor.size: 32
 XTerm*pointerShape: left_ptr
