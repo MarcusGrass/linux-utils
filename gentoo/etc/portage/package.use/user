@@ -13,6 +13,16 @@ app-crypt/gnupg smartcard usb
 # Neovim with lto
 app-editors/neovim lto
 
+app-shells/dash static
+app-containers/crun static-libs
+
+# Qemu static user
+app-emulation/qemu static-user
+dev-libs/libpcre2 static-libs
+dev-libs/glib static-libs
+sys-libs/zlib static-libs
+sys-apps/attr static-libs
+
 # Virt manager needs this
 app-emulation/libvirt pcap virt-network numa fuse macvtap vepa qemu
 
@@ -38,15 +48,13 @@ media-sound/pulseaudio bluetooth
 
 # Firefox dep
 media-libs/libvpx postproc
+media-libs/vulkan-loader layers
 
 # Get layers for vulkan
 media-libs/vulkan-loaders layers
 
 # Needed to break firefox circular dependency
 media-libs/libsndfile minimal
-
-# Pulse spotify
-media-sound/spotify
 
 # Virt manager needs this
 net-dns/dnsmasq script
@@ -77,8 +85,11 @@ sys-libs/libxcrypt static-libs
 virtual/libcrypt static-libs
 
 # Firefox optimized (allegedly pgo doubles compile time)
-www-client/firefox dbus lto pgo
+www-client/firefox dbus pgo lto
 
 # elogind and udev support, no systemd, firefox needs xvfb
 x11-base/xorg-server xvfb elogind udev -systemd
+
+net-libs/gnutls tools pkcs11
+media-video/ffmpeg opus
 

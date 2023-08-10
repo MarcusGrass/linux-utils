@@ -7,16 +7,18 @@ export VISUAL=nvim
 export EDITOR="$VISUAL"
 export TERM=xterm-256color
 export ANDROID_HOME="$HOME/Android/Sdk"
-export PATH="$HOME/.local/bin:$HOME/.cargo/bin:$PATH:$HOME/misc/flutter/flutter/bin:$ANDROID_HOME/tools:$ANDROID_HOME/tools/bin"
+export PATH="$HOME/.local/bin:$HOME/.cargo/bin:$PATH:$HOME/misc/flutter/flutter/bin:$ANDROID_HOME:$ANDROID_HOME/tools:$ANDROID_HOME/tools/bin:$ANDROID_HOME/platform-tools:$HOME/.pub-cache/bin"
 
+# Big hist
 HISTFILE=~/.zsh_histfile
 HISTSIZE=10000
 SAVEHIST=10000000
+
 bindkey -e
 
 # System
-alias off='shutdown -h now'
-alias hibernate='systemctl hibernate'
+alias off='doas /sbin/shutdown -h now'
+alias reboot='doas /sbin/reboot'
 
 # Convenience
 alias vim='nvim'

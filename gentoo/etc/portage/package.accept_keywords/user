@@ -1,7 +1,18 @@
-# Required
 net-im/slack ~amd64
-# Required
 dev-util/clion ~amd64
 # Required for fontawesome 6
 media-fonts/fontawesome ~amd64
-
+media-video/obs-studio
+app-admin/kubectx ~amd64
+net-misc/postman-bin ~amd64
+net-vpn/tailscale ~amd64
+dev-util/android-studio ~amd64
+net-im/discord ~amd64
+dev-lang/zig ~amd64
+app-eselect/eselect-zig ~amd64
+app-misc/yq ~amd64
+media-gfx/pinta ~amd64
+dev-dotnet/dotnet-sdk-bin ~amd64
+# Do want more up-to-date kernel
+sys-kernel/gentoo-sources ~amd64
+sys-fs/e2fsck-static ~amd64

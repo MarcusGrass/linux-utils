@@ -1,0 +1,43 @@
+[[keymaps]]
+command = "-open_file"
+key = "Ctrl+o"
+
+[[keymaps]]
+command = "jump_location_backward"
+mode = "n"
+key = "Ctrl+o"
+
+[[keymaps]]
+command = "-jump_location_backward"
+mode = "n"
+key = "Ctrl+o"
+
+[[keymaps]]
+command = "-search"
+key = "Ctrl+f"
+
+[[keymaps]]
+command = "save"
+key = "Ctrl+s"
+
+[[keymaps]]
+command = "-save"
+key = "Ctrl+s"
+
+[[keymaps]]
+command = "-toggle_terminal_focus"
+key = "Ctrl+`"
+
+[[keymaps]]
+command = "toggle_terminal_visual"
+key = "Ctrl+Shift+t"
+
+[[keymaps]]
+command = "show_code_actions"
+mode = "n"
+key = "Alt+Enter"
+
+[[keymaps]]
+command = "-show_code_actions"
+mode = "n"
+key = "g f"
