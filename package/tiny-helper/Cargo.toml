@@ -1,0 +1,12 @@
+[package]
+name = "tiny-helper"
+version = "0.1.0"
+edition = "2021"
+
+# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+
+[dependencies]
+tiny-cli = { path = "../../../tiny-cli/tiny-cli" }
+tiny-std = { version = "0.1.0", features = ["executable", "global-allocator"]}
+rusl = { version = "0.1.0", features = ["alloc"]}
+unix-print = { version = "0.1.0" }
