@@ -6,7 +6,7 @@ zstyle ':completion::complete:*' use-cache 1
 export VISUAL=nvim
 export EDITOR="$VISUAL"
 export TERM=xterm-256color
-export PATH="/usr/lib/llvm/15/bin:$HOME/.local/bin:$HOME/.cargo/bin:$PATH"
+export PATH="/usr/lib/llvm/16/bin:$HOME/.local/bin:$HOME/.cargo/bin:$PATH"
 
 HISTFILE=~/.zsh_histfile
 HISTSIZE=10000
