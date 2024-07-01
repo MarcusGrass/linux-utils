@@ -1,95 +1,71 @@
-# Don't blow up the disk with sys logs, cba setting up rotation
 app-admin/sysklogd logrotate
 
-# Dmenu integration for pass
-app-admin/pass dmenu
-
-# Static initramfs needs these static-libs
 app-crypt/argon2 static-libs
 
-# gpg smartcard support
-app-crypt/gnupg smartcard usb
+app-crypt/gnupg static-libs
 
-# Neovim with lto
 app-editors/neovim lto
 
-app-shells/dash static
-app-containers/crun static-libs
+app-emulation/qemu static-user usbredir spice
 
-# Qemu static user
-app-emulation/qemu static-user
-dev-libs/libpcre2 static-libs
-dev-libs/glib static-libs
-sys-libs/zlib static-libs
-sys-apps/attr static-libs
-
-# Virt manager needs this
-app-emulation/libvirt pcap virt-network numa fuse macvtap vepa qemu
-
-# Bash with pgo
-app-shells/bash pgo
-
-# Python optimized
 dev-lang/python lto pgo
 
-# Static initramfs needs these static-libs
 dev-libs/json-c static-libs
 dev-libs/openssl static-libs
+dev-libs/glib static-libs
+dev-libs/libpcre2 static-libs
 dev-libs/popt static-libs
 
-# Git with gpg support
+dev-libs/libayatana-appindicator gtk3
+dev-libs/libbusmenu gtk3
+
 dev-vcs/git blksha1 curl gpg
 
-# Ssh-agent on gnome-keyring
-gnome-base/gnome-keyring ssh-agent
-
-# Bluetooth pulse
 media-sound/pulseaudio bluetooth
 
-# Firefox dep
 media-libs/libvpx postproc
-media-libs/vulkan-loader layers
 
-# Get layers for vulkan
-media-libs/vulkan-loaders layers
-
-# Needed to break firefox circular dependency
 media-libs/libsndfile minimal
 
-# Virt manager needs this
-net-dns/dnsmasq script
-
-# Node lto
 net-libs/nodejs lto
-
-# Virt manager needs this
-net-misc/spice-gtk usbredir
-
-# Static initramfs needs static busybox, static busybox can't have the pam feature
+sys-apps/attr static-libs
 sys-apps/busybox static static-libs -pam
 sys-apps/util-linux static-libs
 
-# No systemd
 sys-apps/dbus elogind -systemd
 
-# Build gcc with LTO and graphite support
-sys-devel/gcc graphite lto
-
-# Just build intel microcode for host
-sys-firmware/intel-microcode hostonly
-
-# Needs this static for initramfs
 sys-fs/cryptsetup static static-libs -udev
 sys-fs/lvm2 static static-libs -udev
 sys-libs/libxcrypt static-libs
 virtual/libcrypt static-libs
+sys-libs/zlib static-libs minizip
+sys-fs/e2fsprogs static-libs
 
-# Firefox optimized (allegedly pgo doubles compile time)
-www-client/firefox dbus pgo lto
+# ESR requires wayland support for some unfathomable reason to enable hwaccel
+# Remove when rapid goes into stable (116.0+)
+www-client/firefox dbus lto hwaccel wayland
+x11-libs/gtk+ wayland
+x11-libs/libxkbcommon wayland
+media-libs/mesa wayland
 
-# elogind and udev support, no systemd, firefox needs xvfb
 x11-base/xorg-server xvfb elogind udev -systemd
+dev-db/postgis postgres16
 
+dev-libs/libdbusmenu gtk3
+
+sys-devel/llvm zstd
+sys-devel/lld zstd
+sys-devel/gcc lto pgo graphite multilib
+
+net-misc/spice-gtk usbredir
+net-dns/dnsmasq script
 net-libs/gnutls tools pkcs11
-media-video/ffmpeg opus
+x11-libs/libdrm video_cards_radeon
 
+# Wlroots dev
+x11-libs/pixman static-libs
+
+gui-libs/wlroots X drm libinput vulkan tinywl x11-backend xcb-errors
+media-video/vlc chromecast matroska aom aribsub zvbi
+app-misc/mime-types nginx
+sys-libs/liburing static-libs

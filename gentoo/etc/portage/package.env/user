@@ -1,0 +1,31 @@
+sys-devel/gcc no-mold
+sys-kernel/vanilla-kernel no-mold
+sys-libs/glibc no-mold
+dev-lang/zig no-mold
+www-client/firefox no-mold
+media-video/vlc no-mold
+sys-fs/lvm2 no-lto no-mold
+sys-libs/efivar no-lto
+
+# Uses static libs, prefer no lto on these
+
+sys-fs/cryptsetup no-lto
+app-crypt/argon2 no-lto
+app-crypt/gnupg no-lto
+app-emulation/qemu no-lto
+dev-libs/json-c no-lto
+dev-libs/openssl no-lto
+dev-libs/glib no-lto
+dev-libs/libpcre2 no-lto
+dev-libs/popt no-lto
+sys-apps/attr no-lto
+sys-apps/busybox no-lto
+sys-apps/util-linux no-lto
+sys-fs/cryptsetup no-lto
+sys-libs/libxcrypt no-lto
+virtual/libcrypt no-lto
+sys-libs/zlib no-lto
+sys-fs/e2fsprogs no-lto
+x11-libs/pixman no-lto
+sys-libs/liburing no-lto
+
