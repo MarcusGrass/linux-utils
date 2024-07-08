@@ -1,20 +1,3 @@
---- Syntax highlighting, language specific
-require "nvim-treesitter.configs".setup {
-    highlight = {
-        enable = true,
-        disable = {},
-    },
-    ensure_installed = {
-        "toml",
-        "bash",
-        "json",
-        "yaml",
-        "python",
-        "zig",
-        "rust",
-    }
-}
-
 --- Lsp setup
 ---
 local lsp_status = require('lsp-status')
@@ -85,8 +68,24 @@ local opts = {
         }
     },
 }
-require('rust-tools').setup(opts)
 require('crates').setup()
+vim.g.rustaceanvim = {
+    tools = {
+
+    },
+    server = {
+        on_attach = do_attach,
+        default_settings = {
+            ["rust-analyzer"] = {
+                            capabilities = lsp_status.capabilities,
+                            -- enable clippy on save
+                checkOnSave = {
+                    command = "clippy"
+                },
+            }
+        }
+    }
+}
 
 --- Setup autopairs
 require('nvim-autopairs').setup{}
@@ -159,29 +158,6 @@ cmp.setup({
         { name = 'crates' },
     },
 })
-
---- File browser
-require'nvim-tree'.setup {
-    open_on_tab         = true,
-
-    git = {
-        enable = true,
-        ignore = true,
-        timeout = 500,
-    },
-    diagnostics = {
-        enable = true,
-        icons = {
-            hint = "",
-            info = "",
-            warning = "",
-            error = "",
-        }
-    },
-    view = {
-        width = 30,
-    },
-}
 
 --- Telescope
 local actions = require('telescope.actions')
