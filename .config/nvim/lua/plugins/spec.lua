@@ -37,23 +37,43 @@ return {
         version = "^4",
         lazy = false ,
     },
-    -- Cargo tools TODO: Check
-    { 'saecki/crates.nvim' },
+    -- Cargo tools
+    { 
+        'saecki/crates.nvim',
+        tag = "stable",
+        config = function() 
+            require('crates').setup()
+        end
+    },
+    -- Test
+    {
+        "nvim-neotest/neotest",
+        opts = {
+            adapters = {
+                ["rustaceanvim.neotest"] = {}
+            }
+        },
+        dependencies = {
+            "nvim-neotest/nvim-nio",
+            "nvim-lua/plenary.nvim",
+            "antoinemadec/FixCursorHold.nvim",
+            "nvim-treesitter/nvim-treesitter",
+        }
+    },
 
     --- Language: Zig --
-    -- TODO: Check
     { 'ziglang/zig.vim' },
 
     --- Git ---
     -- TODO: Check
     { 'airblade/vim-gitgutter' },
-    -- TODO: Check
+    -- Diffing
     { 'sindrets/diffview.nvim' },
 
     --- Directories ---
-    -- File icons TODO: Check
+    -- File icons
     { 'kyazdani42/nvim-web-devicons' },
-    -- Tree viewer TODO: Check
+    -- Tree viewer 
     { 'kyazdani42/nvim-tree.lua' },
 
     --- Fuzzy find ---
@@ -65,17 +85,22 @@ return {
 
     -- Status line lsp progress
     { 'nvim-lua/lsp-status.nvim' },
+
     -- Symbol window
     { 'stevearc/aerial.nvim' },
+
     -- Airline bottom bar
     { 
         'nvim-lualine/lualine.nvim',
         requires = "nvim-tree/nvim-web-devicons",
     },
+
     { 'arkav/lualine-lsp-progress' },
     -- Tab bar
+    --
     { 'romgrk/barbar.nvim' },
-    -- Term Todo: Check
+
+    -- Term 
     { 'akinsho/toggleterm.nvim' },
 
 }

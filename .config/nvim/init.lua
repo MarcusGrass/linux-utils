@@ -1,6 +1,5 @@
 require "config.lazy"
 require "editor_cfg"
-require "plugin_cfg"
 require "pluginit"
 require "key_bindings"
 require "auto"

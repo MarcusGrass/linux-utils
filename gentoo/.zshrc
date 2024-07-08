@@ -6,6 +6,7 @@ zstyle ':completion::complete:*' use-cache 1
 export VISUAL=nvim
 export EDITOR="$VISUAL"
 export TERM=xterm-256color
+export COLORTERM=truecolor
 export ANDROID_HOME="$HOME/Android/Sdk"
 export PATH="$HOME/.local/bin:$HOME/.cargo/bin:$PATH:$HOME/misc/flutter/flutter/bin:$ANDROID_HOME:$ANDROID_HOME/tools:$ANDROID_HOME/tools/bin:$ANDROID_HOME/platform-tools:$HOME/.pub-cache/bin:$HOME/go/bin:$HOME/misc/zig/zig-linux-x86_64-0.11.0"
 export XDG_DATA_DIRS="$XDG_DATA_DIRS:$HOME/.local/share/flatpak/exports/share:/var/lib/flatpak/exports/share"

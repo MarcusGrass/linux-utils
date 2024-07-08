@@ -1,10 +1,6 @@
 --- Cosmetic ---
 -- Enables 24-bit RGB https://neovim.io/doc/user/options.html#'termguicolors'
 vim.opt.termguicolors = true
--- Set colorscheme https://neovim.io/doc/user/options.html#'background'
-vim.g.colors_name = "one"
--- Has to be set after colors_name
-vim.opt.background = "dark"
 -- Syntax highlighting needs to come after background and colors_name https://neovim.io/doc/user/options.html#'syntax'
 vim.opt.syntax = "ON"
 
