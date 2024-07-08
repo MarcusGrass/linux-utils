@@ -29,7 +29,7 @@ function shared.lsp_do_attach(client, bufnr)
     vim.api.nvim_buf_set_keymap(bufnr, 'n', '<space>wr', '<cmd>lua vim.lsp.buf.remove_workspace_folder()<CR>', lsp_cfg_opts)
     vim.api.nvim_buf_set_keymap(bufnr, 'n', '<space>wl', '<cmd>lua print(vim.inspect(vim.lsp.buf.list_workspace_folders()))<CR>', lsp_cfg_opts)
     vim.api.nvim_buf_set_keymap(bufnr, 'n', '<space>D', '<cmd>lua vim.lsp.buf.type_definition()<CR>', lsp_cfg_opts)
-    lsp_status.on_attach(client)
+    shared.lsp_status.on_attach(client)
 end
 
 return shared

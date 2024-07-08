@@ -1,11 +1,11 @@
 require("catppuccin").setup({
-    flavour = "latte",
+    flavour = "mocha",
     integrations = {
         aerial = true,
         barbar = true,
         cmp = true,
         diffview = true,
-        gitgutter = true,
+        gitsigns = true,
         neotest = true,
         nvimtree = true,
         telescope = {
@@ -15,5 +15,4 @@ require("catppuccin").setup({
     },
 })
 
-vim.cmd.colorscheme = "catppuccin"
-
+vim.cmd.colorscheme "catppuccin"

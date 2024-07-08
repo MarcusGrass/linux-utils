@@ -65,8 +65,7 @@ return {
     { 'ziglang/zig.vim' },
 
     --- Git ---
-    -- TODO: Check
-    { 'airblade/vim-gitgutter' },
+    { 'lewis6991/gitsigns.nvim', config = true },
     -- Diffing
     { 'sindrets/diffview.nvim' },
 
@@ -81,6 +80,10 @@ return {
         'nvim-telescope/telescope.nvim',
         branch = "0.1.x",
         dependencies = { "nvim-lua/plenary.nvim" },
+    },
+    {
+        'nvim-telescope/telescope-fzf-native.nvim',
+        build = 'cmake -S. -Bbuild DCMAKE_BUILD_TYPE=Release && cmake --build build --config Release'
     },
 
     -- Status line lsp progress
