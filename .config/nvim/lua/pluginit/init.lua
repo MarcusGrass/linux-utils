@@ -1,2 +1,5 @@
 require "pluginit.nvim-treesitter"
 require "pluginit.nvim-tree"
+require "pluginit.telescope"
+require "pluginit.lualine"
+require "pluginit.toggleterm"

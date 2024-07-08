@@ -57,17 +57,21 @@ return {
     { 'kyazdani42/nvim-tree.lua' },
 
     --- Fuzzy find ---
-    -- TODO: Check all
-    { 'nvim-lua/popup.nvim' },
-    { 'nvim-lua/plenary.nvim' },
-    { 'nvim-telescope/telescope.nvim' },
+    { 
+        'nvim-telescope/telescope.nvim',
+        branch = "0.1.x",
+        dependencies = { "nvim-lua/plenary.nvim" },
+    },
 
     -- Status line lsp progress
     { 'nvim-lua/lsp-status.nvim' },
     -- Symbol window
     { 'stevearc/aerial.nvim' },
     -- Airline bottom bar
-    { 'nvim-lualine/lualine.nvim' },
+    { 
+        'nvim-lualine/lualine.nvim',
+        requires = "nvim-tree/nvim-web-devicons",
+    },
     { 'arkav/lualine-lsp-progress' },
     -- Tab bar
     { 'romgrk/barbar.nvim' },
