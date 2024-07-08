@@ -97,8 +97,6 @@ return {
         'nvim-lualine/lualine.nvim',
         requires = "nvim-tree/nvim-web-devicons",
     },
-
-    { 'arkav/lualine-lsp-progress' },
     -- Tab bar
     --
     { 'romgrk/barbar.nvim' },

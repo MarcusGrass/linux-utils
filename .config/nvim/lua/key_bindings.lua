@@ -24,7 +24,7 @@ map('n', '<leader>nvt', '::NvimTreeFocus<CR>', nil)
 -- Open telescope live grep (Ctrl+Shift+f)
 map('n', '<C-S-f>', ':Telescope live_grep<CR>', nil)
 -- Open telescope file finder (Ctrl+g)
-map('n', '<C-g>', ':Telescope find_files<CR>', nil)
+map('n', '<leader>ff', ':Telescope find_files<CR>', nil)
 
 -- Toggle aerial
 map('n', '<C-s>', ':AerialToggle!<CR>', nil)

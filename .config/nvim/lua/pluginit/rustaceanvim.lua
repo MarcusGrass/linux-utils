@@ -8,6 +8,7 @@ vim.g.rustaceanvim = {
         on_attach = shared.lsp_do_attach,
         default_settings = {
             ["rust-analyzer"] = {
+                capabilities = shared.lsp_status.capabilities,
                 -- enable clippy on save
                 checkOnSave = true,
             }

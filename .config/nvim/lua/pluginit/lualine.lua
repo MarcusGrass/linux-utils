@@ -2,15 +2,19 @@
 require('lualine').setup {
     options = {
         theme = "catppuccin",
-        sections = {
-                lualine_a = {'mode'},
-                lualine_b = {'branch', 'diff', 'diagnostics'},
-                lualine_c = { {'filename', file_status = true, path = 2} },
-                lualine_x = {'encoding', 'fileformat', 'filetype'},
-                lualine_y = {'progress', {'lsp_progress', display_components = { { 'title', 'percentage' }},}},
-                lualine_z = {'location'}
-            },
-    }
+        globalstatus = true,
+    },
+    sections = {
+        lualine_a = {'mode'},
+        lualine_b = {'branch', 'diff', 'diagnostics'},
+        lualine_c = { {'filename', file_status = true, path = 1} },
+        lualine_x = {
+            function()
+                return require("lsp-status").status()
+            end
+        },
+        lualine_y = {},
+        lualine_z = {},
+    },
 }
-
 
