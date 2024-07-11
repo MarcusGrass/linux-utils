@@ -6,6 +6,7 @@ shared.nvim_lsp = require("lspconfig")
 shared.lsp_status = require('lsp-status')
 
 shared.lsp_status.register_progress()
+local fmt_augroup = vim.api.nvim_create_augroup("LspFormatting", {})
 
 local lsp_cfg_opts = { noremap=true, silent=true }
 function shared.lsp_do_attach(client, bufnr)
@@ -29,7 +30,18 @@ function shared.lsp_do_attach(client, bufnr)
     vim.api.nvim_buf_set_keymap(bufnr, 'n', '<space>wr', '<cmd>lua vim.lsp.buf.remove_workspace_folder()<CR>', lsp_cfg_opts)
     vim.api.nvim_buf_set_keymap(bufnr, 'n', '<space>wl', '<cmd>lua print(vim.inspect(vim.lsp.buf.list_workspace_folders()))<CR>', lsp_cfg_opts)
     vim.api.nvim_buf_set_keymap(bufnr, 'n', '<space>D', '<cmd>lua vim.lsp.buf.type_definition()<CR>', lsp_cfg_opts)
+    if client.supports_method("textDocument/formatting") then
+        vim.api.nvim_clear_autocmds({ group = augroup, buffer = bufnr })
+        vim.api.nvim_create_autocmd("BufWritePre", {
+            group = fmt_augroup,
+            buffer = bufnr,
+            callback = function()
+                vim.lsp.buf.format()
+            end,
+        })
+		end
     shared.lsp_status.on_attach(client)
+
 end
 
 return shared

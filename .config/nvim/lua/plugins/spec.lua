@@ -1,13 +1,27 @@
 return {
     --- Theme ---
     { "catppuccin/nvim", name = "catppuccin", priority = 1000 },
+
+    --- Visual ---
+    --- Show blank lines in indentation
+    { 
+        "lukas-reineke/indent-blankline.nvim", 
+        main = "ibl", 
+        config = function() 
+            require('ibl').setup()
+        end
+    },    
+
     --- Functionality ---
     -- Automatically insert pairs (eg. <>)
     { 'windwp/nvim-autopairs', event = "InsertEnter", config = true },
 
     --- Language Meta ---
-    -- Lsp
+    -- Lsp 
     { 'neovim/nvim-lspconfig' },
+
+    -- Diagnostics
+    { 'folke/trouble.nvim' },
 
     -- Snippet engine
     { 'hrsh7th/vim-vsnip' },
