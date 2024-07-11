@@ -38,10 +38,10 @@ local cfg = function()
 end
 
 return {
-    { 
+    {
         'hrsh7th/nvim-cmp',
         config = cfg,
-        dependencies = { 
+        dependencies = {
             'hrsh7th/vim-vsnip',
             'hrsh7th/cmp-nvim-lsp',
             'hrsh7th/cmp-vsnip',

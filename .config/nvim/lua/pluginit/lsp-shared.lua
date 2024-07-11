@@ -31,7 +31,7 @@ function shared.lsp_do_attach(client, bufnr)
     vim.api.nvim_buf_set_keymap(bufnr, 'n', '<space>wl', '<cmd>lua print(vim.inspect(vim.lsp.buf.list_workspace_folders()))<CR>', lsp_cfg_opts)
     vim.api.nvim_buf_set_keymap(bufnr, 'n', '<space>D', '<cmd>lua vim.lsp.buf.type_definition()<CR>', lsp_cfg_opts)
     if client.supports_method("textDocument/formatting") then
-        vim.api.nvim_clear_autocmds({ group = augroup, buffer = bufnr })
+        vim.api.nvim_clear_autocmds({ group = fmt_augroup, buffer = bufnr })
         vim.api.nvim_create_autocmd("BufWritePre", {
             group = fmt_augroup,
             buffer = bufnr,
