@@ -5,8 +5,9 @@ local cfg = function()
     telescope.setup{
         defaults = {
             mappings = {
+                i = {},
                 n = {
-                    ["q"] = actions.close
+                    ["q"] = actions.close,
                 },
             },
         },
@@ -28,7 +29,9 @@ return {
     { 
         'nvim-telescope/telescope.nvim',
         branch = "0.1.x",
-        dependencies = { "nvim-lua/plenary.nvim" },
+        dependencies = { 
+            "nvim-lua/plenary.nvim",
+        },
         config = cfg,
     },
     {

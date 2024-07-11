@@ -8,6 +8,8 @@ local cfg = function()
             "lua",
             "toml",
             "bash",
+            "markdown",
+            "markdown_inline",
             "json",
             "yaml",
             "python",
