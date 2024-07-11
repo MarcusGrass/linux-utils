@@ -27,8 +27,8 @@ map('n', '<leader>ff', ':Telescope find_files<CR>', nil)
 map('n', '<leader>aet', ':AerialToggle!<CR>', nil)
 
 -- Toggle Trouble
-map('n', '<leader>to', ':Trouble split_preview toggle<CR>', nil)
-map('n', '<leader>tf', ':Trouble split_preview focus<CR>', nil)
+map('n', '<leader>tt', ':Trouble split_preview toggle<CR>', nil)
+map('n', '<leader>to', ':Trouble split_preview focus<CR>', nil)
 
 -- Toggle terminal
 map('n', '<C-S-t>', ':ToggleTerm size=15<CR>', nil)

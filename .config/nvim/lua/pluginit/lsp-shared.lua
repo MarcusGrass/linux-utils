@@ -11,8 +11,9 @@ local fmt_augroup = vim.api.nvim_create_augroup("LspFormatting", {})
 local lsp_cfg_opts = { noremap=true, silent=true }
 function shared.lsp_do_attach(client, bufnr)
     -- Enable completion triggered by <c-x><c-o>
-    vim.api.nvim_buf_set_option(bufnr, 'omnifunc', 'v:lua.vim.lsp.omnifunc')
-
+    vim.api.nvim_set_option_value('omnifunc', 'v:lua.vim.lsp.omnifunc', {
+        buf = bufnr
+    })
     -- Mappings.
     -- See `:help vim.lsp.*` for documentation on any of the below functions
     vim.api.nvim_buf_set_keymap(bufnr, 'n', 'ga', '<cmd>lua vim.lsp.buf.code_action()<CR>', lsp_cfg_opts)
