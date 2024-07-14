@@ -1,3 +1,2 @@
 -- Status line lsp progress
-return { 'nvim-lua/lsp-status.nvim' }
-
+return { "nvim-lua/lsp-status.nvim" }

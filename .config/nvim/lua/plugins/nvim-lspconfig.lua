@@ -1,3 +1,2 @@
--- Lsp 
-return { 'neovim/nvim-lspconfig' }
-
+-- Lsp
+return { "neovim/nvim-lspconfig" }

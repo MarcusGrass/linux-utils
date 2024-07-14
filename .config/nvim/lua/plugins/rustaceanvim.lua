@@ -12,23 +12,21 @@ local cfg = function()
                     capabilities = shared.lsp_status.capabilities,
                     -- enable clippy on save
                     checkOnSave = true,
-                }
-            }
-        }
+                },
+            },
+        },
     }
 end
 
-
 -- Rust configuration
 return {
-    'mrcjkb/rustaceanvim',
+    "mrcjkb/rustaceanvim",
     version = "^4",
-    lazy = false ,
+    lazy = false,
     config = cfg,
     dependencies = {
-        'neovim/nvim-lspconfig',
-        'nvim-lua/lsp-status.nvim',
-        'nvim-telescope/telescope.nvim',
-    }
+        "neovim/nvim-lspconfig",
+        "nvim-lua/lsp-status.nvim",
+        "nvim-telescope/telescope.nvim",
+    },
 }
-

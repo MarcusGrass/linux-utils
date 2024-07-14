@@ -1,9 +1,8 @@
 -- Tab bar
 --
 return {
-    'romgrk/barbar.nvim',
+    "romgrk/barbar.nvim",
     dependencies = {
-        'nvim-tree/nvim-web-devicons',
-    }
+        "nvim-tree/nvim-web-devicons",
+    },
 }
-

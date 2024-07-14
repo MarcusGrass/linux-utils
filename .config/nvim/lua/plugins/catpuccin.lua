@@ -17,7 +17,7 @@ local cfg = function()
             treesitter = true,
         },
     })
-    vim.cmd.colorscheme "catppuccin"
+    vim.cmd.colorscheme("catppuccin")
 end
 
 --- Theme ---
@@ -27,4 +27,3 @@ return {
     priority = 1000,
     config = cfg,
 }
-

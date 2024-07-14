@@ -7,9 +7,9 @@ local custom = {
                 relative = "win",
                 position = "right",
                 size = 0.3,
-            }
-        }
-    }
+            },
+        },
+    },
 }
 return {
     "folke/trouble.nvim",

@@ -5,7 +5,7 @@ vim.opt.termguicolors = true
 vim.opt.syntax = "ON"
 
 --- Spelling
-vim.opt.spelllang = 'en_us'
+vim.opt.spelllang = "en_us"
 vim.opt.spell = true
 
 --- Keys
@@ -46,7 +46,7 @@ vim.opt.smartcase = true
 vim.opt.incsearch = true
 
 -- Use spaces when tabbing https://neovim.io/doc/user/options.html#'expandtab'
-vim.opt.expandtab  = true
+vim.opt.expandtab = true
 -- Use 4 spaces for tabs https://neovim.io/doc/user/options.html#'expandtab'
 vim.opt.shiftwidth = 4
 -- When editing, this is the number of spaces, -1 refers to `shiftwidth`
@@ -58,7 +58,7 @@ vim.opt.tabstop = 4
 vim.opt.number = true
 
 -- Complete options https://neovim.io/doc/user/options.html#'completeopt'
-vim.opt.completeopt = 'menu,menuone,noinsert,noselect'
+vim.opt.completeopt = "menu,menuone,noinsert,noselect"
 -- Fewer prompt from file messages
 table.insert(vim.opt.shortmess, "c")
 

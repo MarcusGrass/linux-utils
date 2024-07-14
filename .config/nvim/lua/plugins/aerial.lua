@@ -28,8 +28,7 @@ local cfg = function()
         open_automatic = true,
         -- Run this command after jumping to a symbol (false will disable)
         post_jump_cmd = "normal! zz",
-
     })
 end
 
-return { 'stevearc/aerial.nvim', config = cfg }
+return { "stevearc/aerial.nvim", config = cfg }

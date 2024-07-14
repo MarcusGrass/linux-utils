@@ -1,7 +1,7 @@
 local cfg = function()
     --- File browser
-    require'nvim-tree'.setup {
-        open_on_tab         = true,
+    require("nvim-tree").setup({
+        open_on_tab = true,
 
         git = {
             enable = true,
@@ -15,13 +15,12 @@ local cfg = function()
                 info = "",
                 warning = "",
                 error = "",
-            }
+            },
         },
         view = {
             width = 30,
         },
-    }
+    })
 end
 
-return { 'nvim-tree/nvim-tree.lua', config = cfg }
-
+return { "nvim-tree/nvim-tree.lua", config = cfg }
