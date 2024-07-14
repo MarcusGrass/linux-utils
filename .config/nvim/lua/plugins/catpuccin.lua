@@ -8,6 +8,7 @@ local cfg = function()
             diffview = true,
             gitsigns = true,
             lsp_trouble = true,
+            lsp_saga = true,
             neotest = true,
             nvimtree = true,
             telescope = {
