@@ -4,6 +4,10 @@ vim.opt.termguicolors = true
 -- Syntax highlighting needs to come after background and colors_name https://neovim.io/doc/user/options.html#'syntax'
 vim.opt.syntax = "ON"
 
+--- Spelling
+vim.opt.spelllang = 'en_us'
+vim.opt.spell = true
+
 --- Keys
 vim.g.mapleader = " "
 
