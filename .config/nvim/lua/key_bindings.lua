@@ -13,13 +13,50 @@ map("n", "<CR>", ":noh<CR><CR>", nil)
 map("n", "<leader>ne", ":wincmd l<CR>", nil)
 map("n", "<leader>b", ":wincmd h<CR>", nil)
 
+local fallback_live_grep = function()
+    vim.cmd(':Telescope live_grep')
+end
+
+local op = function(input_node)
+    local node = input_node or require("nvim-tree.lib").get_node_at_cursor()
+    if node == nil then
+        fallback_live_grep()
+        return
+    end
+    local absolute_path = node.absolute_path
+    if absolute_path == nil then
+        fallback_live_grep()
+        return
+    end
+    local cwd = require("nvim-tree.core").get_cwd()
+    if cwd == nil then
+        fallback_live_grep()
+        return
+    end
+    local utils = require("nvim-tree.utils")
+
+    local relative_path = utils.path_relative(absolute_path, cwd)
+    local content = node.nodes ~= nil and utils.path_add_trailing(relative_path) or relative_path
+    --require("nvim-tree.notify").info("Copy!")
+    vim.cmd(string.format(':Telescope live_grep search_dirs=./%s', content))
+end
+
 -- Reload files in file tree
 map("n", "<leader>nvr", ":NvimTreeRefresh<CR>", nil)
 -- Switch focus to file tree
-map("n", "<leader>nvt", "::NvimTreeFocus<CR>", nil)
+map("n", "<leader>nvt", ":NvimTreeFocus<CR>", nil)
+-- Open current file in tree
+map("n", "<leader>nvo", ":NvimTreeFindFile<CR>", nil)
+-- Collapse all files in tree
+map("n", "<leader>nvc", ":NvimTreeCollapse<CR>", nil)
+-- Open telescope live grep at current nvt location if present
+vim.keymap.set("n", "<leader>nvf", op, nil)
 
 -- Open telescope live grep (Ctrl+Shift+f)
 map("n", "<C-S-f>", ":Telescope live_grep<CR>", nil)
+
+-- Open telescope live grep (Ctrl+Shift+f)
+-- map("n", "<C-S-f>", ":Telescope live_grep", nil)
 -- Open telescope file finder
 map("n", "<leader>ff", ":Telescope find_files<CR>", nil)
 

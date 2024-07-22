@@ -69,3 +69,6 @@ vim.opt.updatetime = 300
 -- Have a fixed column for the diagnostics to appear in
 -- this removes the jitter when warnings/errors flow in
 vim.opt.signcolumn = "yes:1"
+
+--- Enable Lsp inlay hints, could be moved to pluginit, or set as a toggle
+vim.lsp.inlay_hint.enable(true)
