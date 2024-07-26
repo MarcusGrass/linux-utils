@@ -20,7 +20,6 @@ M.git_base_directory = function()
     return base_dir
 end
 
-
 M.git_iter_diffed_files_abs_path = function()
     local cmd = string.format("git --no-pager diff --name-only $(git merge-base HEAD $(%s))", get_current_branch_cmd)
     local handle = io.popen(cmd)
@@ -42,9 +41,10 @@ end
 -- Could do this another way, but this doesn't sync with the remote
 local get_default_branch_cmd = "git --no-pager symbolic-ref refs/remotes/origin/HEAD | sed 's@^refs/remotes/origin/@@'"
 -- Need to sync the default branch for this to make sense
-local last_shared_commit_with_default_brach = string.format("git --no-pager merge-base $(%s) $(%s)", get_default_branch_cmd, get_current_branch_cmd)
+local last_shared_commit_with_default_brach =
+    string.format("git --no-pager merge-base $(%s) $(%s)", get_default_branch_cmd, get_current_branch_cmd)
 
-M.git_iter_diffed_default_branch_abs_path = function ()
+M.git_iter_diffed_default_branch_abs_path = function()
     local cmd = string.format("git --no-pager diff --name-only $(%s)", last_shared_commit_with_default_brach)
     local handle = io.popen(cmd)
     if handle == nil then

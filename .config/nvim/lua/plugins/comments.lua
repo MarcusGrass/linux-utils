@@ -1,10 +1,8 @@
 local cfg = function()
-    require("Comment").setup({
-
-    })
+    require("Comment").setup({})
 end
 
 return {
-    'numToStr/Comment.nvim',
+    "numToStr/Comment.nvim",
     config = cfg,
 }

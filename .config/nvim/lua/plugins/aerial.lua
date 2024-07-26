@@ -25,7 +25,7 @@ local cfg = function()
         filter_kind = false,
         -- Automatically open aerial when entering supported buffers.
         -- This can be a function (see :help aerial-open-automatic)
-        open_automatic = true,
+        open_automatic = false,
         -- Run this command after jumping to a symbol (false will disable)
         post_jump_cmd = "normal! zz",
     })

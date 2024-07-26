@@ -14,7 +14,7 @@ map("n", "<leader>ne", ":wincmd l<CR>", nil)
 map("n", "<leader>b", ":wincmd h<CR>", nil)
 
 local fallback_live_grep = function()
-    vim.cmd(':Telescope live_grep')
+    vim.cmd(":Telescope live_grep")
 end
 
 local op = function(input_node)
@@ -38,7 +38,7 @@ local op = function(input_node)
     local relative_path = utils.path_relative(absolute_path, cwd)
     local content = node.nodes ~= nil and utils.path_add_trailing(relative_path) or relative_path
     --require("nvim-tree.notify").info("Copy!")
-    vim.cmd(string.format(':Telescope live_grep search_dirs=./%s', content))
+    vim.cmd(string.format(":Telescope live_grep search_dirs=./%s", content))
 end
 
 -- Reload files in file tree
@@ -82,10 +82,19 @@ map("n", "<leader>dvo", ":DiffviewOpen<CR>", nil)
 map("n", "<leader>dvc", ":DiffviewClose<CR>", nil)
 map("n", "<leader>dvf", ":DiffviewFileHistory %<CR>", nil)
 
+-- Gitsigns
+map("n", "]g", ":Gitsigns next_hunk<CR>", nil)
+map("n", "[g", ":Gitsigns prev_hunk<CR>", nil)
+map("n", "<leader>gph", ":Gitsigns preview_hunk<CR>", nil)
+map("n", "<leader>gpi", ":Gitsigns preview_hunk_inline<CR>", nil)
+map("n", "<leader>gsh", ":Gitsigns select_hunk<CR>", nil)
+map("n", "<leader>gbo", ":Gitsigns blame<CR>", nil)
+map("n", "<leader>gbi", ":Gitsigns blame_line<CR>", nil)
+map("n", "<leader>grh", ":Gitsigns reset_hunk<CR>", nil)
+
 -- Telescope search for word under cursor
 map("n", "gs", ":Telescope grep_string<CR>")
 map("x", "gs", "<ESC>:Telescope grep_string<CR>")
-
 vim.keymap.set("n", "<leader>tdo", function()
     require("util.telescope_diff_picker").diff_file_picker("~/.local/bin/difft", true)
 end, nil)
@@ -98,5 +107,3 @@ end, nil)
 vim.keymap.set("n", "<leader>tge", function()
     require("util.telescope_diff_picker").diff_file_picker(nil, false)
 end, nil)
-
-

@@ -20,13 +20,13 @@ local cfg = function()
             -- Increase contrast slightly for most colors
             -- Green more green, mauve more purple, etc
             mocha = {
-                -- Mauve lavender and blue are often together, 
+                -- Mauve lavender and blue are often together,
                 -- in rust they become pub(mauve) var_name(lavender), fn_name(blue), these are often seen together
                 lavender = "#b9b4fe", -- "#b4befe",
                 blue = "#89a9fa", -- "#89b4fa",
                 mauve = "#bf8bfc", -- "#cba6f7",
                 -- Make strings stand out more
-                green = "#8ede87", -- "#a6e3a1", 
+                green = "#8ede87", -- "#a6e3a1",
                 peach = "#f7a877", -- "#fab387",
                 -- Structs defs, more yellow
                 yellow = "#f5da9f", -- "#f9e2af",

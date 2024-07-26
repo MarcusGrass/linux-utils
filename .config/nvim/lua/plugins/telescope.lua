@@ -3,6 +3,13 @@ local cfg = function()
     local telescope = require("telescope")
     telescope.setup({
         defaults = {
+            layout_config = {
+                horizontal = {
+                    height = 0.95,
+                    width = 0.95,
+                    preview_width = 0.7,
+                },
+            },
             mappings = {
                 i = {},
                 n = {

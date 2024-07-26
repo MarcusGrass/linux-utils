@@ -38,7 +38,9 @@ local cfg = function()
             "git_rebase",
             "make",
             "meson",
+            "regex",
             "terraform",
+            "vim",
             "vimdoc",
         },
     })

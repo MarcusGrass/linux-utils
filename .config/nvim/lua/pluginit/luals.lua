@@ -27,13 +27,10 @@ require("lspconfig").lua_ls.setup({
             format = {
                 enable = false,
             },
-
         })
     end,
     on_attach = shared.lsp_do_attach,
     settings = {
-        Lua = {
-
-        },
+        Lua = {},
     },
 })
