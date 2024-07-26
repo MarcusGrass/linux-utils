@@ -11,6 +11,7 @@ Symlink the files from this directory to `~/.config/nvim` to make risk of local 
 ## Rustaceanvim
 
 Add rust-analyzer to the rust toolchain: 
+
 ```
 rustup component add rust-analyzer
 ```

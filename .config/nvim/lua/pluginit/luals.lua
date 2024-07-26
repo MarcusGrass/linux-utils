@@ -24,10 +24,16 @@ require("lspconfig").lua_ls.setup({
                 -- or pull in all of 'runtimepath'. NOTE: this is a lot slower
                 -- library = vim.api.nvim_get_runtime_file("", true)
             },
+            format = {
+                enable = false,
+            },
+
         })
     end,
     on_attach = shared.lsp_do_attach,
     settings = {
-        Lua = {},
+        Lua = {
+
+        },
     },
 })

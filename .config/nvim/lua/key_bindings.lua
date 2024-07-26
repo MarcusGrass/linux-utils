@@ -76,3 +76,27 @@ map("n", "<C-S-t>", ":ToggleTerm size=15<CR>", nil)
 map("n", "<Tab>", ":BufferNext<CR>", nil)
 map("n", "<S-Tab>", ":BufferPrevious<CR>", nil)
 map("n", "<C-c>", ":BufferClose<CR>", nil)
+
+-- Diffview
+map("n", "<leader>dvo", ":DiffviewOpen<CR>", nil)
+map("n", "<leader>dvc", ":DiffviewClose<CR>", nil)
+map("n", "<leader>dvf", ":DiffviewFileHistory %<CR>", nil)
+
+-- Telescope search for word under cursor
+map("n", "gs", ":Telescope grep_string<CR>")
+map("x", "gs", "<ESC>:Telescope grep_string<CR>")
+
+vim.keymap.set("n", "<leader>tdo", function()
+    require("util.telescope_diff_picker").diff_file_picker("~/.local/bin/difft", true)
+end, nil)
+vim.keymap.set("n", "<leader>tde", function()
+    require("util.telescope_diff_picker").diff_file_picker("~/.local/bin/difft", false)
+end, nil)
+vim.keymap.set("n", "<leader>tgo", function()
+    require("util.telescope_diff_picker").diff_file_picker(nil, true)
+end, nil)
+vim.keymap.set("n", "<leader>tge", function()
+    require("util.telescope_diff_picker").diff_file_picker(nil, false)
+end, nil)
+
+

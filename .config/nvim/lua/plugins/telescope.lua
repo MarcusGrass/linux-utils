@@ -1,4 +1,3 @@
---- Telescope
 local cfg = function()
     local actions = require("telescope.actions")
     local telescope = require("telescope")
@@ -10,6 +9,7 @@ local cfg = function()
                     ["q"] = actions.close,
                 },
             },
+            --set_env = { GIT_EXTERNAL_DIFF = '~/.local/bin/difft' },
         },
         extensions = {
             fzf = {
@@ -27,8 +27,10 @@ end
 return {
     --- Fuzzy find ---
     {
-        "nvim-telescope/telescope.nvim",
-        branch = "0.1.x",
+        "MarcusGrass/telescope.nvim",
+        branch = "mg/use",
+        -- dir = "/home/gramar/code/lua/telescope.nvim",
+        -- dev = { true },
         dependencies = {
             "nvim-lua/plenary.nvim",
         },

@@ -49,6 +49,13 @@ function shared.lsp_do_attach(client, bufnr)
     vim.api.nvim_buf_set_keymap(
         bufnr,
         "n",
+        "<C-S-g>",
+        "<cmd>lua require('telescope.builtin').lsp_dynamic_workspace_symbols()<CR>",
+        lsp_cfg_opts
+    )
+    vim.api.nvim_buf_set_keymap(
+        bufnr,
+        "n",
         "<C-g>",
         "<cmd>lua require('telescope.builtin').lsp_workspace_symbols()<CR>",
         lsp_cfg_opts
@@ -81,7 +88,7 @@ function shared.lsp_do_attach(client, bufnr)
         bufnr,
         "n",
         "<leader>wl",
-        "<cmd>lua print(vim.inspect(vim.lsp.buf.list_workspace_folders()))<CR>",
+        "<cmd>lua vim.lsp.buf.list_workspace_folders()<CR>",
         lsp_cfg_opts
     )
     vim.api.nvim_buf_set_keymap(bufnr, "n", "<space>D", "<cmd>lua vim.lsp.buf.type_definition()<CR>", lsp_cfg_opts)

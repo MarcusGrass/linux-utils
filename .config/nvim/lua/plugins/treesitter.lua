@@ -39,6 +39,7 @@ local cfg = function()
             "make",
             "meson",
             "terraform",
+            "vimdoc",
         },
     })
 end
