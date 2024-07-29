@@ -33,6 +33,7 @@ local cfg = function()
             "css",
             "csv",
             "cmake",
+            "diff",
             "dockerfile",
             "git_config",
             "git_rebase",
