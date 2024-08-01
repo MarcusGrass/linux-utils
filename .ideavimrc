@@ -1,2 +1,70 @@
-set clipboard+=unnamed
+let mapleader=" "
+set clipboard=unnamed,unnamedplus
 set matchpairs+=<:>
+
+
+nnoremap ]e :action GotoNextError<CR>
+nnoremap [e :action GotoPreviousError<CR>
+
+" Search
+nnoremap <leader>ff :action GotoFile<CR>
+nnoremap <leader>fs :action GotoSymbol<CR>
+nnoremap <leader>fa :action GotoAction<CR>
+
+" Lsp
+nnoremap gr :action FindUsages<CR>
+nnoremap gf :action FindUsagesInFile<CR>
+nnoremap ga :action ShowIntentionActions<CR>
+nnoremap ge :action RenameElement<CR>
+
+" Git
+nnoremap <leader>gb :action Annotate<CR>
+nnoremap <leader>gs :action Git.Show.Stash<CR>
+nnoremap <leader>gl :action Vcs.Show.Log<CR>
+nnoremap <leader>ge :action EditSource<CR>
+nnoremap <leader>gs :action Switcher<CR>
+nnoremap ]c :action VcsShowNextChangeMarker<CR>
+nnoremap [c :action VcsShowPrevChangeMarker<CR>
+map [d :action NextDiff<CR>
+map ]d :action PrevDiff<CR>
+nnoremap <leader>cr :action Vcs.RollbackChangedLines<CR>
+
+" Opts
+nnoremap <leader>fc :action ActivateFindToolWindow<CR>
+nnoremap <leader>to :action ActivateTerminalToolWindow<CR>
+nnoremap <leader>co :action Vcs.Show.Local.Changes<CR>
+nnoremap <leader>hw :action HideActiveWindow<CR>
+nnoremap <leader>hs :action HideSideWindows<CR>
+nnoremap <leader>ha :action HideAllWindows<CR>
+nnoremap <esc> :action EditorEscape<CR>
+nnoremap <leader>ss :action WelcomeScreen.Settings<CR>
+nnoremap <leader>sp :action WelcomeScreen.Plugins<CR>
+
+" Easymotion is integrated into JetBrains stuff https://github.com/AlexPl292/IdeaVim-EasyMotion#supported-commands
+" requires AceJump and IdeaVim-EasyMotion
+set easymotion
+
+" nmap s <Action>(AceForwardAction)
+" nmap S <Action>(AceBackwardAction)
+nmap s <Plug>(easymotion-f)
+nmap S <Plug>(easymotion-F)
+" Both are needed, nnoremap does not work
+xmap s <Plug>(easymotion-f)
+xmap S <Plug>(easymotion-F)
+
+
+" Dir bindings
+" Make sure to disable Open Files with Single Click
+" and Open Files in Preview Tab
+set NERDTree
+
+" Focus
+nnoremap <leader>nt :NERDTree<CR>
+" Open current file in NERDTree
+nnoremap <leader>no :NERDTreeFind<CR>
+nnoremap <leader>nr :NERDTreeRefreshRoot<CR>
+
+" Comment out chunks
+set commentary
+
+" Experimental
