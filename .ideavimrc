@@ -3,8 +3,8 @@ set clipboard=unnamed,unnamedplus
 set matchpairs+=<:>
 
 
-nnoremap ]e :action GotoNextError<CR>
-nnoremap [e :action GotoPreviousError<CR>
+nnoremap ]d :action GotoNextError<CR>
+nnoremap [d :action GotoPreviousError<CR>
 
 " Search
 nnoremap <leader>ff :action GotoFile<CR>
@@ -16,6 +16,7 @@ nnoremap gr :action FindUsages<CR>
 nnoremap gf :action FindUsagesInFile<CR>
 nnoremap ga :action ShowIntentionActions<CR>
 nnoremap ge :action RenameElement<CR>
+nnoremap gi :action GotoImplementation<CR>
 
 " Git
 nnoremap <leader>gb :action Annotate<CR>
@@ -25,8 +26,6 @@ nnoremap <leader>ge :action EditSource<CR>
 nnoremap <leader>gs :action Switcher<CR>
 nnoremap ]c :action VcsShowNextChangeMarker<CR>
 nnoremap [c :action VcsShowPrevChangeMarker<CR>
-map [d :action NextDiff<CR>
-map ]d :action PrevDiff<CR>
 nnoremap <leader>cr :action Vcs.RollbackChangedLines<CR>
 
 " Opts
