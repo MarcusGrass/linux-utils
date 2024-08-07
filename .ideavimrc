@@ -32,6 +32,7 @@ nnoremap <leader>cr :action Vcs.RollbackChangedLines<CR>
 nnoremap <leader>fc :action ActivateFindToolWindow<CR>
 nnoremap <leader>to :action ActivateTerminalToolWindow<CR>
 nnoremap <leader>co :action Vcs.Show.Local.Changes<CR>
+nnoremap <leader>so :action ACtivateStructureToolWindow<CR>
 nnoremap <leader>hw :action HideActiveWindow<CR>
 nnoremap <leader>hs :action HideSideWindows<CR>
 nnoremap <leader>ha :action HideAllWindows<CR>
