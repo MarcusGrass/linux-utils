@@ -24,6 +24,7 @@ nnoremap <leader>gs :action Git.Show.Stash<CR>
 nnoremap <leader>gl :action Vcs.Show.Log<CR>
 nnoremap <leader>ge :action EditSource<CR>
 nnoremap <leader>gs :action Switcher<CR>
+nnoremap <leader>gg :action Generate<CR>
 nnoremap ]c :action VcsShowNextChangeMarker<CR>
 nnoremap [c :action VcsShowPrevChangeMarker<CR>
 nnoremap <leader>cr :action Vcs.RollbackChangedLines<CR>
