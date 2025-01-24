@@ -10,6 +10,7 @@ export COLORTERM=truecolor
 export ANDROID_HOME="$HOME/Android/Sdk"
 export PATH="$HOME/.local/bin:$HOME/.cargo/bin:$PATH:$HOME/misc/flutter/flutter/bin:$ANDROID_HOME:$ANDROID_HOME/tools:$ANDROID_HOME/tools/bin:$ANDROID_HOME/platform-tools:$HOME/.pub-cache/bin:$HOME/go/bin:$HOME/misc/zig/zig-linux-x86_64-0.11.0"
 export XDG_DATA_DIRS="$XDG_DATA_DIRS:$HOME/.local/share/flatpak/exports/share:/var/lib/flatpak/exports/share"
+export XDG_CACHE_HOME="$HOME/.cache/"
 export XZ_DEFAULTS="-T0"
 export HELIX_RUNTIME="$HOME/code/rust/helix/runtime"
 

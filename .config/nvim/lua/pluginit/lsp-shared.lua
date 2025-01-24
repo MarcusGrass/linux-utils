@@ -68,6 +68,7 @@ function shared.lsp_do_attach(client, bufnr)
         lsp_cfg_opts
     )
     vim.api.nvim_buf_set_keymap(bufnr, "n", "<S-r>", "<cmd>lua vim.lsp.buf.rename()<CR>", lsp_cfg_opts)
+    vim.api.nvim_buf_set_keymap(bufnr, "n", "ge", "<cmd>lua vim.lsp.buf.rename()<CR>", lsp_cfg_opts)
     vim.api.nvim_buf_set_keymap(bufnr, "n", "K", "<cmd>lua vim.lsp.buf.hover()<CR>", lsp_cfg_opts)
     vim.api.nvim_buf_set_keymap(bufnr, "n", "<C-k>", "<cmd>lua vim.lsp.buf.signature_help()<CR>", lsp_cfg_opts)
     vim.api.nvim_buf_set_keymap(

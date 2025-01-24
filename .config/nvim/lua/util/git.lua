@@ -20,8 +20,13 @@ M.git_base_directory = function()
     return base_dir
 end
 
-M.git_iter_diffed_files_abs_path = function()
-    local cmd = string.format("git --no-pager diff --name-only $(git merge-base HEAD $(%s))", get_current_branch_cmd)
+M.git_iter_diffed_files_abs_path = function(at_origin)
+    local cmd = nil
+    if at_origin then
+        cmd = string.format("git --no-pager diff --name-only $(git merge-base HEAD $(%s))", get_current_branch_cmd)
+    else
+        cmd = string.format("git --no-pager diff --name-only $(git merge-base origin/HEAD $(%s))", get_current_branch_cmd)
+    end
     local handle = io.popen(cmd)
     if handle == nil then
         return
@@ -62,10 +67,16 @@ M.git_iter_diffed_default_branch_abs_path = function()
     return it
 end
 
-M.git_show_merge_base = function(branch_diff)
+M.git_show_merge_base = function(branch_diff, at_origin)
     local cmd = nil
     if branch_diff then
-        cmd = string.format("git --no-pager merge-base HEAD $(%s)", last_shared_commit_with_default_brach)
+        if at_origin then
+            cmd = string.format("git --no-pager merge-base origin/HEAD $(%s)", last_shared_commit_with_default_brach)
+        else
+            cmd = string.format("git --no-pager merge-base HEAD $(%s)", last_shared_commit_with_default_brach)
+        end
+    elseif at_origin then
+        cmd = string.format("git --no-pager merge-base origin/HEAD $(%s)", get_current_branch_cmd)
     else
         cmd = string.format("git --no-pager merge-base HEAD $(%s)", get_current_branch_cmd)
     end

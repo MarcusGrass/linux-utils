@@ -1,10 +1,35 @@
 # Todo
 
-## Git 
+## General
 
-- Telescope all changes from current branch to default branch
+General necessary fixes
 
-- difft current file, changes since last commit
+### Sneak
 
-- difft current file, changes between this and default branch
+-[ ] Underscore searches doesn't work, cancels search, check settings
+
+## Fuzzy search sources
+
+Probably some LSP integration, in the `Rust` case I need to know where Cargo stores the specific sources for a given project and fuzzy-search in there,
+I would like to NvimTree the sources
+
+## Diffview
+
+- [x] open specific file with <C-ENTER> or similar, currently <C-w>gf
+
+
+## Telescope
+
+- [ ] Find files not working at some depth
+
+## Lsp
+
+- [ ] Figure out how to go to inline type-hint definitions
+
+
+## Additions
+
+### JQ
+
+- [ ] Add JQ formatting with vim.notify on errors formatting
 

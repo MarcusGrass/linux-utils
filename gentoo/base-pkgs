@@ -50,13 +50,11 @@ sys-libs/efivar
 sys-process/cronie
 sys-process/htop
 virtual/jdk
-www-client/brave-bin
 www-client/firefox
 www-client/links
 x11-apps/setxkbmap
 x11-apps/xrestop
 x11-base/xorg-server
-x11-drivers/nvidia-drivers
 x11-misc/arandr
 x11-misc/dmenu
 x11-misc/dunst

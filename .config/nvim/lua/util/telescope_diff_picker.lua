@@ -1,6 +1,10 @@
 local M = {}
 
-M.diff_file_picker = function(custom_diff, branch_diff)
+---comment
+---@param custom_diff string | nil, if using a custom diff tool, path
+---@param branch_diff boolean diffing a branch
+---@param at_origin boolean diffing with origin
+M.diff_file_picker = function(custom_diff, branch_diff, at_origin)
     local git = require("util.git")
     local diff_files = function()
         local base = git.git_base_directory()
@@ -55,7 +59,7 @@ M.diff_file_picker = function(custom_diff, branch_diff)
                 title = "Difft preview",
                 env = use_env,
                 get_command = function(entry)
-                    local merge_base = git.git_show_merge_base(branch_diff)
+                    local merge_base = git.git_show_merge_base(branch_diff, at_origin)
                     return { "git", "diff", merge_base, entry.value }
                 end,
                 teardown = buf_prev.search_teardown,

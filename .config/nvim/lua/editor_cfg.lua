@@ -9,6 +9,25 @@ vim.opt.spell = true
 --- Keys
 vim.g.mapleader = " "
 
+--- Keep undos persistent, and pick a directory to not save it next to the files being edited
+--- https://neovim.io/doc/user/undo.html#undo-persistence
+--- Vim seems to be able to create these by itself
+local prefix = vim.env.XDG_CACHE_HOME or vim.fn.expand("~/.cache")
+local undo_dir = { prefix .. "/nvim/.undo//"}
+local backup_dir = { prefix .. "/nvim/.backup//"}
+local directory = { prefix .. "/nvim/.swp//"}
+
+vim.opt.undodir = undo_dir
+vim.opt.backupdir = backup_dir
+vim.opt.directory = directory
+vim.opt.undofile = true
+--- https://neovim.io/doc/user/options.html#'undolevels'
+--- Default is 1000, set to 100_000, how many undos to save
+vim.opt.undolevels = 100000
+--- https://neovim.io/doc/user/options.html#'undoreload'
+--- Default is 10_000, set to 100_000, 
+vim.opt.undoreload = 100000
+
 --- Editing
 -- Matching pairs https://neovim.io/doc/user/options.html#'matchpairs'
 table.insert(vim.opt.matchpairs, "<:>")

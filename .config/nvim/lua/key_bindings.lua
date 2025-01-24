@@ -42,15 +42,15 @@ local op = function(input_node)
 end
 
 -- Reload files in file tree
-map("n", "<leader>nvr", ":NvimTreeRefresh<CR>", nil)
+map("n", "<leader>nr", ":NvimTreeRefresh<CR>", nil)
 -- Switch focus to file tree
-map("n", "<leader>nvt", ":NvimTreeFocus<CR>", nil)
+map("n", "<leader>nt", ":NvimTreeFocus<CR>", nil)
 -- Open current file in tree
-map("n", "<leader>nvo", ":NvimTreeFindFile<CR>", nil)
+map("n", "<leader>no", ":NvimTreeFindFile<CR>", nil)
 -- Collapse all files in tree
-map("n", "<leader>nvc", ":NvimTreeCollapse<CR>", nil)
+map("n", "<leader>nc", ":NvimTreeCollapse<CR>", nil)
 -- Open telescope live grep at current nvt location if present
-vim.keymap.set("n", "<leader>nvf", op, nil)
+vim.keymap.set("n", "<leader>nf", op, nil)
 
 -- Open telescope live grep (Ctrl+Shift+f)
 map("n", "<C-S-f>", ":Telescope live_grep<CR>", nil)
@@ -73,14 +73,17 @@ map("n", "<C-S-t>", ":ToggleTerm size=15<CR>", nil)
 -- nnoremap <F29> :TermExec size=15 cmd='cargo build --release'<CR>
 
 -- Bar nav
-map("n", "<Tab>", ":BufferNext<CR>", nil)
-map("n", "<S-Tab>", ":BufferPrevious<CR>", nil)
-map("n", "<C-c>", ":BufferClose<CR>", nil)
+map("n", "<Tab>", ":bnext<CR>", nil)
+map("n", "<S-Tab>", ":bprev<CR>", nil)
+-- Use del to navigate between windows
+map("n", "<C-H>", "<C-w>W", nil)
+map("n", "<C-S-H>", "<C-w>w", nil)
+map("n", "<C-c>", ":bd<CR>:bprev<CR>", nil)
 
 -- Diffview
-map("n", "<leader>dvo", ":DiffviewOpen<CR>", nil)
-map("n", "<leader>dvc", ":DiffviewClose<CR>", nil)
-map("n", "<leader>dvf", ":DiffviewFileHistory %<CR>", nil)
+map("n", "<leader>do", ":DiffviewOpen<CR>", nil)
+map("n", "<leader>dc", ":DiffviewClose<CR>", nil)
+map("n", "<leader>df", ":DiffviewFileHistory %<CR>", nil)
 
 -- Gitsigns
 map("n", "]g", ":Gitsigns next_hunk<CR>", nil)
@@ -91,19 +94,39 @@ map("n", "<leader>gsh", ":Gitsigns select_hunk<CR>", nil)
 map("n", "<leader>gbo", ":Gitsigns blame<CR>", nil)
 map("n", "<leader>gbi", ":Gitsigns blame_line<CR>", nil)
 map("n", "<leader>grh", ":Gitsigns reset_hunk<CR>", nil)
+map("n", "<leader>grb", ":Gitsigns reset_buffer<CR>", nil)
+map("n", "<leader>gsh", ":Gitsigns stage_hunk<CR>", nil)
+map("n", "<leader>gsb", ":Gitsigns stage_buffer<CR>", nil)
+
+-- Fugitive
+map("n", "<leader>gfo", ":Git<CR>")
+map("n", "<leader>gff", ":Git fetch<CR>")
+map("n", "<leader>gfp", ":Git push<CR>")
 
 -- Telescope search for word under cursor
 map("n", "gs", ":Telescope grep_string<CR>")
 map("x", "gs", "<ESC>:Telescope grep_string<CR>")
 vim.keymap.set("n", "<leader>tdo", function()
-    require("util.telescope_diff_picker").diff_file_picker("~/.local/bin/difft", true)
+    require("util.telescope_diff_picker").diff_file_picker("~/.local/bin/difft", true, false)
 end, nil)
 vim.keymap.set("n", "<leader>tde", function()
-    require("util.telescope_diff_picker").diff_file_picker("~/.local/bin/difft", false)
+    require("util.telescope_diff_picker").diff_file_picker("~/.local/bin/difft", false, false)
+end, nil)
+vim.keymap.set("n", "<leader>tdu", function()
+    require("util.telescope_diff_picker").diff_file_picker("~/.local/bin/difft", false, true)
 end, nil)
 vim.keymap.set("n", "<leader>tgo", function()
-    require("util.telescope_diff_picker").diff_file_picker(nil, true)
+    require("util.telescope_diff_picker").diff_file_picker(nil, true, false)
 end, nil)
 vim.keymap.set("n", "<leader>tge", function()
-    require("util.telescope_diff_picker").diff_file_picker(nil, false)
+    require("util.telescope_diff_picker").diff_file_picker(nil, false, false)
 end, nil)
+vim.keymap.set("n", "<leader>tgu", function()
+    require("util.telescope_diff_picker").diff_file_picker(nil, false, true)
+end, nil)
+
+
+vim.keymap.set("n", "<leader>ip", function()
+    require("util.telescope_inlay_hint_picker").inlay_picker()
+end, nil)
+

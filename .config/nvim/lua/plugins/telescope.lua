@@ -34,10 +34,7 @@ end
 return {
     --- Fuzzy find ---
     {
-        "MarcusGrass/telescope.nvim",
-        branch = "mg/use",
-        -- dir = "/home/gramar/code/lua/telescope.nvim",
-        -- dev = { true },
+        "nvim-telescope/telescope.nvim", tag = "0.1.8",
         dependencies = {
             "nvim-lua/plenary.nvim",
         },

@@ -3,7 +3,6 @@ local cfg = function()
         flavour = "mocha",
         integrations = {
             aerial = true,
-            barbar = true,
             cmp = true,
             diffview = true,
             gitsigns = true,
