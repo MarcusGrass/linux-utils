@@ -125,8 +125,3 @@ vim.keymap.set("n", "<leader>tgu", function()
     require("util.telescope_diff_picker").diff_file_picker(nil, false, true)
 end, nil)
 
-
-vim.keymap.set("n", "<leader>ip", function()
-    require("util.telescope_inlay_hint_picker").inlay_picker()
-end, nil)
-

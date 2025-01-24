@@ -12,6 +12,10 @@ local cfg = function()
                     capabilities = shared.lsp_status.capabilities,
                     -- enable clippy on save
                     checkOnSave = true,
+                    inlayHints = {
+                        -- never truncate inlay hints
+                        maxLength = 9999,
+                    }
                 },
             },
         },

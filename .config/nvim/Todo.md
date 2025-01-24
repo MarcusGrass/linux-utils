@@ -6,7 +6,7 @@ General necessary fixes
 
 ### Sneak
 
--[ ] Underscore searches doesn't work, cancels search, check settings
+- [ ] Underscore searches doesn't work, cancels search, check settings
 
 ## Fuzzy search sources
 
@@ -20,7 +20,8 @@ I would like to NvimTree the sources
 
 ## Telescope
 
-- [ ] Find files not working at some depth
+- [x] Find files not working at some depth
+- [ ] treesitter on diff buffers on custom differ
 
 ## Lsp
 
