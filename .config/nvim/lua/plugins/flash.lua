@@ -1,4 +1,4 @@
-local cfg = function ()
+local cfg = function()
     require("flash").setup({
         jump = {
             autojump = true,

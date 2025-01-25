@@ -25,7 +25,8 @@ M.git_iter_diffed_files_abs_path = function(at_origin)
     if at_origin then
         cmd = string.format("git --no-pager diff --name-only $(git merge-base HEAD $(%s))", get_current_branch_cmd)
     else
-        cmd = string.format("git --no-pager diff --name-only $(git merge-base origin/HEAD $(%s))", get_current_branch_cmd)
+        cmd =
+            string.format("git --no-pager diff --name-only $(git merge-base origin/HEAD $(%s))", get_current_branch_cmd)
     end
     local handle = io.popen(cmd)
     if handle == nil then

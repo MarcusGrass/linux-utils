@@ -15,7 +15,7 @@ local cfg = function()
                     inlayHints = {
                         -- never truncate inlay hints
                         maxLength = 9999,
-                    }
+                    },
                 },
             },
         },
