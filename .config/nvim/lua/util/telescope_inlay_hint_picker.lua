@@ -45,8 +45,6 @@ M.inlay_picker = function()
                 function(picker)
                     if picker.manager.linked_states.size == 1 then
                         actions.select_default(picker.prompt_bufnr)
-                    elseif picker.manager.linked_states.size == 0 then
-                        actions.close(picker.prompt_bufnr)
                     end
                 end
             }

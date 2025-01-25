@@ -30,7 +30,7 @@ vim.opt.undoreload = 100000
 
 --- Editing
 -- Matching pairs https://neovim.io/doc/user/options.html#'matchpairs'
-table.insert(vim.opt.matchpairs, "<:>")
+vim.opt.matchpairs:append("<:>")
 
 --- Quirks
 -- Hide buffers whe abandoned, TextEdit might fail if hidden is not set.
