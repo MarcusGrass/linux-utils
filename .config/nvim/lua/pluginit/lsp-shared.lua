@@ -94,15 +94,21 @@ function shared.lsp_do_attach(client, bufnr)
     )
     vim.api.nvim_buf_set_keymap(bufnr, "n", "<space>D", "<cmd>lua vim.lsp.buf.type_definition()<CR>", lsp_cfg_opts)
     -- Custom
-    vim.api.nvim_buf_set_keymap(bufnr, "n", "gh", "<cmd>lua require('util.telescope_inlay_hint_picker').inlay_picker()<CR>", lsp_cfg_opts)
+    vim.api.nvim_buf_set_keymap(
+        bufnr,
+        "n",
+        "gh",
+        "<cmd>lua require('util.telescope_inlay_hint_picker').inlay_picker()<CR>",
+        lsp_cfg_opts
+    )
 
     if client.supports_method("textDocument/formatting") then
         vim.api.nvim_clear_autocmds({ group = fmt_augroup, buffer = bufnr })
         vim.api.nvim_create_autocmd("BufWritePre", {
             group = fmt_augroup,
-            buffer = bufnr,
+            pattern = "*",
             callback = function()
-                vim.lsp.buf.format()
+                require("conform").format({ bufnr = bufnr })
             end,
         })
     end

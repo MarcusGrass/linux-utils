@@ -24,6 +24,7 @@ Install from [source](https://github.com/LuaLS/lua-language-server)
 2. `./make.sh`
 3. Make proxy bash file on path `exec "<path>" "$@"`
 
+Install stylua using cargo `cargo install stylua`
 
 ## pylsp
 
@@ -40,3 +41,4 @@ the path is correct.
 
 Can currently be found in gentoo repos at 
 [dev-util/ccls](https://packages.gentoo.org/packages/dev-util/ccls), just merge.
+

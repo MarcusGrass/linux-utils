@@ -25,7 +25,7 @@ I would like to NvimTree the sources
 
 ## Lsp
 
-- [ ] Figure out how to go to inline type-hint definitions
+- [x] Figure out how to go to inline type-hint definitions
 
 
 ## Additions
