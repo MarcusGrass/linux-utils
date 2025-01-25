@@ -3,6 +3,9 @@ local cfg = function()
     vim.g.rustaceanvim = {
         tools = {
             enable_clippy = true,
+            float_win_config = {
+                auto_focus = true,
+            },
         },
         server = {
             auto_attach = true,

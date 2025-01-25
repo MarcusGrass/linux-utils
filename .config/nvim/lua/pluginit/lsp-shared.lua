@@ -20,18 +20,17 @@ function shared.lsp_do_attach(client, bufnr)
     vim.api.nvim_buf_set_keymap(
         bufnr,
         "n",
-        "gA",
-        "<cmd>lua require('telescope.builtin').lsp_range_code_actions()<CR>",
+        "gd",
+        "<cmd>lua require('telescope.builtin').lsp_definitions()<CR>",
         lsp_cfg_opts
     )
     vim.api.nvim_buf_set_keymap(
         bufnr,
         "n",
-        "gd",
-        "<cmd>lua require('telescope.builtin').lsp_definitions()<CR>",
+        "gD",
+        "<cmd>lua require('telescope.builtin').lsp_type_definitions()<CR>",
         lsp_cfg_opts
     )
-    vim.api.nvim_buf_set_keymap(bufnr, "n", "gD", "<cmd>lua vim.lsp.buf.declaration()<CR>", lsp_cfg_opts)
     vim.api.nvim_buf_set_keymap(
         bufnr,
         "n",
@@ -102,16 +101,6 @@ function shared.lsp_do_attach(client, bufnr)
         lsp_cfg_opts
     )
 
-    if client.supports_method("textDocument/formatting") then
-        vim.api.nvim_clear_autocmds({ group = fmt_augroup, buffer = bufnr })
-        vim.api.nvim_create_autocmd("BufWritePre", {
-            group = fmt_augroup,
-            pattern = "*",
-            callback = function()
-                require("conform").format({ bufnr = bufnr })
-            end,
-        })
-    end
     shared.lsp_status.on_attach(client)
 end
 

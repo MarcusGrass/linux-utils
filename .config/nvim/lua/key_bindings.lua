@@ -78,7 +78,7 @@ map("n", "<S-Tab>", ":bprev<CR>", nil)
 -- Use del to navigate between windows
 map("n", "<C-H>", "<C-w>W", nil)
 map("n", "<C-S-H>", "<C-w>w", nil)
-map("n", "<C-c>", ":bd<CR>:bprev<CR>", nil)
+map("n", "<C-c>", ":bd<CR>:bNext<CR>", nil)
 
 -- Diffview
 map("n", "<leader>do", ":DiffviewOpen<CR>", nil)
