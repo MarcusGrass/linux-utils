@@ -18,7 +18,7 @@ local fallback_live_grep = function()
 end
 
 local op = function(input_node)
-    local node = input_node or require("nvim-tree.lib").get_node_at_cursor()
+    local node = input_node or require("nvim-tree.api").tree.get_node_under_cursor()
     if node == nil then
         fallback_live_grep()
         return
