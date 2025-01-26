@@ -12,7 +12,13 @@ local cfg = function()
     require("nvim-tree").setup({
         on_attach = my_on_attach,
         open_on_tab = true,
-
+        -- Becomes really weird with searches otherwise
+        sync_root_with_cwd = true,
+        actions = {
+            change_dir = {
+                global = true,
+            },
+        },
         git = {
             enable = true,
             ignore = true,

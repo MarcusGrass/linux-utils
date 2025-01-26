@@ -16,7 +16,14 @@ debugged by finding a file that didn't render properly and running `:verbose set
 ## Fuzzy search sources
 
 Probably some LSP integration, in the `Rust` case I need to know where Cargo stores the specific sources for a given project and fuzzy-search in there,
-I would like to NvimTree the sources
+I would like to NvimTree the sources. 
+
+Could probably be implemented with Telescope, I need to list the unique sources and versions (found in Cargo.lock), 
+then find those local dependencies they should be in `~/.cargo.registry/src/index.crate.io-<hash>`. 
+However, that hash is suspect, I could wildcard match it... 
+
+Ideally I could open a separate nvimtree for the dependency, but it seems to be WIP: https://github.com/nvim-tree/nvim-tree.lua/issues/2255
+
 
 ## Diffview
 
