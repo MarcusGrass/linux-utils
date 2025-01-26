@@ -4,6 +4,7 @@ local cfg = function()
             lua = { "stylua" },
             python = { "isort", "black" },
             rust = { "rustfmt" },
+            json = { "jq" },
         },
         format_on_save = {
             timeout_ms = 500,
