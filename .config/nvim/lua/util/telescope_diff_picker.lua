@@ -67,4 +67,48 @@ M.diff_file_picker = function(custom_diff, branch_diff, at_origin)
         })
         :find()
 end
+
+M.snacks_diff_file_picker = function(custom_diff, branch_diff, at_origin)
+    local git = require("util.git")
+    local diff_files = function()
+        local base = git.git_base_directory()
+        if base == nil then
+            return nil
+        end
+        local files_iter = {}
+        if branch_diff then
+            files_iter = git.git_iter_diffed_default_branch_abs_path()
+        else
+            files_iter = git.git_iter_diffed_files_abs_path()
+        end
+        local files = {}
+        for s in files_iter do
+            table.insert(files, base .. "/" .. s)
+        end
+        return files
+    end
+    local use_env = nil
+    if custom_diff ~= nil then
+        use_env = { ["GIT_EXTERNAL_DIFF"] = custom_diff }
+    end
+    return require("snacks").picker({
+        finder = function()
+            local items = {}
+            local files = diff_files()
+            local idx = 0
+            for _, file in pairs(files) do
+                local merge_base = git.git_show_merge_base(branch_diff, at_origin)
+                local handle = io.popen(string.format("git --no-pager diff %s %s", merge_base, file))
+                local text = handle.read("*a")
+                table.insert(items, {
+                    idx = idx,
+                    file = file,
+                    text = text,
+                })
+                idx = idx + 1
+            end
+            return items
+        end,
+    })
+end
 return M

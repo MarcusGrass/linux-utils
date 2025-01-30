@@ -1,5 +1,10 @@
 # Todo
 
+## Replacements
+
+- [ ] Use Snacks pickers over Telescope, remove Telescope completely.
+- [ ] Switch to neotree, needs to implement search-in-dir.
+
 ## QoL
 
 Maybe not necessary, but still important fixes
@@ -11,6 +16,12 @@ Maybe not necessary, but still important fixes
 ## General
 
 General necessary fixes
+
+### Snacks
+
+#### Picker
+
+Backspace doesn't work in input window insert mode, shift+backspace does however. could be some other part of my config that's busted.
 
 ### Sneak
 
