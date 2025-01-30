@@ -13,8 +13,11 @@ map("n", "<CR>", ":noh<CR><CR>", nil)
 map("n", "<leader>ne", ":wincmd l<CR>", nil)
 map("n", "<leader>b", ":wincmd h<CR>", nil)
 
+-- Save all close all, but handle some buffers not being save-closeable
+map("n", ":wqa<CR>", ":wq<CR>:qa<CR>", nil)
+
 local fallback_live_grep = function()
-    vim.cmd(":Telescope live_grep")
+    vim.cmd(":lua Snacks.picker.pick(\"grep\")<CR>")
 end
 
 local op = function(input_node)
@@ -38,7 +41,7 @@ local op = function(input_node)
     local relative_path = utils.path_relative(absolute_path, cwd)
     local content = node.nodes ~= nil and utils.path_add_trailing(relative_path) or relative_path
     --require("nvim-tree.notify").info("Copy!")
-    vim.cmd(string.format(":Telescope live_grep search_dirs=./%s", content))
+    vim.cmd(string.format(":lua Snacks.picker.pick(\"grep\", {dirs = { \"./%s\" } })", content))
 end
 
 -- Reload files in file tree
@@ -52,13 +55,11 @@ map("n", "<leader>nc", ":NvimTreeCollapse<CR>", nil)
 -- Open telescope live grep at current nvt location if present
 vim.keymap.set("n", "<leader>nf", op, nil)
 
--- Open telescope live grep (Ctrl+Shift+f)
-map("n", "<C-S-f>", ":Telescope live_grep<CR>", nil)
+-- Open snacks grep (Ctrl+Shift+f)
+map("n", "<C-S-f>", ":lua Snacks.picker.pick(\"grep\")<CR>", nil)
 
--- Open telescope live grep (Ctrl+Shift+f)
--- map("n", "<C-S-f>", ":Telescope live_grep", nil)
--- Open telescope file finder
-map("n", "<leader>ff", ":Telescope find_files<CR>", nil)
+-- Open snacks file finder
+map("n", "<leader>ff", ":lua Snacks.picker.pick(\"files\")<CR>", nil)
 
 -- Toggle aerial
 map("n", "<leader>aet", ":AerialToggle!<CR>", nil)
@@ -103,9 +104,9 @@ map("n", "<leader>gfo", ":Git<CR>")
 map("n", "<leader>gff", ":Git fetch<CR>")
 map("n", "<leader>gfp", ":Git push<CR>")
 
--- Telescope search for word under cursor
-map("n", "gs", ":Telescope grep_string<CR>")
-map("x", "gs", "<ESC>:Telescope grep_string<CR>")
+-- Picker search for word under cursor
+map("n", "gs", ":lua Snacks.picker.pick(\"grep_word\")<CR>")
+map("x", "gs", "<ESC>:lua Snacks.picker.pick(\"grep_word\")<CR>")
 vim.keymap.set("n", "<leader>tdo", function()
     require("util.telescope_diff_picker").diff_file_picker("~/.local/bin/difft", true, false)
 end, nil)

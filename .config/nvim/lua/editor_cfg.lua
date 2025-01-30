@@ -32,6 +32,12 @@ vim.opt.undoreload = 100000
 -- Matching pairs https://neovim.io/doc/user/options.html#'matchpairs'
 vim.opt.matchpairs:append("<:>")
 
+--- Lines
+--- I want line-breaks to be visible
+vim.opt.listchars = {
+    eol = "↵"
+}
+vim.opt.list = true
 --- Quirks
 -- Hide buffers whe abandoned, TextEdit might fail if hidden is not set.
 vim.opt.hidden = true

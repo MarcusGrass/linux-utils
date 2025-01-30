@@ -1,5 +1,13 @@
 # Todo
 
+## QoL
+
+Maybe not necessary, but still important fixes
+
+### Cargo auto-complete on deps
+
+- [x] The `cargo` plugin check dependency versions, but not (at least not as configured) available features, autocomplete on toml format etc.
+
 ## General
 
 General necessary fixes
