@@ -35,7 +35,7 @@ vim.opt.matchpairs:append("<:>")
 --- Lines
 --- I want line-breaks to be visible
 vim.opt.listchars = {
-    eol = "↵"
+    eol = "↵",
 }
 vim.opt.list = true
 --- Quirks

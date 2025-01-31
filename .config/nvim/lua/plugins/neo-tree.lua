@@ -33,6 +33,7 @@ local cfg = function(_, opts)
                 hijack_netrw_behavior = "open_current",
             },
         },
+        auto_clean_after_session_restore = true,
     })
 end
 return {
