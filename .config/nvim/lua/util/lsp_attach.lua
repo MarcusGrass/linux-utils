@@ -8,48 +8,30 @@ function M.lsp_do_attach(client, bufnr)
     -- Mappings.
     -- See `:help vim.lsp.*` for documentation on any of the below functions
     vim.api.nvim_buf_set_keymap(bufnr, "n", "ga", "<cmd>lua vim.lsp.buf.code_action()<CR>", lsp_cfg_opts)
-    vim.api.nvim_buf_set_keymap(
-        bufnr,
-        "n",
-        "gd",
-        "<cmd>lua Snacks.picker.pick(\"lsp_definitions\")<CR>",
-        lsp_cfg_opts
-    )
+    vim.api.nvim_buf_set_keymap(bufnr, "n", "gd", '<cmd>lua Snacks.picker.pick("lsp_definitions")<CR>', lsp_cfg_opts)
     vim.api.nvim_buf_set_keymap(
         bufnr,
         "n",
         "gD",
-        "<cmd>lua Snacks.picker.pick(\"lsp_type_definitions\")<CR>",
+        '<cmd>lua Snacks.picker.pick("lsp_type_definitions")<CR>',
         lsp_cfg_opts
     )
-    vim.api.nvim_buf_set_keymap(
-        bufnr,
-        "n",
-        "gr",
-        "<cmd>lua Snacks.picker.pick(\"lsp_references\")<CR>",
-        lsp_cfg_opts
-    )
+    vim.api.nvim_buf_set_keymap(bufnr, "n", "gr", '<cmd>lua Snacks.picker.pick("lsp_references")<CR>', lsp_cfg_opts)
     vim.api.nvim_buf_set_keymap(
         bufnr,
         "n",
         "gi",
-        "<cmd>lua Snacks.picker.pick(\"lsp_implementations\")<CR>",
+        '<cmd>lua Snacks.picker.pick("lsp_implementations")<CR>',
         lsp_cfg_opts
     )
     vim.api.nvim_buf_set_keymap(
         bufnr,
         "n",
         "<C-g>",
-        "<cmd>lua Snacks.picker.pick(\"lsp_workspace_symbols\")<CR>",
+        '<cmd>lua Snacks.picker.pick("lsp_workspace_symbols")<CR>',
         lsp_cfg_opts
     )
-    vim.api.nvim_buf_set_keymap(
-        bufnr,
-        "n",
-        "g0",
-        "<cmd>lua Snacks.picker.pick(\"lsp_symbols\")<CR>",
-        lsp_cfg_opts
-    )
+    vim.api.nvim_buf_set_keymap(bufnr, "n", "g0", '<cmd>lua Snacks.picker.pick("lsp_symbols")<CR>', lsp_cfg_opts)
     vim.api.nvim_buf_set_keymap(bufnr, "n", "<S-r>", "<cmd>lua vim.lsp.buf.rename()<CR>", lsp_cfg_opts)
     vim.api.nvim_buf_set_keymap(bufnr, "n", "ge", "<cmd>lua vim.lsp.buf.rename()<CR>", lsp_cfg_opts)
     vim.api.nvim_buf_set_keymap(bufnr, "n", "K", "<cmd>lua vim.lsp.buf.hover()<CR>", lsp_cfg_opts)
@@ -81,7 +63,7 @@ function M.lsp_do_attach(client, bufnr)
         bufnr,
         "n",
         "gh",
-        "<cmd>lua require('util.telescope_inlay_hint_picker').inlay_picker()<CR>",
+        "<cmd>lua require('util.telescope_inlay_hint_picker').snacks_inlay_picker()<CR>",
         lsp_cfg_opts
     )
 end

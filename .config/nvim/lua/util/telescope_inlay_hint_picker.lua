@@ -53,6 +53,31 @@ M.inlay_picker = function()
         :find()
 end
 
+M.snacks_inlay_picker = function()
+    local hints = M.inlay_analyze()
+    local items = {}
+    local idx = 0
+    for _, hint in pairs(hints) do
+        table.insert(items, {
+            idx = idx,
+            file = hint.uri,
+            text = hint.ident,
+            pos = { hint.start_line + 1, 1 },
+        })
+        idx = idx + 1
+    end
+
+    return require("snacks").picker({
+        items = items,
+        format = function(item)
+            local ret = {}
+            ret[#ret + 1] = { item.text }
+            return ret
+        end,
+    })
+
+end
+
 local function string_starts_with(String, Start)
     return string.sub(String, 1, string.len(Start))==Start
 end
