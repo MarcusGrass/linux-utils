@@ -10,6 +10,7 @@ local cfg = function()
             lsp_saga = true,
             neotest = true,
             nvimtree = true,
+            snacks = true,
             telescope = {
                 enabled = true,
             },

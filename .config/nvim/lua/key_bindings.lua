@@ -20,40 +20,30 @@ local fallback_live_grep = function()
     vim.cmd(':lua Snacks.picker.pick("grep")<CR>')
 end
 
-local op = function(input_node)
-    local node = input_node or require("nvim-tree.api").tree.get_node_under_cursor()
-    if node == nil then
-        fallback_live_grep()
-        return
+vim.keymap.set("n", "<leader>no", function()
+    local reveal_file = vim.fn.expand("%:p")
+    if reveal_file == "" then
+        reveal_file = vim.fn.getcwd()
+    else
+        local f = io.open(reveal_file, "r")
+        if f then
+            f.close(f)
+        else
+            reveal_file = vim.fn.getcwd()
+        end
     end
-    local absolute_path = node.absolute_path
-    if absolute_path == nil then
-        fallback_live_grep()
-        return
-    end
-    local cwd = require("nvim-tree.core").get_cwd()
-    if cwd == nil then
-        fallback_live_grep()
-        return
-    end
-    local utils = require("nvim-tree.utils")
+    require("neo-tree.command").execute({
+        action = "focus", -- OPTIONAL, this is the default value
+        source = "filesystem", -- OPTIONAL, this is the default value
+        position = "left", -- OPTIONAL, this is the default value
+        reveal_file = reveal_file, -- path to file or folder to reveal
+    })
+end, { desc = "Open neo-tree at current file or working directory" })
 
-    local relative_path = utils.path_relative(absolute_path, cwd)
-    local content = node.nodes ~= nil and utils.path_add_trailing(relative_path) or relative_path
-    --require("nvim-tree.notify").info("Copy!")
-    vim.cmd(string.format(':lua Snacks.picker.pick("grep", { dirs = { "./%s" } })', content))
-end
-
--- Reload files in file tree
-map("n", "<leader>nr", ":NvimTreeRefresh<CR>", nil)
 -- Switch focus to file tree
-map("n", "<leader>nt", ":NvimTreeFocus<CR>", nil)
--- Open current file in tree
-map("n", "<leader>no", ":NvimTreeFindFile<CR>", nil)
+map("n", "<leader>nt", ":Neotree focus<CR>", nil)
 -- Collapse all files in tree
-map("n", "<leader>nc", ":NvimTreeCollapse<CR>", nil)
--- Open telescope live grep at current nvt location if present
-vim.keymap.set("n", "<leader>nf", op, nil)
+map("n", "<leader>nc", ":Neotree close<CR>", nil)
 
 -- Open snacks grep (Ctrl+Shift+f)
 map("n", "<C-S-f>", ':lua Snacks.picker.pick("grep")<CR>', nil)
@@ -69,7 +59,7 @@ map("n", "<leader>tt", ":Trouble split_preview toggle<CR>", nil)
 map("n", "<leader>to", ":Trouble split_preview focus<CR>", nil)
 
 -- Toggle terminal
-map("n", "<C-S-t>", ":ToggleTerm size=15<CR>", nil)
+map("n", "<C-S-t>", ":lua Snacks.terminal.toggle()<CR>", nil)
 -- nnoremap <F33> :TermExec size=15 cmd='cargo test -- --nocapture'<CR>
 -- nnoremap <F29> :TermExec size=15 cmd='cargo build --release'<CR>
 
@@ -108,20 +98,20 @@ map("n", "<leader>gfp", ":Git push<CR>")
 map("n", "gs", ':lua Snacks.picker.pick("grep_word")<CR>')
 map("x", "gs", '<ESC>:lua Snacks.picker.pick("grep_word")<CR>')
 vim.keymap.set("n", "<leader>tdo", function()
-    require("util.telescope_diff_picker").snacks_diff_file_picker("~/.local/bin/difft", true, false)
+    require("plug-ext.snacks.diff-picker").snacks_diff_file_picker("~/.local/bin/difft", true, false)
 end, nil)
 vim.keymap.set("n", "<leader>tde", function()
-    require("util.telescope_diff_picker").snacks_diff_file_picker("~/.local/bin/difft", false, false)
+    require("plug-ext.snacks.diff-picker").snacks_diff_file_picker("~/.local/bin/difft", false, false)
 end, nil)
 vim.keymap.set("n", "<leader>tdu", function()
-    require("util.telescope_diff_picker").snacks_diff_file_picker("~/.local/bin/difft", false, true)
+    require("plug-ext.snacks.diff-picker").snacks_diff_file_picker("~/.local/bin/difft", false, true)
 end, nil)
 vim.keymap.set("n", "<leader>tgo", function()
-    require("util.telescope_diff_picker").snacks_diff_file_picker(nil, true, false)
+    require("plug-ext.snacks.diff-picker").snacks_diff_file_picker(nil, true, false)
 end, nil)
 vim.keymap.set("n", "<leader>tge", function()
-    require("util.telescope_diff_picker").snacks_diff_file_picker(nil, false, false)
+    require("plug-ext.snacks.diff-picker").snacks_diff_file_picker(nil, false, false)
 end, nil)
 vim.keymap.set("n", "<leader>tgu", function()
-    require("util.telescope_diff_picker").snacks_diff_file_picker(nil, false, true)
+    require("plug-ext.snacks.diff-picker").snacks_diff_file_picker(nil, false, true)
 end, nil)

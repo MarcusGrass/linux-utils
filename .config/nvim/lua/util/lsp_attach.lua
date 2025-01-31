@@ -63,7 +63,7 @@ function M.lsp_do_attach(client, bufnr)
         bufnr,
         "n",
         "gh",
-        "<cmd>lua require('util.telescope_inlay_hint_picker').snacks_inlay_picker()<CR>",
+        "<cmd>lua require('plug-ext/snacks/inlay_hint_picker').snacks_inlay_picker()<CR>",
         lsp_cfg_opts
     )
 end

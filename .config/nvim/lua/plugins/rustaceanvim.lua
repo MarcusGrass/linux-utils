@@ -34,6 +34,5 @@ return {
     dependencies = {
         "neovim/nvim-lspconfig",
         "nvim-lua/lsp-status.nvim",
-        "nvim-telescope/telescope.nvim",
     },
 }

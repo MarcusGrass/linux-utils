@@ -6,7 +6,7 @@ vim.api.nvim_create_autocmd(
 
 local function open_nvim_tree()
     -- open the tree
-    require("nvim-tree.api").tree.open()
+    -- require("nvim-tree.api").tree.open()
 end
 
 -- We opened a buffer

@@ -2,7 +2,7 @@
 
 ## Replacements
 
-- [ ] Use Snacks pickers over Telescope, remove Telescope completely.
+- [x] Use Snacks pickers over Telescope, remove Telescope completely.
 - [ ] Switch to neotree, needs to implement search-in-dir.
 
 ## QoL
