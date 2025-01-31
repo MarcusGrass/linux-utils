@@ -10,7 +10,7 @@ return {
         bigfile = { enabled = false },
         dashboard = { enabled = false },
         indent = { enabled = false },
-        input = { enabled = false },
+        input = { enabled = true },
         picker = {
             enabled = true,
             win = {
