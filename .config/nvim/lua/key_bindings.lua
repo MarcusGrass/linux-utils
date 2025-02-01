@@ -14,11 +14,7 @@ map("n", "<leader>ne", ":wincmd l<CR>", nil)
 map("n", "<leader>b", ":wincmd h<CR>", nil)
 
 -- Save all close all, but handle some buffers not being save-closeable
-map("n", ":wqa<CR>", ":wq<CR>:qa<CR>", nil)
-
-local fallback_live_grep = function()
-    vim.cmd(':lua Snacks.picker.pick("grep")<CR>')
-end
+map("n", ":wqa<CR>", ":wq<CR>:qa!<CR>", nil)
 
 vim.keymap.set("n", "<leader>no", function()
     local reveal_file = vim.fn.expand("%:p")

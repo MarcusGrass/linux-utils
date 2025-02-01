@@ -26,11 +26,35 @@ local cfg = function(_, opts)
                         vim.cmd(string.format(':lua Snacks.picker.pick("grep", { dirs = { "%s" } })', path))
                     end,
                 },
+                ["<C-ENTER>"] = {
+                    function(state)
+                        local node = state.tree:get_node()
+                        if node == nil then
+                            vim.notify("Neotree failed to get node (was nil)", vim.log.levels.ERROR, nil)
+                            return
+                        end
+                        local path = node.path
+                        if path == nil then
+                            vim.notify("Neotree failed to get node path (was nil)", vim.log.levels.ERROR, nil)
+                            return
+                        end
+                        vim.cmd(string.format(":cd %s", path))
+                    end,
+                },
             },
         },
         filesystem = {
-            filtered_items = {
-                hijack_netrw_behavior = "open_current",
+            bind_to_cwd = true,
+            filtered_items = {},
+            follow_current_file = {
+                enabled = false, -- This will find and focus the file in the active buffer every time
+            },
+            hijack_netrw_behavior = "open_default", -- netrw disabled, opening a directory opens neo-tree
+            use_libuv_file_watcher = true,
+        },
+        buffers = {
+            follow_current_file = {
+                enabled = false, -- This will find and focus the file in the active buffer every time
             },
         },
         auto_clean_after_session_restore = true,
