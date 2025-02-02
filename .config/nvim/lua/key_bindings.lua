@@ -13,9 +13,6 @@ map("n", "<CR>", ":noh<CR><CR>", nil)
 map("n", "<leader>ne", ":wincmd l<CR>", nil)
 map("n", "<leader>b", ":wincmd h<CR>", nil)
 
--- Save all close all, but handle some buffers not being save-closeable
-map("n", ":wqa<CR>", ":wq<CR>:qa!<CR>", nil)
-
 vim.keymap.set("n", "<leader>no", function()
     local reveal_file = vim.fn.expand("%:p")
     if reveal_file == "" then
@@ -72,7 +69,8 @@ map("n", "<S-Tab>", ":bprev<CR>", nil)
 -- Use del to navigate between windows
 map("n", "<C-H>", "<C-w>w", nil)
 map("n", "<C-S-H>", "<C-w>W", nil)
-map("n", "<C-c>", ":bd<CR>:bNext<CR>", nil)
+map("n", "<C-c>", ":lua Snacks.bufdelete.delete()<CR>", nil)
+map("n", "<leader>bd", ":lua Snacks.bufdelete.other()<CR>", nil)
 
 -- Diffview
 map("n", "<leader>do", ":DiffviewOpen<CR>", nil)
