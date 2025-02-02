@@ -27,11 +27,11 @@ function M.lsp_do_attach(client, bufnr)
     vim.api.nvim_buf_set_keymap(
         bufnr,
         "n",
-        "<C-g>",
+        "<leader>fs",
         '<cmd>lua Snacks.picker.pick("lsp_workspace_symbols")<CR>',
         lsp_cfg_opts
     )
-    vim.api.nvim_buf_set_keymap(bufnr, "n", "g0", '<cmd>lua Snacks.picker.pick("lsp_symbols")<CR>', lsp_cfg_opts)
+    vim.api.nvim_buf_set_keymap(bufnr, "n", "<C-g>", '<cmd>lua Snacks.picker.pick("lsp_symbols")<CR>', lsp_cfg_opts)
     vim.api.nvim_buf_set_keymap(bufnr, "n", "<S-r>", "<cmd>lua vim.lsp.buf.rename()<CR>", lsp_cfg_opts)
     vim.api.nvim_buf_set_keymap(bufnr, "n", "ge", "<cmd>lua vim.lsp.buf.rename()<CR>", lsp_cfg_opts)
     vim.api.nvim_buf_set_keymap(bufnr, "n", "K", "<cmd>lua vim.lsp.buf.hover()<CR>", lsp_cfg_opts)

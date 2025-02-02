@@ -38,8 +38,15 @@ end, { desc = "Open neo-tree at current file or working directory" })
 
 -- Switch focus to file tree
 map("n", "<leader>nt", ":Neotree focus<CR>", nil)
+-- Switch focus to file tree
+map("n", "<leader>nb", ":Neotree focus buffers<CR>", nil)
 -- Collapse all files in tree
 map("n", "<leader>nc", ":Neotree close<CR>", nil)
+
+-- Open edgy left panel
+map("n", "<leader>eo", ':lua require("edgy").open("left")<CR>')
+map("n", "<leader>ec", ':lua require("edgy").close("left")<CR>')
+map("n", "<leader>em", ':lua require("edgy").goto_main()<CR>')
 
 -- Open snacks grep (Ctrl+Shift+f)
 map("n", "<C-S-f>", ':lua Snacks.picker.pick("grep")<CR>', nil)
@@ -63,8 +70,8 @@ map("n", "<C-S-t>", ":lua Snacks.terminal.toggle()<CR>", nil)
 map("n", "<Tab>", ":bnext<CR>", nil)
 map("n", "<S-Tab>", ":bprev<CR>", nil)
 -- Use del to navigate between windows
-map("n", "<C-H>", "<C-w>W", nil)
-map("n", "<C-S-H>", "<C-w>w", nil)
+map("n", "<C-H>", "<C-w>w", nil)
+map("n", "<C-S-H>", "<C-w>W", nil)
 map("n", "<C-c>", ":bd<CR>:bNext<CR>", nil)
 
 -- Diffview

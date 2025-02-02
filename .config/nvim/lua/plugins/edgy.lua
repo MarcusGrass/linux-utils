@@ -37,6 +37,7 @@ return {
                     return vim.b[buf].neo_tree_source == "filesystem"
                 end,
                 size = { height = 0.5 },
+                pinned = true,
                 open = "Neotree",
             },
             {
