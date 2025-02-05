@@ -30,7 +30,7 @@ function DUMP(o)
 end
 local running_proc = nil
 function source:complete(ctx, callback)
-    local max_lines = 1000
+    local max_lines = 10
     local cursor = ctx.context.cursor
     local cur_line = ctx.context.cursor_line
     -- properly handle utf8
@@ -83,7 +83,11 @@ function source:complete(ctx, callback)
                         value = "```" .. (vim.filetype.match({ buf = 0 }) or "") .. "\n" .. result .. "\n```",
                     },
                 })
-                vim.notify(string.format("Resp: %s, %s", output, resp))
+                if resp ~= 0 then
+                    vim.notify(string.format("Got err='%s' code='%s'", output, resp))
+                else
+                    vim.notify(string.format("Got resp='%s' code='%s'", output, resp))
+                end
                 callback({
                     items = items,
                     isIncomplete = true,
