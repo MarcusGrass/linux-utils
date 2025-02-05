@@ -41,7 +41,7 @@ map("n", "<leader>nb", ":Neotree focus buffers<CR>", nil)
 map("n", "<leader>nc", ":Neotree close<CR>", nil)
 
 -- Open edgy left panel
-map("n", "<leader>eo", ':lua require("edgy").open("left")<CR>')
+map("n", "<leader>eo", ':lua require("edgy").open()<CR>')
 map("n", "<leader>ec", ':lua require("edgy").close("left")<CR>')
 map("n", "<leader>em", ':lua require("edgy").goto_main()<CR>')
 
@@ -50,6 +50,8 @@ map("n", "<C-S-f>", ':lua Snacks.picker.pick("grep")<CR>', nil)
 
 -- Open snacks file finder
 map("n", "<leader>ff", ':lua Snacks.picker.pick("files")<CR>', nil)
+-- Open snacks buffer finder
+map("n", "<leader>fb", ':lua Snacks.picker.pick("buffers")<CR>', nil)
 
 -- Toggle aerial
 map("n", "<leader>aet", ":AerialToggle!<CR>", nil)

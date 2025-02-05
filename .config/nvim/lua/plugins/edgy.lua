@@ -40,16 +40,7 @@ return {
                 pinned = true,
                 open = "Neotree",
             },
-            {
-                title = "Neo-Tree Buffers",
-                ft = "neo-tree",
-                filter = function(buf)
-                    return vim.b[buf].neo_tree_source == "buffers"
-                end,
-                size = { height = 0.25 },
-                pinned = true,
-                open = "Neotree position=top buffers",
-            },
+
             {
                 title = "Neo-Tree Git",
                 ft = "neo-tree",
@@ -58,13 +49,27 @@ return {
                 end,
                 pinned = true,
                 collapsed = false, -- show window as closed/collapsed on start
-                open = "Neotree position=right git_status",
+                open = "Neotree position=top git_status",
             },
         },
         right = {
             {
+                title = "Neo-Tree Buffers",
+                ft = "neo-tree",
+                filter = function(buf)
+                    return vim.b[buf].neo_tree_source == "buffers"
+                end,
+                size = { height = 0.5 },
+                pinned = true,
+                collapsed = false,
+                open = "Neotree position=right buffers",
+            },
+            {
                 title = "Aerial",
                 ft = "aerial",
+                size = { height = 0.5 },
+                pinned = true,
+                open = "AerialOpen",
             },
         },
         top = {
