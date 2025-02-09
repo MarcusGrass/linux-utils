@@ -36,7 +36,7 @@ local cfg = function()
             { name = "path" },
             { name = "buffer" },
             { name = "crates" },
-            { name = "cmp_ollama_local" },
+            -- { name = "cmp_ollama_local" },
         },
     })
 end
