@@ -21,6 +21,9 @@ return {
                         and not vim.w[win].trouble_preview
                 end,
                 open = "lua Snacks.terminal.toggle()",
+                wo = {
+                    winbar = false, -- Annoying with winbar on term
+                },
             },
             {
                 title = "Trouble",
@@ -40,7 +43,6 @@ return {
                 pinned = true,
                 open = "Neotree",
             },
-
             {
                 title = "Neo-Tree Git",
                 ft = "neo-tree",
@@ -68,8 +70,6 @@ return {
                 title = "Aerial",
                 ft = "aerial",
                 size = { height = 0.5 },
-                pinned = true,
-                open = "AerialOpen",
             },
         },
         top = {

@@ -37,6 +37,7 @@ end, { desc = "Open neo-tree at current file or working directory" })
 map("n", "<leader>nt", ":Neotree focus<CR>", nil)
 -- Switch focus to file tree
 map("n", "<leader>nb", ":Neotree focus buffers<CR>", nil)
+map("n", "<leader>ng", ":Neotree focus git_status<CR>", nil)
 -- Collapse all files in tree
 map("n", "<leader>nc", ":Neotree close<CR>", nil)
 
@@ -60,6 +61,7 @@ map("n", "<leader>aet", ":AerialToggle!<CR>", nil)
 map("n", "<leader>tt", ":Trouble split_preview toggle<CR>", nil)
 map("n", "<leader>to", ":Trouble split_preview focus<CR>", nil)
 
+map("n", "<leader>gt", ":lua Snacks.terminal.toggle()<CR>", nil)
 -- Toggle terminal
 map("n", "<C-S-t>", ":lua Snacks.terminal.toggle()<CR>", nil)
 -- nnoremap <F33> :TermExec size=15 cmd='cargo test -- --nocapture'<CR>
