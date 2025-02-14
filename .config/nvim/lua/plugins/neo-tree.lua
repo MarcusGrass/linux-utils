@@ -51,6 +51,12 @@ local cfg = function(_, opts)
             },
             hijack_netrw_behavior = "open_default", -- netrw disabled, opening a directory opens neo-tree
             use_libuv_file_watcher = true,
+            window = {
+                mappings = {
+                    ["h"] = { "navigate_up", desc = "Navigate up" },
+                    ["l"] = { "set_root", desc = "Navigate down" },
+                },
+            },
         },
         buffers = {
             follow_current_file = {
