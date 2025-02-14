@@ -68,8 +68,8 @@ map("n", "<C-S-t>", ":lua Snacks.terminal.toggle()<CR>", nil)
 -- nnoremap <F29> :TermExec size=15 cmd='cargo build --release'<CR>
 
 -- Bar nav
-map("n", "<Tab>", ":bnext<CR>", nil)
-map("n", "<S-Tab>", ":bprev<CR>", nil)
+map("n", "<Tab>", ":tabnext<CR>", nil)
+map("n", "<S-Tab>", ":tabprev<CR>", nil)
 -- Use del to navigate between windows
 map("n", "<C-H>", "<C-w>w", nil)
 map("n", "<C-S-H>", "<C-w>W", nil)
