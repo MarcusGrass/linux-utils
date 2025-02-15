@@ -33,24 +33,32 @@ vim.keymap.set("n", "<leader>no", function()
     })
 end, { desc = "Open neo-tree at current file or working directory" })
 
+--- Try to open to current buffer in a new tab.
+--- Preserves location.
+--- Preserves the old buffer in the old tab.
+--- Mostly used for browsing dependencies separately, after navigating to a file in the dependency.
 vim.keymap.set("n", "<leader>nn", function()
-    local reveal_file = vim.fn.expand("%:p")
-    if reveal_file == "" then
-        reveal_file = vim.fn.getcwd()
-    else
-        local f = io.open(reveal_file, "r")
-        if f then
-            f.close(f)
-        else
-            reveal_file = vim.fn.getcwd()
-        end
+    local cur_buf = vim.fn.expand("%")
+    if cur_buf == "" then
+        vim.notify("Buf with no name, can't go-to", vim.log.levels.WARN)
+        return
     end
-    vim.cmd(string.format(":tabnew %s", reveal_file))
+    local line, col = unpack(vim.api.nvim_win_get_cursor(0))
+    local f = io.open(cur_buf, "r")
+    if f then
+        f.close(f)
+    else
+        vim.notify(string.format("failed to open %s can't go-to", cur_buf), vim.log.levels.WARN)
+        return
+    end
+    vim.cmd(string.format(":tabnew %s", cur_buf))
+    vim.api.nvim_win_set_cursor(0, { line, col })
     require("neo-tree.command").execute({
-        action = "focus", -- OPTIONAL, this is the default value
+        action = "show", -- OPTIONAL, this is the default value
         source = "filesystem", -- OPTIONAL, this is the default value
         position = "left", -- OPTIONAL, this is the default value
-        reveal_file = reveal_file, -- path to file or folder to reveal
+        reveal_file = cur_buf, -- path to file or folder to reveal
+        reveal_force_cwd = true, -- switch cwd without asking
     })
 end, { desc = "Open neo-tree at current file or working directory" })
 
