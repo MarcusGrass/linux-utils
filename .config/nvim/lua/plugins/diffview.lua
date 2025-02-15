@@ -2,21 +2,32 @@ return {
     "sindrets/diffview.nvim",
     config = function()
         require("diffview").setup({
+            view = {
+                -- default = {
+                --     layout = "diff3_mixed",
+                -- },
+                merge_tool = {
+                    layout = "diff3_mixed",
+                },
+                -- file_history = {
+                --     layout = "diff3_mixed",
+                -- },
+            },
             keymaps = {
                 view = {
                     {
                         "n",
                         "<C-ENTER>",
-                        require("diffview.config").actions.goto_file_tab,
-                        { desc = "Goto file in new tab" },
+                        require("diffview.config").actions.goto_file_edit,
+                        { desc = "Goto file in last accessed tab" },
                     },
                 },
                 file_panel = {
                     {
                         "n",
                         "<C-ENTER>",
-                        require("diffview.config").actions.goto_file_tab,
-                        { desc = "Goto file in new tab" },
+                        require("diffview.config").actions.goto_file_edit,
+                        { desc = "Goto file in last accessed tab" },
                     },
                     { "n", "<leader>cf", "<CMD>Git commit <bar> wincmd J<CR>", { desc = "Commit file" } },
                     {
@@ -33,8 +44,8 @@ return {
                     {
                         "n",
                         "<C-ENTER>",
-                        require("diffview.config").actions.goto_file_tab,
-                        { desc = "Goto file in new tab" },
+                        require("diffview.config").actions.goto_file_edit,
+                        { desc = "Goto file in last accessed tab" },
                     },
                 },
             },

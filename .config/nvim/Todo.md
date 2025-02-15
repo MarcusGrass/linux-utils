@@ -3,7 +3,7 @@
 ## Replacements
 
 - [x] Use Snacks pickers over Telescope, remove Telescope completely.
-- [ ] Switch to neotree, needs to implement search-in-dir.
+- [x] Switch to neotree, needs to implement search-in-dir.
 
 ## QoL
 
@@ -25,7 +25,7 @@ Backspace doesn't work in input window insert mode, shift+backspace does however
 
 ### Sneak
 
-- [ ] Underscore searches doesn't work, cancels search, check settings
+- [ ] Underscore searches doesn't work, cancels search, check settings, should open a ticket
 
 ### Markdown rendering
 
@@ -48,6 +48,13 @@ Ideally I could open a separate nvimtree for the dependency, but it seems to be 
 
 - [x] open specific file with <C-ENTER> or similar, currently <C-w>gf
 
+
+## Sneak
+
+Custom git log picker, 
+1. `git --no-pager log -3 --pretty=format:"%H" -- <path>`
+2. show git diff (or difft) on the preview
+3. on-open, load diffview `:DiffviewOpen b4d60a307baa9b473568ea9ccac7721634726122^! -- crates/cm-core/src/util.rs`
 
 ## Telescope
 

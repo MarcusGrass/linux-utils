@@ -28,6 +28,8 @@ vim.opt.undolevels = 100000
 --- Default is 10_000, set to 100_000,
 vim.opt.undoreload = 100000
 
+vim.opt.fillchars:append({ diff = " " })
+
 --- Editing
 -- Matching pairs https://neovim.io/doc/user/options.html#'matchpairs'
 vim.opt.matchpairs:append("<:>")
