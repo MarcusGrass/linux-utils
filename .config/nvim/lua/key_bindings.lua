@@ -82,6 +82,11 @@ map("n", "<C-S-f>", ':lua Snacks.picker.pick("grep")<CR>', nil)
 map("n", "<leader>ff", ':lua Snacks.picker.pick("files")<CR>', nil)
 -- Open snacks buffer finder
 map("n", "<leader>fb", ':lua Snacks.picker.pick("buffers")<CR>', nil)
+vim.keymap.set("n", "<leader>fc", function()
+    require("plug-ext.snacks.file_git_diff_picker").snack_file_diff_picker()
+end, nil)
+
+-- map("n", "<leader>fc", ':lua require("plug-ext.snacks.file_git_diff_picker").snack_file_diff_picker()")<CR>', nil)
 
 -- Toggle aerial
 map("n", "<leader>aet", ":AerialToggle!<CR>", nil)

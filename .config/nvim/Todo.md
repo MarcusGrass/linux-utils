@@ -49,8 +49,6 @@ Ideally I could open a separate nvimtree for the dependency, but it seems to be 
 - [x] open specific file with <C-ENTER> or similar, currently <C-w>gf
 
 
-## Sneak
-
 Custom git log picker, 
 1. `git --no-pager log -3 --pretty=format:"%H" -- <path>`
 2. show git diff (or difft) on the preview

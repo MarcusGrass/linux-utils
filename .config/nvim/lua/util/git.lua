@@ -92,4 +92,25 @@ M.git_show_merge_base = function(branch_diff, at_origin)
     local read = handle:read("*a")
     return string_manipulation.first_trimmed_line(read)
 end
+
+M.git_get_file_change_commits = function(file_name)
+    -- The format string for git %H, does not behave well with lua's string.format, pass %H through %s
+    local cmd = string.format('git --no-pager log -3 --pretty=format:"%s" -- %s', "%H", file_name)
+    local handle = io.popen(cmd)
+    if handle == nil then
+        vim.notify("Git local file diff returned nil handle on command", vim.log.levels.WARN)
+        return
+    end
+    if type(handle) == "string" then
+        vim.notify(string.format("Failed to run git diff on file_name=%s, output=%s", file_name, handle))
+        return
+    end
+    local lines = handle:read("*a")
+    vim.notify(string.format("Lines: %s", lines))
+    local commits = {}
+    for s in lines:gmatch("[^\r\n]+") do
+        table.insert(commits, s)
+    end
+    return commits
+end
 return M

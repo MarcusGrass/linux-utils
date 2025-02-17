@@ -14,20 +14,6 @@ end
 
 local job = require("plenary.job")
 
-function DUMP(o)
-    if type(o) == "table" then
-        local s = "{ "
-        for k, v in pairs(o) do
-            if type(k) ~= "number" then
-                k = '"' .. k .. '"'
-            end
-            s = s .. "[" .. k .. "] = " .. DUMP(v) .. ","
-        end
-        return s .. "} "
-    else
-        return tostring(o)
-    end
-end
 local running_proc = nil
 function source:complete(ctx, callback)
     local max_lines = 10
