@@ -47,12 +47,7 @@ Ideally I could open a separate nvimtree for the dependency, but it seems to be 
 ## Diffview
 
 - [x] open specific file with <C-ENTER> or similar, currently <C-w>gf
-
-
-Custom git log picker, 
-1. `git --no-pager log -3 --pretty=format:"%H" -- <path>`
-2. show git diff (or difft) on the preview
-3. on-open, load diffview `:DiffviewOpen b4d60a307baa9b473568ea9ccac7721634726122^! -- crates/cm-core/src/util.rs`
+- [x] custom git log picker
 
 ## Telescope
 
