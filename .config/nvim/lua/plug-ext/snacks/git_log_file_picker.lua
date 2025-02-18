@@ -29,15 +29,45 @@ M.git_log_file_picker = function()
             end
             return items
         end,
-        format = function(item)
+        format = function(item, picker)
+            -- From the Snacks source https://github.com/folke/snacks.nvim/blob/41c4391/lua/snacks/picker/format.lua#L166
+            local highlight = require("snacks.picker.util.highlight")
+            local snacks_util = require("snacks.picker.util")
             local ret = {}
-            ret[#ret + 1] = { item.date }
+            ret[#ret + 1] = { picker.opts.icons.git.commit, "SnacksPickerGitCommit" }
+            ret[#ret + 1] = { snacks_util.align(item.date, 13), "SnacksPickerGitDate" }
+            ret[#ret + 1] = { snacks_util.align(item.sha, 7, { truncate = true }), "SnacksPickerGitCommit" }
             ret[#ret + 1] = { " " }
-            ret[#ret + 1] = { item.sha_short }
-            ret[#ret + 1] = { " " }
-            ret[#ret + 1] = { item.author }
-            ret[#ret + 1] = { " " }
-            ret[#ret + 1] = { item.subject }
+            local msg = item.subject ---@type string
+            local type, scope, breaking, body = msg:match("^(%S+)(%(.-%))(!?):%s*(.*)$")
+            if not type then
+                type, breaking, body = msg:match("^(%S+)(!?):%s*(.*)$")
+            end
+            local msg_hl = "SnacksPickerGitMsg"
+            if type and body then
+                local dimmed = vim.tbl_contains({ "chore", "bot", "build", "ci", "style", "test" }, type)
+                msg_hl = dimmed and "SnacksPickerDimmed" or "SnacksPickerGitMsg"
+                ret[#ret + 1] = {
+                    type,
+                    breaking ~= "" and "SnacksPickerGitBreaking"
+                        or dimmed and "SnacksPickerBold"
+                        or "SnacksPickerGitType",
+                }
+                if scope and scope ~= "" then
+                    ret[#ret + 1] = { scope, "SnacksPickerGitScope" }
+                end
+                if breaking ~= "" then
+                    ret[#ret + 1] = { "!", "SnacksPickerGitBreaking" }
+                end
+                ret[#ret + 1] = { ":", "SnacksPickerDelim" }
+                ret[#ret + 1] = { " " }
+                msg = body
+            end
+            ret[#ret + 1] = { msg, msg_hl }
+            highlight.markdown(ret)
+            highlight.highlight(ret, {
+                ["#%d+"] = "SnacksPickerGitIssue",
+            })
             return ret
         end,
         preview = function(ctx)
