@@ -13,6 +13,18 @@ map("n", "<CR>", ":noh<CR><CR>", nil)
 map("n", "<leader>ne", ":wincmd l<CR>", nil)
 map("n", "<leader>b", ":wincmd h<CR>", nil)
 
+-- Window rearrangement
+-- Pick focus window
+map("n", "<leader>wo", "<C-W>H", nil)
+vim.keymap.set("n", "<leader>h", function()
+    require("plug-ext.window-picker-ext.select").select_focus_window()
+end)
+
+-- Send window to bottom
+map("n", "<leader>wb", "<C-W>J", nil)
+-- Send bottom window to top left
+map("n", "<leader>wt", "<C-W>H", nil)
+
 vim.keymap.set("n", "<leader>no", function()
     local reveal_file = vim.fn.expand("%:p")
     if reveal_file == "" then
