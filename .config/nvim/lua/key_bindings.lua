@@ -80,6 +80,9 @@ map("n", "<C-S-f>", ':lua Snacks.picker.pick("grep")<CR>', nil)
 
 -- Open snacks file finder
 map("n", "<leader>ff", ':lua Snacks.picker.pick("files")<CR>', nil)
+-- Open snacks git file finder (when there's a bunch of files in e.g. ./target), could restrict to cwd
+map("n", "<leader>fg", ':lua Snacks.picker.pick("git_files")<CR>', nil)
+
 -- Open snacks buffer finder
 map("n", "<leader>fb", ':lua Snacks.picker.pick("buffers")<CR>', nil)
 vim.keymap.set("n", "<leader>fc", function()
