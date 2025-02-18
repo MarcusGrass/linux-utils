@@ -36,6 +36,8 @@ M.git_log_file_picker = function()
             local ret = {}
             ret[#ret + 1] = { picker.opts.icons.git.commit, "SnacksPickerGitCommit" }
             ret[#ret + 1] = { snacks_util.align(item.date, 13), "SnacksPickerGitDate" }
+            ret[#ret + 1] = { snacks_util.align(item.author, 14, { truncate = true }), "SnacksPickerGitAuthor" }
+            ret[#ret + 1] = { " " }
             ret[#ret + 1] = { snacks_util.align(item.sha, 7, { truncate = true }), "SnacksPickerGitCommit" }
             ret[#ret + 1] = { " " }
             local msg = item.subject ---@type string
