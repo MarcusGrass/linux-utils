@@ -83,7 +83,7 @@ map("n", "<leader>ff", ':lua Snacks.picker.pick("files")<CR>', nil)
 -- Open snacks buffer finder
 map("n", "<leader>fb", ':lua Snacks.picker.pick("buffers")<CR>', nil)
 vim.keymap.set("n", "<leader>fc", function()
-    require("plug-ext.snacks.file_git_diff_picker").snack_file_diff_picker()
+    require("plug-ext.snacks.git_log_file_picker").git_log_file_picker()
 end, nil)
 
 -- map("n", "<leader>fc", ':lua require("plug-ext.snacks.file_git_diff_picker").snack_file_diff_picker()")<CR>', nil)

@@ -1,5 +1,5 @@
 local M = {}
-M.snack_file_diff_picker = function()
+M.git_log_file_picker = function()
     local git = require("util.git")
     local file = require("util.file")
     local cur_file = file.get_current_file()
