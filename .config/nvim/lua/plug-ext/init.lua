@@ -1,1 +1,1 @@
-require("plug-ext.snacks")
+require("plug-ext.snacks-ext")

@@ -6,7 +6,6 @@ local shared = {}
 shared.nvim_lsp = require("lspconfig")
 shared.lsp_status = require("lsp-status")
 
-
 shared.lsp_status.register_progress()
 
 function shared.lsp_do_attach(client, bufnr)

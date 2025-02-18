@@ -2,7 +2,6 @@ return {
     "folke/snacks.nvim",
     priority = 1000,
     lazy = false,
-    ---@type snacks.Config
     opts = {
         -- your configuration comes here
         -- or leave it empty to use the default settings
@@ -59,7 +58,10 @@ return {
                 },
             },
         },
-        notifier = { enabled = true },
+        notifier = {
+            enabled = true,
+            timeout = 10000,
+        },
         quickfile = { enabled = false },
         scroll = { enabled = false },
         statuscolumn = { enabled = false },
@@ -70,7 +72,7 @@ return {
                     term_normal = {
                         "<esc>",
                         function(self)
-                            self.esc_timer = self.esc_timer or (vim.uv or vim.loop).new_timer()
+                            self.esc_timer = self.esc_timer or vim.uv.new_timer()
                             if self.esc_timer:is_active() then
                                 self.esc_timer:stop()
                                 vim.cmd("stopinsert")

@@ -1,6 +1,6 @@
 local M = {}
 local lsp_cfg_opts = { noremap = true, silent = true }
-function M.lsp_do_attach(client, bufnr)
+function M.lsp_do_attach(_, bufnr)
     -- Enable completion triggered by <c-x><c-o>
     vim.api.nvim_set_option_value("omnifunc", "v:lua.vim.lsp.omnifunc", {
         buf = bufnr,
@@ -63,7 +63,7 @@ function M.lsp_do_attach(client, bufnr)
         bufnr,
         "n",
         "gh",
-        "<cmd>lua require('plug-ext/snacks/inlay_hint_picker').snacks_inlay_picker()<CR>",
+        "<cmd>lua require('plug-ext/snacks-ext/inlay_hint_picker').snacks_inlay_picker()<CR>",
         lsp_cfg_opts
     )
 end
