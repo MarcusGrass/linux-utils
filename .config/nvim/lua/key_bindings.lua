@@ -7,6 +7,14 @@ local function map(mode, lhs, rhs, opts)
     vim.api.nvim_set_keymap(mode, lhs, rhs, options)
 end
 
+local function mapnfn(lhs, fn, opts)
+    local options = { noremap = true }
+    if opts then
+        options = vim.tbl_extend("force", options, opts)
+    end
+    vim.keymap.set("n", lhs, fn, opts)
+end
+
 -- Disable highlighting after enter
 map("n", "<CR>", ":noh<CR><CR>", nil)
 -- Next window
@@ -15,9 +23,12 @@ map("n", "<leader>b", ":wincmd h<CR>", nil)
 
 -- Window rearrangement
 -- Pick focus window
-map("n", "<leader>wo", "<C-W>H", nil)
-vim.keymap.set("n", "<leader>h", function()
+mapnfn("<leader>h", function()
     require("plug-ext.window-picker-ext.select").select_focus_window()
+end)
+-- close a window
+mapnfn("<leader>wd", function()
+    require("plug-ext.window-picker-ext.select").close_focus_window()
 end)
 
 -- Send window to bottom
