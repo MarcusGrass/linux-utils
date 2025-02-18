@@ -93,9 +93,15 @@ M.git_show_merge_base = function(branch_diff, at_origin)
     return string_manipulation.first_trimmed_line(read)
 end
 
+local format_sep = "<|COMMIT-SEP-TOKEN|>"
+
 M.git_get_file_change_commits = function(file_name)
     -- The format string for git %H, does not behave well with lua's string.format, pass %H through %s
-    local cmd = string.format('git --no-pager log -3 --pretty=format:"%s" -- %s', "%H", file_name)
+    local cmd = string.format(
+        'git --no-pager log --pretty="format:%s" -- %s',
+        "%H" .. format_sep .. "%h" .. format_sep .. "[%cs]" .. format_sep .. "%an" .. format_sep .. "%s",
+        file_name
+    )
     local handle = io.popen(cmd)
     if handle == nil then
         vim.notify("Git local file diff returned nil handle on command", vim.log.levels.WARN)
@@ -106,10 +112,16 @@ M.git_get_file_change_commits = function(file_name)
         return
     end
     local lines = handle:read("*a")
-    vim.notify(string.format("Lines: %s", lines))
     local commits = {}
-    for s in lines:gmatch("[^\r\n]+") do
-        table.insert(commits, s)
+    for line in string_manipulation.iter_string_lines(lines) do
+        local commit_data = string_manipulation.split_string_to_table(line, format_sep)
+        table.insert(commits, {
+            sha = commit_data[1],
+            sha_short = commit_data[2],
+            date = commit_data[3],
+            author = commit_data[4],
+            subject = commit_data[5],
+        })
     end
     return commits
 end
