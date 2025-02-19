@@ -27,7 +27,7 @@ local cfg = function()
                 mauve = "#bf8bfc", -- "#cba6f7",
                 -- Make strings stand out more
                 green = "#8ede87", -- "#a6e3a1",
-                peach = "#f7a877", -- "#fab387",
+                peach = "#fab387", -- "#fab387",
                 -- Structs defs, more yellow
                 yellow = "#f5da9f", -- "#f9e2af",
                 -- General text, needs to contrast with other's too blue in general, inrease whiteness
