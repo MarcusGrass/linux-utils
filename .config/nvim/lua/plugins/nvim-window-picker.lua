@@ -15,6 +15,7 @@ return {
                     filetype = {},
                 },
             },
+            show_prompt = false,
         })
     end,
 }

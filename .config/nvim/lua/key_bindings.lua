@@ -35,6 +35,14 @@ end)
 map("n", "<leader>wb", "<C-W>J", nil)
 -- Send bottom window to top left
 map("n", "<leader>wt", "<C-W>H", nil)
+-- Equalize all windows horisontally
+map("n", "<leader>wh", ":horizontal wincmd =<CR>", nil)
+-- Equalize all windows vertically
+map("n", "<leader>wv", ":vertical wincmd =<CR>", nil)
+-- Resize windows horisontally
+mapnfn("<leader>ws", function()
+    require("plug-ext.window-picker-ext.swap").swap_with_current()
+end)
 
 vim.keymap.set("n", "<leader>no", function()
     local reveal_file = vim.fn.expand("%:p")
