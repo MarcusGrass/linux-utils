@@ -1,5 +1,6 @@
-local cfg = function()
-    require("scrollbar").setup({
+return {
+    "petertriho/nvim-scrollbar",
+    opts = {
         show = true,
         handlers = {
             cursor = true,
@@ -33,9 +34,5 @@ local cfg = function()
                 text = "<",
             },
         },
-    })
-end
-return {
-    "petertriho/nvim-scrollbar",
-    config = cfg,
+    },
 }

@@ -5,16 +5,6 @@ key.mapn("<CR>", ":noh<CR><CR>")
 key.mapn("<leader>ne", ":wincmd l<CR>")
 key.mapn("<leader>b", ":wincmd h<CR>")
 
--- Window rearrangement
--- Pick focus window
-key.mapnfn("<leader>h", function()
-    require("plug-ext.window-picker-ext.select").select_focus_window()
-end)
--- close a window
-key.mapnfn("<leader>wd", function()
-    require("plug-ext.window-picker-ext.select").close_focus_window()
-end)
-
 -- Send window to bottom
 key.mapn("<leader>wb", "<C-W>J")
 -- Send bottom window to top left
@@ -23,15 +13,6 @@ key.mapn("<leader>wt", "<C-W>H")
 key.mapn("<leader>wh", ":horizontal wincmd =<CR>")
 -- Equalize all windows vertically
 key.mapn("<leader>wv", ":vertical wincmd =<CR>")
--- Resize windows horisontally
-key.mapnfn("<leader>ws", function()
-    require("plug-ext.window-picker-ext.swap").swap_with_current()
-end)
-
--- Open edgy left panel
-key.mapn("<leader>eo", ':lua require("edgy").open()<CR>')
-key.mapn("<leader>ec", ':lua require("edgy").close("left")<CR>')
-key.mapn("<leader>em", ':lua require("edgy").goto_main()<CR>')
 
 -- Open snacks grep (Ctrl+Shift+f)
 key.mapn("<C-S-f>", ':lua Snacks.picker.pick("grep")<CR>')
@@ -43,10 +24,6 @@ key.mapn("<leader>fg", ':lua Snacks.picker.pick("git_files")<CR>')
 
 -- Open snacks buffer finder
 key.mapn("<leader>fb", ':lua Snacks.picker.pick("buffers")<CR>')
-key.mapnfn("<leader>fc", function()
-    require("plug-ext.snacks-ext.git_log_file_picker").git_log_file_picker()
-end)
-
 -- Toggle aerial
 key.mapn("<leader>aet", ":AerialToggle!<CR>")
 
@@ -64,9 +41,10 @@ key.mapn("<C-S-t>", ":lua Snacks.terminal.toggle()<CR>")
 key.mapn("<Tab>", ":tabnext<CR>")
 key.mapn("<S-Tab>", ":tabprev<CR>")
 key.mapn("<leader>tc", ":tabclose<CR>")
+
 -- Use del to navigate between windows
-key.mapn("<C-H>", "<C-w>w")
-key.mapn("<C-S-H>", "<C-w>W")
+key.mapn("<C-H>", "<C-w>W")
+key.mapn("<C-S-H>", "<C-w>w")
 key.mapn("<C-c>", ":lua Snacks.bufdelete.delete()<CR>")
 key.mapn("<leader>bd", ":lua Snacks.bufdelete.other()<CR>")
 
@@ -100,21 +78,3 @@ end)
 -- Picker search for word under cursor
 key.mapn("gs", ':lua Snacks.picker.pick("grep_word")<CR>')
 key.map("x", "gs", '<ESC>:lua Snacks.picker.pick("grep_word")<CR>')
-key.mapnfn("<leader>tdo", function()
-    require("plug-ext.snacks-ext.diff-picker").snacks_diff_file_picker("~/.local/bin/difft", true, false)
-end)
-key.mapnfn("<leader>tde", function()
-    require("plug-ext.snacks-ext.diff-picker").snacks_diff_file_picker("~/.local/bin/difft", false, false)
-end)
-key.mapnfn("<leader>tdu", function()
-    require("plug-ext.snacks-ext.diff-picker").snacks_diff_file_picker("~/.local/bin/difft", false, true)
-end)
-key.mapnfn("<leader>tgo", function()
-    require("plug-ext.snacks-ext.diff-picker").snacks_diff_file_picker(nil, true, false)
-end)
-key.mapnfn("<leader>tge", function()
-    require("plug-ext.snacks-ext.diff-picker").snacks_diff_file_picker(nil, false, false)
-end)
-key.mapnfn("<leader>tgu", function()
-    require("plug-ext.snacks-ext.diff-picker").snacks_diff_file_picker(nil, false, true)
-end)

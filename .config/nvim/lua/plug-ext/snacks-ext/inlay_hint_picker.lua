@@ -1,58 +1,5 @@
 local M = {}
 
-M.inlay_picker = function()
-    local hints = M.inlay_analyze()
-    local lines = {}
-    --- Todo: Relativize to crate over `src` starting from the right
-    for _, hint in pairs(hints) do
-        table.insert(lines, {
-            path = hint.uri,
-
-        })
-    end
-
-    local pickers = require("telescope.pickers")
-    local finders = require("telescope.finders")
-    local conf = require("telescope.config").values
-    local actions = require("telescope.actions")
-    local previews = {}
-    for _, hint in pairs(hints) do
-        table.insert(previews, {
-            path = hint.uri,
-            lnum = hint.start_line,
-            start = hint.start_line,
-            finish = hint.start_line + 10,
-        })
-    end
-
-    pickers
-        .new(nil, {
-            prompt_title = "Choose inlay hint",
-            finder = finders.new_table {
-                results = hints,
-                entry_maker = function (entry)
-                    return {
-                        value = entry,
-                        display = entry.ident,
-                        ordinal = entry.ident,
-                        path = entry.uri,
-                        lnum = entry.start_line + 1,
-                    }
-                end
-            },
-            previewer = conf.qflist_previewer(previews),
-            on_complete = {
-                function(picker)
-                    if picker.manager.linked_states.size == 1 then
-                        actions.select_default(picker.prompt_bufnr)
-                    end
-                end
-            }
-
-        })
-        :find()
-end
-
 M.snacks_inlay_picker = function()
     local hints = M.inlay_analyze()
     local items = {}

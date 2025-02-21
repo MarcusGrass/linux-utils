@@ -2,7 +2,7 @@ local cfg = function(_, opts)
     vim.keymap.set("n", "<leader>qS", function()
         require("persistence").select()
     end)
-    require("persistence").setup({})
+    require("persistence").setup(opts)
 end
 return {
     "folke/persistence.nvim",

@@ -1,5 +1,8 @@
-local cfg = function()
-    require("lualine").setup({
+-- Airline bottom bar
+return {
+    "nvim-lualine/lualine.nvim",
+    dependencies = "nvim-tree/nvim-web-devicons",
+    opts = {
         options = {
             theme = "catppuccin",
             globalstatus = true,
@@ -16,11 +19,5 @@ local cfg = function()
             lualine_y = {},
             lualine_z = {},
         },
-    })
-end
--- Airline bottom bar
-return {
-    "nvim-lualine/lualine.nvim",
-    dependencies = "nvim-tree/nvim-web-devicons",
-    config = cfg,
+    },
 }

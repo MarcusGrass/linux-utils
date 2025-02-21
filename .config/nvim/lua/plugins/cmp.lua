@@ -28,14 +28,13 @@ local cfg = function()
                 select = true,
             }),
         },
-
         -- Installed sources
         sources = {
+            { name = "crates" },
             { name = "nvim_lsp" },
-            { name = "vsnip" },
             { name = "path" },
             { name = "buffer" },
-            { name = "crates" },
+            { name = "vsnip" },
             -- { name = "cmp_ollama_local" },
         },
     })

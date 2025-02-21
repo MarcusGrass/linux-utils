@@ -1,16 +1,12 @@
-local cfg = function()
-    require("flash").setup({
+return {
+    "folke/flash.nvim",
+    event = "VeryLazy",
+    opts = {
         jump = {
             autojump = true,
             nohlsearch = true,
         },
-    })
-end
-return {
-    "folke/flash.nvim",
-    event = "VeryLazy",
-    opts = {},
-    config = cfg,
+    },
     -- stylua: ignore
     keys = {
         { "s", mode = { "n", "x", "o" }, function() require("flash").jump() end, desc = "Flash" },

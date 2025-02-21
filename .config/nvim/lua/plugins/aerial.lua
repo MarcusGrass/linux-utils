@@ -1,8 +1,6 @@
--- Symbol window
-local cfg = function()
-    require("aerial").setup({
-        -- Priority list of preferred backends for aerial.
-        -- This can be a filetype map (see :help aerial-filetype-map)
+return {
+    "stevearc/aerial.nvim",
+    opts = {
         backends = { "lsp", "treesitter", "markdown" },
 
         -- Set to false to remove the default keybindings for the aerial buffer
@@ -26,7 +24,5 @@ local cfg = function()
         open_automatic = false,
         -- Run this command after jumping to a symbol (false will disable)
         post_jump_cmd = "normal! zz",
-    })
-end
-
-return { "stevearc/aerial.nvim", config = cfg }
+    },
+}

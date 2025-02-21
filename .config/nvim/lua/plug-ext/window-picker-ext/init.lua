@@ -1,6 +1,0 @@
-require("plug-ext.window-picker-ext.merge")
-require("plug-ext.window-picker-ext.select")
-require("plug-ext.window-picker-ext.swap")
-require("plug-ext.window-picker-ext.open")
-require("plug-ext.window-picker-ext.filter")
-require("plug-ext.window-picker-ext.custom_pickers")

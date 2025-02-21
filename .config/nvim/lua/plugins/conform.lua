@@ -1,5 +1,6 @@
-local cfg = function()
-    require("conform").setup({
+return {
+    "stevearc/conform.nvim",
+    opts = {
         formatters_by_ft = {
             lua = { "stylua" },
             python = { "isort", "black" },
@@ -9,11 +10,5 @@ local cfg = function()
         format_on_save = {
             timeout_ms = 500,
         },
-    })
-end
-
-return {
-    "stevearc/conform.nvim",
-    opts = {},
-    config = cfg,
+    },
 }

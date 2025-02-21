@@ -1,5 +1,12 @@
-local cfg = function()
-    require("catppuccin").setup({
+--- Theme ---
+return {
+    "catppuccin/nvim",
+    name = "catppuccin",
+    priority = 1000,
+    config = function()
+        vim.cmd.colorscheme("catppuccin")
+    end,
+    opts = {
         flavour = "mocha",
         integrations = {
             aerial = true,
@@ -42,14 +49,5 @@ local cfg = function()
                 flamingo = "#f0bdbd", -- "#f2cdcd"
             },
         },
-    })
-    vim.cmd.colorscheme("catppuccin")
-end
-
---- Theme ---
-return {
-    "catppuccin/nvim",
-    name = "catppuccin",
-    priority = 1000,
-    config = cfg,
+    },
 }
