@@ -1,193 +1,120 @@
--- Functional wrapper for mapping custom keybindings
-local function map(mode, lhs, rhs, opts)
-    local options = { noremap = true }
-    if opts then
-        options = vim.tbl_extend("force", options, opts)
-    end
-    vim.api.nvim_set_keymap(mode, lhs, rhs, options)
-end
-
-local function mapnfn(lhs, fn, opts)
-    local options = { noremap = true }
-    if opts then
-        options = vim.tbl_extend("force", options, opts)
-    end
-    vim.keymap.set("n", lhs, fn, opts)
-end
-
+local key = require("util.keymap")
 -- Disable highlighting after enter
-map("n", "<CR>", ":noh<CR><CR>", nil)
+key.mapn("<CR>", ":noh<CR><CR>")
 -- Next window
-map("n", "<leader>ne", ":wincmd l<CR>", nil)
-map("n", "<leader>b", ":wincmd h<CR>", nil)
+key.mapn("<leader>ne", ":wincmd l<CR>")
+key.mapn("<leader>b", ":wincmd h<CR>")
 
 -- Window rearrangement
 -- Pick focus window
-mapnfn("<leader>h", function()
+key.mapnfn("<leader>h", function()
     require("plug-ext.window-picker-ext.select").select_focus_window()
 end)
 -- close a window
-mapnfn("<leader>wd", function()
+key.mapnfn("<leader>wd", function()
     require("plug-ext.window-picker-ext.select").close_focus_window()
 end)
 
 -- Send window to bottom
-map("n", "<leader>wb", "<C-W>J", nil)
+key.mapn("<leader>wb", "<C-W>J")
 -- Send bottom window to top left
-map("n", "<leader>wt", "<C-W>H", nil)
+key.mapn("<leader>wt", "<C-W>H")
 -- Equalize all windows horisontally
-map("n", "<leader>wh", ":horizontal wincmd =<CR>", nil)
+key.mapn("<leader>wh", ":horizontal wincmd =<CR>")
 -- Equalize all windows vertically
-map("n", "<leader>wv", ":vertical wincmd =<CR>", nil)
+key.mapn("<leader>wv", ":vertical wincmd =<CR>")
 -- Resize windows horisontally
-mapnfn("<leader>ws", function()
+key.mapnfn("<leader>ws", function()
     require("plug-ext.window-picker-ext.swap").swap_with_current()
 end)
 
-vim.keymap.set("n", "<leader>no", function()
-    local reveal_file = vim.fn.expand("%:p")
-    if reveal_file == "" then
-        reveal_file = vim.fn.getcwd()
-    else
-        local f = io.open(reveal_file, "r")
-        if f then
-            f.close(f)
-        else
-            reveal_file = vim.fn.getcwd()
-        end
-    end
-    require("neo-tree.command").execute({
-        action = "focus", -- OPTIONAL, this is the default value
-        source = "filesystem", -- OPTIONAL, this is the default value
-        position = "left", -- OPTIONAL, this is the default value
-        reveal_file = reveal_file, -- path to file or folder to reveal
-    })
-end, { desc = "Open neo-tree at current file or working directory" })
-
---- Try to open to current buffer in a new tab.
---- Preserves location.
---- Preserves the old buffer in the old tab.
---- Mostly used for browsing dependencies separately, after navigating to a file in the dependency.
-vim.keymap.set("n", "<leader>nn", function()
-    local cur_buf = vim.fn.expand("%")
-    if cur_buf == "" then
-        vim.notify("Buf with no name, can't go-to", vim.log.levels.WARN)
-        return
-    end
-    local line, col = unpack(vim.api.nvim_win_get_cursor(0))
-    local f = io.open(cur_buf, "r")
-    if f then
-        f.close(f)
-    else
-        vim.notify(string.format("failed to open %s can't go-to", cur_buf), vim.log.levels.WARN)
-        return
-    end
-    vim.cmd(string.format(":tabnew %s", cur_buf))
-    vim.api.nvim_win_set_cursor(0, { line, col })
-    require("neo-tree.command").execute({
-        action = "show", -- OPTIONAL, this is the default value
-        source = "filesystem", -- OPTIONAL, this is the default value
-        position = "left", -- OPTIONAL, this is the default value
-        reveal_file = cur_buf, -- path to file or folder to reveal
-        reveal_force_cwd = true, -- switch cwd without asking
-    })
-end, { desc = "Open neo-tree at current file or working directory" })
-
--- Switch focus to file tree
-map("n", "<leader>nt", ":Neotree focus<CR>", nil)
--- Switch focus to file tree
-map("n", "<leader>nb", ":Neotree focus buffers<CR>", nil)
-map("n", "<leader>ng", ":Neotree focus git_status<CR>", nil)
--- Collapse all files in tree
-map("n", "<leader>nc", ":Neotree close<CR>", nil)
-
 -- Open edgy left panel
-map("n", "<leader>eo", ':lua require("edgy").open()<CR>')
-map("n", "<leader>ec", ':lua require("edgy").close("left")<CR>')
-map("n", "<leader>em", ':lua require("edgy").goto_main()<CR>')
+key.mapn("<leader>eo", ':lua require("edgy").open()<CR>')
+key.mapn("<leader>ec", ':lua require("edgy").close("left")<CR>')
+key.mapn("<leader>em", ':lua require("edgy").goto_main()<CR>')
 
 -- Open snacks grep (Ctrl+Shift+f)
-map("n", "<C-S-f>", ':lua Snacks.picker.pick("grep")<CR>', nil)
+key.mapn("<C-S-f>", ':lua Snacks.picker.pick("grep")<CR>')
 
 -- Open snacks file finder
-map("n", "<leader>ff", ':lua Snacks.picker.pick("files")<CR>', nil)
+key.mapn("<leader>ff", ':lua Snacks.picker.pick("files")<CR>')
 -- Open snacks git file finder (when there's a bunch of files in e.g. ./target), could restrict to cwd
-map("n", "<leader>fg", ':lua Snacks.picker.pick("git_files")<CR>', nil)
+key.mapn("<leader>fg", ':lua Snacks.picker.pick("git_files")<CR>')
 
 -- Open snacks buffer finder
-map("n", "<leader>fb", ':lua Snacks.picker.pick("buffers")<CR>', nil)
-vim.keymap.set("n", "<leader>fc", function()
+key.mapn("<leader>fb", ':lua Snacks.picker.pick("buffers")<CR>')
+key.mapnfn("<leader>fc", function()
     require("plug-ext.snacks-ext.git_log_file_picker").git_log_file_picker()
-end, nil)
+end)
 
 -- Toggle aerial
-map("n", "<leader>aet", ":AerialToggle!<CR>", nil)
+key.mapn("<leader>aet", ":AerialToggle!<CR>")
 
 -- Toggle Trouble
-map("n", "<leader>tt", ":Trouble split_preview toggle<CR>", nil)
-map("n", "<leader>to", ":Trouble split_preview focus<CR>", nil)
+key.mapn("<leader>tt", ":Trouble split_preview toggle<CR>")
+key.mapn("<leader>to", ":Trouble split_preview focus<CR>")
 
-map("n", "<leader>gt", ":lua Snacks.terminal.toggle()<CR>", nil)
+key.mapn("<leader>gt", ":lua Snacks.terminal.toggle()<CR>")
 -- Toggle terminal
-map("n", "<C-S-t>", ":lua Snacks.terminal.toggle()<CR>", nil)
+key.mapn("<C-S-t>", ":lua Snacks.terminal.toggle()<CR>")
 -- nnoremap <F33> :TermExec size=15 cmd='cargo test -- --nocapture'<CR>
 -- nnoremap <F29> :TermExec size=15 cmd='cargo build --release'<CR>
 
 -- Bar nav
-map("n", "<Tab>", ":tabnext<CR>", nil)
-map("n", "<S-Tab>", ":tabprev<CR>", nil)
-map("n", "<leader>tc", ":tabclose<CR>", nil)
+key.mapn("<Tab>", ":tabnext<CR>")
+key.mapn("<S-Tab>", ":tabprev<CR>")
+key.mapn("<leader>tc", ":tabclose<CR>")
 -- Use del to navigate between windows
-map("n", "<C-H>", "<C-w>w", nil)
-map("n", "<C-S-H>", "<C-w>W", nil)
-map("n", "<C-c>", ":lua Snacks.bufdelete.delete()<CR>", nil)
-map("n", "<leader>bd", ":lua Snacks.bufdelete.other()<CR>", nil)
+key.mapn("<C-H>", "<C-w>w")
+key.mapn("<C-S-H>", "<C-w>W")
+key.mapn("<C-c>", ":lua Snacks.bufdelete.delete()<CR>")
+key.mapn("<leader>bd", ":lua Snacks.bufdelete.other()<CR>")
 
 -- Diffview
-map("n", "<leader>do", ":DiffviewOpen<CR>", nil)
-map("n", "<leader>dc", ":DiffviewClose<CR>", nil)
-map("n", "<leader>df", ":DiffviewFileHistory %<CR>", nil)
+key.mapn("<leader>do", ":DiffviewOpen<CR>")
+key.mapn("<leader>dc", ":DiffviewClose<CR>")
+key.mapn("<leader>df", ":DiffviewFileHistory %<CR>")
 
 -- Gitsigns
-map("n", "]g", ":Gitsigns next_hunk<CR>", nil)
-map("n", "[g", ":Gitsigns prev_hunk<CR>", nil)
-map("n", "<leader>gph", ":Gitsigns preview_hunk<CR>", nil)
-map("n", "<leader>gpi", ":Gitsigns preview_hunk_inline<CR>", nil)
-map("n", "<leader>gsh", ":Gitsigns select_hunk<CR>", nil)
-map("n", "<leader>gbo", ":Gitsigns blame<CR>", nil)
-map("n", "<leader>gbi", ":Gitsigns blame_line<CR>", nil)
-map("n", "<leader>grh", ":Gitsigns reset_hunk<CR>", nil)
-map("n", "<leader>grb", ":Gitsigns reset_buffer<CR>", nil)
-map("n", "<leader>gsh", ":Gitsigns stage_hunk<CR>", nil)
-map("n", "<leader>gsb", ":Gitsigns stage_buffer<CR>", nil)
+key.mapn("]g", ":Gitsigns next_hunk<CR>")
+key.mapn("[g", ":Gitsigns prev_hunk<CR>")
+key.mapn("<leader>gph", ":Gitsigns preview_hunk<CR>")
+key.mapn("<leader>gpi", ":Gitsigns preview_hunk_inline<CR>")
+key.mapn("<leader>gsh", ":Gitsigns select_hunk<CR>")
+key.mapn("<leader>gbo", ":Gitsigns blame<CR>")
+key.mapn("<leader>gbi", ":Gitsigns blame_line<CR>")
+key.mapn("<leader>grh", ":Gitsigns reset_hunk<CR>")
+key.mapn("<leader>grb", ":Gitsigns reset_buffer<CR>")
+key.mapn("<leader>gsh", ":Gitsigns stage_hunk<CR>")
+key.mapn("<leader>gsb", ":Gitsigns stage_buffer<CR>")
 
 -- Fugitive
-map("n", "<leader>gfo", ":Git<CR>")
-map("n", "<leader>gff", ":Git fetch<CR>")
-map("n", "<leader>gfp", ":Git push<CR>")
-mapnfn("<leader>gfr", function()
+key.mapn("<leader>gfo", ":Git<CR>")
+key.mapn("<leader>gff", ":Git fetch<CR>")
+key.mapn("<leader>gfp", ":Git push<CR>")
+key.mapnfn("<leader>gfr", function()
     vim.cmd(":Git fetch")
     vim.cmd(":Git rebase -i origin/main")
 end)
 
 -- Picker search for word under cursor
-map("n", "gs", ':lua Snacks.picker.pick("grep_word")<CR>')
-map("x", "gs", '<ESC>:lua Snacks.picker.pick("grep_word")<CR>')
-vim.keymap.set("n", "<leader>tdo", function()
+key.mapn("gs", ':lua Snacks.picker.pick("grep_word")<CR>')
+key.map("x", "gs", '<ESC>:lua Snacks.picker.pick("grep_word")<CR>')
+key.mapnfn("<leader>tdo", function()
     require("plug-ext.snacks-ext.diff-picker").snacks_diff_file_picker("~/.local/bin/difft", true, false)
-end, nil)
-vim.keymap.set("n", "<leader>tde", function()
+end)
+key.mapnfn("<leader>tde", function()
     require("plug-ext.snacks-ext.diff-picker").snacks_diff_file_picker("~/.local/bin/difft", false, false)
-end, nil)
-vim.keymap.set("n", "<leader>tdu", function()
+end)
+key.mapnfn("<leader>tdu", function()
     require("plug-ext.snacks-ext.diff-picker").snacks_diff_file_picker("~/.local/bin/difft", false, true)
-end, nil)
-vim.keymap.set("n", "<leader>tgo", function()
+end)
+key.mapnfn("<leader>tgo", function()
     require("plug-ext.snacks-ext.diff-picker").snacks_diff_file_picker(nil, true, false)
-end, nil)
-vim.keymap.set("n", "<leader>tge", function()
+end)
+key.mapnfn("<leader>tge", function()
     require("plug-ext.snacks-ext.diff-picker").snacks_diff_file_picker(nil, false, false)
-end, nil)
-vim.keymap.set("n", "<leader>tgu", function()
+end)
+key.mapnfn("<leader>tgu", function()
     require("plug-ext.snacks-ext.diff-picker").snacks_diff_file_picker(nil, false, true)
-end, nil)
+end)

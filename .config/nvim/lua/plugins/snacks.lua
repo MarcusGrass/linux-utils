@@ -1,36 +1,3 @@
-local edit_pick_win = {
-    action = function(picker, item)
-        local pickers = require("plug-ext.window-picker-ext.custom_pickers")
-        local file = item.file
-        picker:close()
-        require("plug-ext.window-picker-ext.open").open_path_over_win(file, pickers.snacks_picker_opts)
-    end,
-
-    desc = "edit confirm which window to use",
-}
-
-local edit_hsplit_pick_win = {
-    action = function(picker, item)
-        local pickers = require("plug-ext.window-picker-ext.custom_pickers")
-        local file = item.file
-        picker:close()
-        require("plug-ext.window-picker-ext.open").open_path_hsplit_at_win(file, pickers.snacks_picker_opts)
-    end,
-
-    desc = "edit_hsplit confirm which window to split",
-}
-
-local edit_vsplit_pick_win = {
-    action = function(picker, item)
-        local pickers = require("plug-ext.window-picker-ext.custom_pickers")
-        local file = item.file
-        picker:close()
-        require("plug-ext.window-picker-ext.open").open_path_vsplit_at_win(file, pickers.snacks_picker_opts)
-    end,
-
-    desc = "edit_vsplit confirm which window to split",
-}
-
 return {
     "folke/snacks.nvim",
     priority = 1000,
@@ -77,20 +44,6 @@ return {
         input = { enabled = true },
         picker = {
             enabled = true,
-            win = {
-                input = {
-                    keys = {
-                        ["<C-ENTER>"] = { "edit_pick_win", mode = { "n", "i" } },
-                        ["<C-s>"] = { "edit_hsplit_pick_win", mode = { "n", "i" } },
-                        ["<C-v>"] = { "edit_vsplit_pick_win", mode = { "n", "i" } },
-                    },
-                },
-            },
-            actions = {
-                edit_vsplit_pick_win = edit_vsplit_pick_win,
-                edit_hsplit_pick_win = edit_hsplit_pick_win,
-                edit_pick_win = edit_pick_win,
-            },
         },
         terminal = {
             enabled = true,
