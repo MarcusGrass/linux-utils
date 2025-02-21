@@ -17,6 +17,11 @@ Maybe not necessary, but still important fixes
 
 General necessary fixes
 
+### Window picker
+
+- [ ] Duplicate window in split, should be easy enough, probably already as a 
+default command, but I want to pick where it's opened
+
 ### Snacks
 
 #### Picker

@@ -1,3 +1,4 @@
+require("util.buffer")
 require("util.debug")
 require("util.file")
 require("util.git")

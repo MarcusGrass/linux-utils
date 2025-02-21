@@ -38,7 +38,37 @@ local cfg = function(_, opts)
                             vim.notify("Neotree failed to get node path (was nil)", vim.log.levels.ERROR, nil)
                             return
                         end
-                        vim.cmd(string.format(":cd %s", path))
+                        require("plug-ext.window-picker-ext.open").open_path_over_win(path)
+                    end,
+                },
+                ["s"] = {
+                    function(state)
+                        local node = state.tree:get_node()
+                        if node == nil then
+                            vim.notify("Neotree failed to get node (was nil)", vim.log.levels.ERROR, nil)
+                            return
+                        end
+                        local path = node.path
+                        if path == nil then
+                            vim.notify("Neotree failed to get node path (was nil)", vim.log.levels.ERROR, nil)
+                            return
+                        end
+                        require("plug-ext.window-picker-ext.open").open_path_hsplit_at_win(path)
+                    end,
+                },
+                ["S"] = {
+                    function(state)
+                        local node = state.tree:get_node()
+                        if node == nil then
+                            vim.notify("Neotree failed to get node (was nil)", vim.log.levels.ERROR, nil)
+                            return
+                        end
+                        local path = node.path
+                        if path == nil then
+                            vim.notify("Neotree failed to get node path (was nil)", vim.log.levels.ERROR, nil)
+                            return
+                        end
+                        require("plug-ext.window-picker-ext.open").open_path_vsplit_at_win(path)
                     end,
                 },
             },

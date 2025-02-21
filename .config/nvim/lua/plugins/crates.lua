@@ -1,7 +1,6 @@
 local lsp_attach = require("util.lsp_attach")
 return {
     "saecki/crates.nvim",
-    tag = "stable",
     config = function()
         require("crates").setup({
             lsp = {

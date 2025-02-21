@@ -165,6 +165,10 @@ map("n", "<leader>gsb", ":Gitsigns stage_buffer<CR>", nil)
 map("n", "<leader>gfo", ":Git<CR>")
 map("n", "<leader>gff", ":Git fetch<CR>")
 map("n", "<leader>gfp", ":Git push<CR>")
+mapnfn("<leader>gfr", function()
+    vim.cmd(":Git fetch")
+    vim.cmd(":Git rebase -i origin/main")
+end)
 
 -- Picker search for word under cursor
 map("n", "gs", ':lua Snacks.picker.pick("grep_word")<CR>')

@@ -13,6 +13,7 @@ return {
                 include_unfocusable_windows = true,
                 bo = {
                     filetype = {},
+                    buftype = {},
                 },
             },
             show_prompt = false,
