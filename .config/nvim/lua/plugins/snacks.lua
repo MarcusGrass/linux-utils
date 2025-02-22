@@ -1,11 +1,11 @@
 local git_log_file_picker = function()
-    local git = require("util.git")
     local file = require("util.file")
+    local git = require("main_config").git
     local cur_file = file.get_current_file()
     if cur_file == nil then
         return
     end
-    local commit_data = git.git_get_file_change_commits(cur_file)
+    local commit_data = git.get_file_change_commits(cur_file)
     if commit_data == nil then
         return
     end
