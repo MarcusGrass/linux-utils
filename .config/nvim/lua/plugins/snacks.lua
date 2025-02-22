@@ -169,6 +169,23 @@ return {
         key.mapnfn("<leader>fc", function()
             git_log_file_picker()
         end)
+        -- Open snacks grep (Ctrl+Shift+f)
+        key.mapn("<C-S-f>", ':lua Snacks.picker.pick("grep")<CR>')
+
+        -- Open snacks file finder
+        key.mapn("<leader>ff", ':lua Snacks.picker.pick("files")<CR>')
+        -- Open snacks git file finder (when there's a bunch of files in e.g. ./target), could restrict to cwd
+        key.mapn("<leader>fg", ':lua Snacks.picker.pick("git_files")<CR>')
+        -- Open snacks buffer finder
+        key.mapn("<leader>fb", ':lua Snacks.picker.pick("buffers")<CR>')
+        -- Toggle terminal
+        key.mapn("<leader>gt", ":lua Snacks.terminal.toggle()<CR>")
+        key.mapn("<C-S-t>", ":lua Snacks.terminal.toggle()<CR>")
+        key.mapn("<C-c>", ":lua Snacks.bufdelete.delete()<CR>")
+        key.mapn("<leader>bd", ":lua Snacks.bufdelete.other()<CR>")
+        -- Picker search for word under cursor
+        key.mapn("gs", ':lua Snacks.picker.pick("grep_word")<CR>')
+        key.map("x", "gs", '<ESC>:lua Snacks.picker.pick("grep_word")<CR>')
 
         return vim.tbl_deep_extend("force", opts or {}, {
             -- your configuration comes here
