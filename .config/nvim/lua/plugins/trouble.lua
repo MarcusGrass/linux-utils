@@ -1,5 +1,6 @@
 return {
     "folke/trouble.nvim",
+    lazy = false,
     opts = function(_, opts)
         local key = require("util.keymap")
         key.mapn("<leader>tt", ":Trouble split_preview toggle<CR>")
