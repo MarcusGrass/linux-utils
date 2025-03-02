@@ -1,7 +1,8 @@
+local default_chars = "OEUHTNAIDSCRL"
+local pick_relative_chars = "ESUATNDOH"
 return {
     dir = "/home/gramar/code/rust/nvim_winpick",
     lazy = false,
-    build = "build.lua",
     opts = function(_, opts)
         local key = require("util.keymap")
         -- Pick focus window
@@ -18,7 +19,11 @@ return {
         end)
 
         return vim.tbl_deep_extend("force", opts or {}, {
-            selection_chars = "OEUHTNAIDSCRL",
+            selection_chars = default_chars,
+            multiselect = {
+                trigger_char = "m",
+                commit_char = "c",
+            },
         })
     end,
     specs = {
@@ -29,11 +34,14 @@ return {
                     action = function(picker, item)
                         local file = item.file
                         picker:close()
-                        require("nvim_winpick").pick_open_over({
+                        require("nvim_winpick").pick_win_relative({
                             path = file,
+                            relative_chars = pick_relative_chars,
+                            opts = {
+                                selection_chars = default_chars,
+                            },
                         })
                     end,
-
                     desc = "edit confirm which window to use",
                 }
 
@@ -106,8 +114,12 @@ return {
                                         )
                                         return
                                     end
-                                    require("nvim_winpick").pick_open_over({
+                                    require("nvim_winpick").pick_win_relative({
                                         path = path,
+                                        relative_chars = pick_relative_chars,
+                                        opts = {
+                                            selection_chars = default_chars,
+                                        },
                                     })
                                 end,
                             },

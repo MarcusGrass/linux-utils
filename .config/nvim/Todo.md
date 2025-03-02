@@ -9,6 +9,10 @@
 
 Maybe not necessary, but still important fixes
 
+### Rust-analyzer
+
+- [ ] Auto-complete derives gives a trailing `()`
+
 ### Cargo auto-complete on deps
 
 - [x] The `cargo` plugin check dependency versions, but not (at least not as configured) available features, autocomplete on toml format etc.

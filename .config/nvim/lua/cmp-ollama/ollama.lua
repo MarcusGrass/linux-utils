@@ -100,4 +100,3 @@ end
 
 local src = source:new()
 cmp.register_source("cmp_ollama_local", src)
-vim.notify("Registered localama")
