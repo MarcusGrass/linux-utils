@@ -9,9 +9,10 @@
 
 Maybe not necessary, but still important fixes
 
-### Rust-analyzer
+### Rust specifics
 
-- [ ] Auto-complete derives gives a trailing `()`
+- [ ] Custom picker for rust commands like `cargo fmt --all` which pops a window with the output
+- [ ] See if rust-analyzer autocomplete on derives can be prevented from generating trailing `()`
 
 ### Cargo auto-complete on deps
 
@@ -25,6 +26,7 @@ General necessary fixes
 
 - [ ] Duplicate window in split, should be easy enough, probably already as a 
 default command, but I want to pick where it's opened
+- [ ] Fix so that opens can target any window
 
 ### Snacks
 
@@ -58,10 +60,10 @@ Ideally I could open a separate nvimtree for the dependency, but it seems to be 
 - [x] open specific file with <C-ENTER> or similar, currently <C-w>gf
 - [x] custom git log picker
 
-## Telescope
+## Fugitive
 
-- [x] Find files not working at some depth
-- [ ] treesitter on diff buffers on custom differ
+- [ ] Make a picker for standard commands like `fetch` `pull` `rebase` etc.
+- [ ] Do something to make cherry-picking easier `git log --left-right --graph --cherry-pick --oneline HEAD..mg/cm-power-hostname-state`, maybe add a picker to show the commit diffs there
 
 ## Lsp
 

@@ -142,6 +142,57 @@ local snacks_diff_file_picker = function(custom_diff, branch_diff, at_origin)
     })
 end
 
+local cargo_cmds = {
+    {
+        text = "format",
+        cmd = ":botright terminal cargo fmt --all",
+        preview = {
+            text = "Run `cargo format --all`",
+            ft = "markdown",
+        },
+    },
+    {
+        text = "clippy",
+        cmd = ":botright terminal cargo clippy",
+        preview = {
+            text = "Run `cargo clippy`",
+            ft = "markdown",
+        },
+    },
+    {
+        text = "test",
+        cmd = ":botright terminal cargo test",
+        preview = {
+            text = "Run `cargo test`",
+            ft = "markdown",
+        },
+    },
+    {
+        text = "check all",
+        cmd = ":botright terminal cargo fmt --all && cargo clippy && cargo test",
+        preview = {
+            text = "Run `cargo fmt --all && cargo clippy && cargo test`",
+            ft = "markdown",
+        },
+    },
+}
+
+local snacks_cargo_cmd_picker = function()
+    return require("snacks").picker({
+        name = "cargo_cmd",
+        items = cargo_cmds,
+        preview = "preview",
+        format = "text",
+        confirm = function(picker, item)
+            picker:close()
+            if item then
+                vim.cmd(string.format("%s", item.cmd))
+            end
+        end,
+        previewers = {},
+    })
+end
+
 return {
     "folke/snacks.nvim",
     priority = 1000,
@@ -178,6 +229,9 @@ return {
         key.mapn("<leader>fg", ':lua Snacks.picker.pick("git_files")<CR>')
         -- Open snacks buffer finder
         key.mapn("<leader>fb", ':lua Snacks.picker.pick("buffers")<CR>')
+        key.mapnfn("<leader>pc", function()
+            snacks_cargo_cmd_picker()
+        end)
         -- Toggle terminal
         key.mapn("<leader>gt", ":lua Snacks.terminal.toggle()<CR>")
         key.mapn("<C-S-t>", ":lua Snacks.terminal.toggle()<CR>")
