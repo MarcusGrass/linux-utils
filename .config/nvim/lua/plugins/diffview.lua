@@ -3,7 +3,6 @@ return {
     opts = function(_, opts)
         local key = require("util.keymap")
         key.mapn("<leader>do", ":DiffviewOpen<CR>")
-        key.mapn("<leader>dc", ":DiffviewClose<CR>")
         key.mapn("<leader>df", ":DiffviewFileHistory %<CR>")
 
         return vim.tbl_deep_extend("force", opts or {}, {
