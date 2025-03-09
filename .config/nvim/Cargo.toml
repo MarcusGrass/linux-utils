@@ -3,7 +3,7 @@ members = ["rust/main-config"]
 resolver = "2"
 
 [workspace.dependencies]
-anyhow = { version = "1.0.96"}
+anyhow = { version = "1.0.96", features = []}
 nvim-oxi = { version = "0.5.1", features = ["neovim-0-10"] }
 thiserror = "2.0.11"
 tracing = "0.1.41"

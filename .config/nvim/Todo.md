@@ -26,7 +26,8 @@ General necessary fixes
 
 - [ ] Duplicate window in split, should be easy enough, probably already as a 
 default command, but I want to pick where it's opened
-- [ ] Fix so that opens can target any window
+- [x] Fix so that opens can target any window
+- [ ] Bind lsp things like go-to-def which doesn't usually pop snacks so that they can be intercepted
 
 ### Snacks
 

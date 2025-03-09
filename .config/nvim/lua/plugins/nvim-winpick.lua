@@ -16,10 +16,9 @@ return {
                     autoselect_one = false,
                     include_current_win = true,
                     bo = {
-                        buftype = {
-                            -- Don't skip terminals here
-                            "nofile",
-                        },
+                        -- Don't skip anything
+                        buftype = {},
+                        filetype = {},
                     },
                 },
             })

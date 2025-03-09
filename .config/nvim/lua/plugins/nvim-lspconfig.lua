@@ -10,10 +10,13 @@ return {
             on_attach(client, bufnr)
             status.on_attach(client, bufnr)
         end
+        local status_capabilities = status.capabilities
+        local all_capabilities = require("blink.cmp").get_lsp_capabilities(status_capabilities)
         slf.gopls.setup({
             on_attach = lsp_on_attach,
         })
         slf.lua_ls.setup({
+            capabilities = all_capabilities,
             on_init = function(client)
                 local path = client.workspace_folders[1].name
                 if vim.loop.fs_stat(path .. "/.luarc.json") or vim.loop.fs_stat(path .. "/.luarc.jsonc") then
@@ -49,11 +52,13 @@ return {
             },
         })
         slf.pylsp.setup({
+            capabilities = all_capabilities,
             on_attach = lsp_on_attach,
         })
         require("ccls").setup({
             lsp = {
                 server = {
+                    capabilities = all_capabilities,
                     name = "ccls",
                     cmd = { "/usr/bin/ccls" },
                     init_options = {
@@ -79,7 +84,7 @@ return {
                 on_attach = lsp_on_attach,
                 default_settings = {
                     ["rust-analyzer"] = {
-                        capabilities = status.capabilities,
+                        capabilities = all_capabilities,
                         -- enable clippy on save
                         checkOnSave = true,
                         inlayHints = {
