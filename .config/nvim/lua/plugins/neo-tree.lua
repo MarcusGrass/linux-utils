@@ -18,11 +18,6 @@ return {
             { event = events.FILE_MOVED, handler = on_move },
             { event = events.FILE_RENAMED, handler = on_move },
         })
-        -- Switch focus to file tree
-        key.mapn("<leader>nt", ":Neotree focus<CR>")
-        -- Switch focus to file tree
-        key.mapn("<leader>nb", ":Neotree focus buffers<CR>")
-        key.mapn("<leader>ng", ":Neotree focus git_status<CR>")
         -- Collapse all files in tree
         key.mapn("<leader>nc", ":Neotree close<CR>")
         -- Open tree at current file

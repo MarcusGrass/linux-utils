@@ -10,7 +10,6 @@ return {
         -- Open edgy left panel
         key.mapn("<leader>eo", ':lua require("edgy").open()<CR>')
         key.mapn("<leader>ec", ':lua require("edgy").close("left")<CR>')
-        key.mapn("<leader>em", ':lua require("edgy").goto_main()<CR>')
         return vim.tbl_deep_extend("force", opts or {}, {
             animate = {
                 enabled = false,
