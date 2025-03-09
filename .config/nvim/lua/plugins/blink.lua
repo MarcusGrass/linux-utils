@@ -16,7 +16,7 @@ return {
         opts = {
             keymap = {
                 preset = "default",
-                ["<ENTER>"] = {
+                ["<TAB>"] = {
                     "select_and_accept",
                     "fallback",
                 },
