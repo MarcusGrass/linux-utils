@@ -22,6 +22,10 @@ Maybe not necessary, but still important fixes
 
 General necessary fixes
 
+### Cleanup
+
+Replace weird opts key running with a `keys` entry as it should be.
+
 ### Window picker
 
 - [ ] Duplicate window in split, should be easy enough, probably already as a 
