@@ -1,4 +1,4 @@
-use nvim_oxi::{Dictionary, Function, Object, api::Buffer};
+use nvim_oxi::{Array, Dictionary, Function, Object, api::Buffer};
 mod error;
 pub use error::{Error, Result};
 mod command;
@@ -22,7 +22,7 @@ fn main_config() -> Dictionary {
             "git",
             Dictionary::from_iter([(
                 "get_file_change_commits",
-                Object::from(Function::<String, Dictionary>::from_fn(
+                Object::from(Function::<String, Array>::from_fn(
                     git::get_file_change_commits,
                 )),
             )]),

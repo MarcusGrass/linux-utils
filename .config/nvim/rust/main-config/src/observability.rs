@@ -1,4 +1,4 @@
-use nvim_oxi::api::opts::EchoOpts;
+use nvim_oxi::Dictionary;
 use tracing_subscriber::fmt::MakeWriter;
 
 pub fn setup() {
@@ -24,13 +24,21 @@ impl<'a> MakeWriter<'a> for MakeVimNotifyWriter {
 impl std::io::Write for VimNotifyWriter {
     fn write(&mut self, buf: &[u8]) -> std::io::Result<usize> {
         let msg = String::from_utf8_lossy(buf);
-        let _ = nvim_oxi::api::echo([(msg, None)], true, &EchoOpts::default());
+        let _ = nvim_oxi::api::notify(
+            &msg,
+            nvim_oxi::api::types::LogLevel::Warn,
+            &Dictionary::new(),
+        );
         Ok(buf.len())
     }
 
     #[inline]
     fn flush(&mut self) -> std::io::Result<()> {
-        let _ = nvim_oxi::api::echo([("flushed", None)], false, &EchoOpts::default());
+        let _ = nvim_oxi::api::notify(
+            "flushed",
+            nvim_oxi::api::types::LogLevel::Warn,
+            &Dictionary::new(),
+        );
         Ok(())
     }
 }

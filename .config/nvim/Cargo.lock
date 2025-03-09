@@ -38,7 +38,7 @@ version = "0.1.0"
 dependencies = [
  "anyhow",
  "nvim-oxi",
- "thiserror 2.0.11",
+ "thiserror",
  "tracing",
  "tracing-subscriber",
 ]
@@ -56,44 +56,40 @@ dependencies = [
 [[package]]
 name = "nvim-oxi"
 version = "0.5.1"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "13587f8434641462a0674bc575fb1ca88d66827118470df3c2608e769fc8e3ee"
+source = "git+https://github.com/MarcusGrass/nvim-oxi?rev=4b227faa4c089843169f7362e0541983010691ae#4b227faa4c089843169f7362e0541983010691ae"
 dependencies = [
  "nvim-oxi-api",
  "nvim-oxi-luajit",
  "nvim-oxi-macros",
  "nvim-oxi-types",
- "thiserror 1.0.69",
+ "thiserror",
 ]
 
 [[package]]
 name = "nvim-oxi-api"
 version = "0.5.1"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "0926b8fac04e376a743a7519382ef21c9d6e3ef584338d439972b911e5d85554"
+source = "git+https://github.com/MarcusGrass/nvim-oxi?rev=4b227faa4c089843169f7362e0541983010691ae#4b227faa4c089843169f7362e0541983010691ae"
 dependencies = [
  "nvim-oxi-luajit",
  "nvim-oxi-macros",
  "nvim-oxi-types",
  "serde",
  "serde_repr",
- "thiserror 1.0.69",
+ "thiserror",
 ]
 
 [[package]]
 name = "nvim-oxi-luajit"
 version = "0.5.1"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "d3d83bb0ca6908c82bad8b22379f7577d0d82aa050601c0dce15d7c691c2131a"
+source = "git+https://github.com/MarcusGrass/nvim-oxi?rev=4b227faa4c089843169f7362e0541983010691ae#4b227faa4c089843169f7362e0541983010691ae"
 dependencies = [
- "thiserror 1.0.69",
+ "thiserror",
 ]
 
 [[package]]
 name = "nvim-oxi-macros"
 version = "0.5.1"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "b0db91ed44967f43c9ac9f80ce629391f53787aac6212aac79966422940671f9"
+source = "git+https://github.com/MarcusGrass/nvim-oxi?rev=4b227faa4c089843169f7362e0541983010691ae#4b227faa4c089843169f7362e0541983010691ae"
 dependencies = [
  "proc-macro2",
  "quote",
@@ -103,13 +99,12 @@ dependencies = [
 [[package]]
 name = "nvim-oxi-types"
 version = "0.5.1"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "c2545fa96873e7bc0bd12e1e68582a89ca593fad872e996e479a8615ae986424"
+source = "git+https://github.com/MarcusGrass/nvim-oxi?rev=4b227faa4c089843169f7362e0541983010691ae#4b227faa4c089843169f7362e0541983010691ae"
 dependencies = [
  "libc",
  "nvim-oxi-luajit",
  "serde",
- "thiserror 1.0.69",
+ "thiserror",
 ]
 
 [[package]]
@@ -207,31 +202,11 @@ dependencies = [
 
 [[package]]
 name = "thiserror"
-version = "1.0.69"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "b6aaf5339b578ea85b50e080feb250a3e8ae8cfcdff9a461c9ec2904bc923f52"
-dependencies = [
- "thiserror-impl 1.0.69",
-]
-
-[[package]]
-name = "thiserror"
 version = "2.0.11"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "d452f284b73e6d76dd36758a0c8684b1d5be31f92b89d07fd5822175732206fc"
 dependencies = [
- "thiserror-impl 2.0.11",
-]
-
-[[package]]
-name = "thiserror-impl"
-version = "1.0.69"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "4fee6c4efc90059e10f81e6d42c60a18f76588c3d74cb83a0b242a2b6c7504c1"
-dependencies = [
- "proc-macro2",
- "quote",
- "syn",
+ "thiserror-impl",
 ]
 
 [[package]]

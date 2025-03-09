@@ -13,10 +13,9 @@ local git_log_file_picker = function()
     return require("snacks").picker({
         finder = function()
             local items = {}
-            local idx = 1
-            for _, commit in pairs(commit_data) do
+            for k, commit in ipairs(commit_data) do
                 table.insert(items, {
-                    idx = idx,
+                    idx = k + 1,
                     file = cur_file,
                     sha = commit.sha,
                     sha_short = commit.sha_short,
@@ -24,7 +23,6 @@ local git_log_file_picker = function()
                     author = commit.author,
                     subject = commit.subject,
                 })
-                idx = idx + 1
             end
             return items
         end,
@@ -124,7 +122,7 @@ local snacks_diff_file_picker = function(custom_diff, branch_diff, at_origin)
             if files == nil then
                 return items
             end
-            local idx = 0
+            local idx = 1
             for _, file in pairs(files) do
                 table.insert(items, {
                     idx = idx,
