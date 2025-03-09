@@ -16,13 +16,19 @@ return {
         opts = {
             keymap = {
                 preset = "default",
-                ["<TAB>"] = { "select_and_accept" },
+                ["<ENTER>"] = {
+                    "select_and_accept",
+                    "fallback",
+                },
             },
             completion = {
                 documentation = { auto_show = true, auto_show_delay_ms = 0, update_delay_ms = 0 },
                 ghost_text = {
                     -- Glitchy but I like it
                     enabled = true,
+                },
+                menu = {
+                    max_height = 50,
                 },
             },
 

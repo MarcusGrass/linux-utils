@@ -10,6 +10,7 @@ return {
         flavour = "mocha",
         integrations = {
             aerial = true,
+            blink = true,
             cmp = true,
             diffview = true,
             gitsigns = true,
