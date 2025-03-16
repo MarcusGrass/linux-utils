@@ -218,6 +218,7 @@ return {
         key.mapnfn("<leader>fc", function()
             git_log_file_picker()
         end)
+        key.mapn("<leader>fr", ':lua Snacks.picker.pick("resume")<CR>')
         -- Open snacks grep (Ctrl+Shift+f)
         key.mapn("<C-S-f>", ':lua Snacks.picker.pick("grep")<CR>')
 

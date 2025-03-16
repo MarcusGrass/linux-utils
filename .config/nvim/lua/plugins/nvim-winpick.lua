@@ -1,10 +1,9 @@
 local default_chars = "OEUHTNAIDSCRL"
 local pick_relative_chars = "ESUATNDOH"
 return {
-    -- dir = "/home/gramar/code/rust/nvim_winpick",
-    "MarcusGrass/nvim_winpick",
-    branch = "x86_64-unknown-linux-gnu-latest",
-    build = false,
+    dir = "/home/gramar/code/rust/nvim_winpick",
+    --"MarcusGrass/nvim_winpick",
+    --branch = "x86_64-unknown-linux-gnu-latest",
     lazy = false,
     opts = function(_, opts)
         local key = require("util.keymap")
@@ -25,7 +24,25 @@ return {
         end)
         -- close a window
         key.mapnfn("<leader>wd", function()
-            require("nvim_winpick").pick_close_window()
+            require("nvim_winpick").pick_close_window({
+                selection_chars = default_chars,
+                filter_rules = {
+                    autoselect_one = false,
+                    include_current_win = true,
+                    bo = {
+                        -- Don't skip anything
+                        buftype = {},
+                        filetype = {},
+                    },
+                },
+            })
+        end)
+
+        key.mapnfn("<leader>wu", function()
+            require("nvim_winpick").pick_win_relative({
+                path = vim.fn.expand("%"),
+                focus_new = false,
+            })
         end)
         -- Swap a window
         key.mapnfn("<leader>ws", function()
