@@ -25,6 +25,7 @@ return {
         },
     },
     opts = {
+        switch = "prompt",
         cycle = {
             global = {
                 "snake",

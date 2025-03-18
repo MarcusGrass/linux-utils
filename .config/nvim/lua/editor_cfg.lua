@@ -41,7 +41,7 @@ vim.opt.listchars = {
 }
 vim.opt.list = true
 --- Quirks
--- Hide buffers whe abandoned, TextEdit might fail if hidden is not set.
+-- Hide buffers when abandoned, `TextEdit` might fail if hidden is not set.
 vim.opt.hidden = true
 -- Indicate fast terminal connection
 vim.opt.ttyfast = true
@@ -65,7 +65,7 @@ vim.opt.scrolloff = 10
 vim.opt.hlsearch = true
 -- Ignorecase in searches https://neovim.io/doc/user/options.html#'ignorecase'
 vim.opt.ignorecase = true
--- Override ignorecase if search containser uppercase letters https://neovim.io/doc/user/options.html#'smartcase'
+-- Override ignorecase if search contains uppercase letters https://neovim.io/doc/user/options.html#'smartcase'
 vim.opt.smartcase = true
 -- Incremental searching, defaults to on but whatever https://neovim.io/doc/user/options.html#'incsearch'
 vim.opt.incsearch = true

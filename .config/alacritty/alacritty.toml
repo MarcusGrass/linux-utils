@@ -1,0 +1,13 @@
+[env]
+TERM = "xterm-256color"
+
+[font]
+normal = { family = "JetBrainsMonoNL NF" }
+
+[general]
+import = [
+    # "~/.config/alacritty/catppuccin-mocha.toml"
+    # "~/misc/alacritty-theme/themes/monokai_pro.toml"
+    "~/misc/alacritty-theme/themes/gruvbox_material.toml"
+    # "~/misc/alacritty-theme/themes/hatsunemiku.toml"
+]

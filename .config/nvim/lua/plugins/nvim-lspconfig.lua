@@ -12,6 +12,14 @@ return {
         end
         local status_capabilities = status.capabilities
         local all_capabilities = require("blink.cmp").get_lsp_capabilities(status_capabilities)
+        slf.harper_ls.setup({
+            on_attach = lsp_on_attach,
+            settings = {
+                ["harper-ls"] = {
+                    userDictPath = "~/.config/nvim/spell/harper",
+                },
+            },
+        })
         slf.gopls.setup({
             on_attach = lsp_on_attach,
         })

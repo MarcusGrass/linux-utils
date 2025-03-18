@@ -10,7 +10,7 @@ vim.api.nvim_create_autocmd(
 )
 -- We opened a buffer
 vim.api.nvim_create_autocmd("StdinReadPre", { pattern = "*", command = "let s:std_in=1" })
--- Toggle nvimtree on start
+-- Toggle nvim-tree on start
 vim.api.nvim_create_autocmd(
     "VimEnter",
     { pattern = "*", command = 'if argc() > 0 || exists("s:std_in") | wincmd p | endif' }
