@@ -4,10 +4,13 @@ TERM = "xterm-256color"
 [font]
 normal = { family = "JetBrainsMonoNL NF" }
 
+[keyboard]
+bindings = [
+    { key = "F", mods = "Control|Shift", action = "ReceiveChar" }
+]
+
+
 [general]
 import = [
-    # "~/.config/alacritty/catppuccin-mocha.toml"
-    # "~/misc/alacritty-theme/themes/monokai_pro.toml"
-    "~/misc/alacritty-theme/themes/gruvbox_material.toml"
-    # "~/misc/alacritty-theme/themes/hatsunemiku.toml"
+    "~/.config/alacritty/catppuccin-mocha.toml"
 ]
