@@ -35,6 +35,10 @@ return {
             function()
                 require("nvim_winpick").pick_close_window({
                     selection_chars = default_chars,
+                    multiselect = {
+                        trigger_char = "m",
+                        commit_char = "c",
+                    },
                     filter_rules = {
                         autoselect_one = false,
                         include_current_win = true,

@@ -1,5 +1,6 @@
 return {
     "sindrets/diffview.nvim",
+    lazy = true,
     opts = {
         view = {
             -- default = {
@@ -17,7 +18,9 @@ return {
                 {
                     "n",
                     "<C-ENTER>",
-                    require("diffview.config").actions.goto_file_edit,
+                    function()
+                        require("diffview.config").actions.goto_file_edit()
+                    end,
                     { desc = "Goto file in last accessed tab" },
                 },
             },
@@ -25,7 +28,9 @@ return {
                 {
                     "n",
                     "<C-ENTER>",
-                    require("diffview.config").actions.goto_file_edit,
+                    function()
+                        require("diffview.config").actions.goto_file_edit()
+                    end,
                     { desc = "Goto file in last accessed tab" },
                 },
             },
@@ -33,7 +38,9 @@ return {
                 {
                     "n",
                     "<C-ENTER>",
-                    require("diffview.config").actions.goto_file_edit,
+                    function()
+                        require("diffview.config").actions.goto_file_edit()
+                    end,
                     { desc = "Goto file in last accessed tab" },
                 },
             },
