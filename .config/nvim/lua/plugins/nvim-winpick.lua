@@ -5,58 +5,64 @@ return {
     --"MarcusGrass/nvim_winpick",
     --branch = "x86_64-unknown-linux-gnu-latest",
     lazy = false,
-    opts = function(_, opts)
-        local key = require("util.keymap")
-        -- Pick focus window
-        key.mapnfn("<leader>h", function()
-            require("nvim_winpick").pick_focus_window({
-                selection_chars = default_chars,
-                filter_rules = {
-                    autoselect_one = false,
-                    include_current_win = true,
-                    bo = {
-                        -- Don't skip anything
-                        buftype = {},
-                        filetype = {},
+    opts = {
+        selection_chars = default_chars,
+        multiselect = {
+            trigger_char = "m",
+            commit_char = "c",
+        },
+    },
+    keys = {
+        {
+            "<leader>h",
+            function()
+                require("nvim_winpick").pick_focus_window({
+                    selection_chars = default_chars,
+                    filter_rules = {
+                        autoselect_one = false,
+                        include_current_win = true,
+                        bo = {
+                            -- Don't skip anything
+                            buftype = {},
+                            filetype = {},
+                        },
                     },
-                },
-            })
-        end)
-        -- close a window
-        key.mapnfn("<leader>wd", function()
-            require("nvim_winpick").pick_close_window({
-                selection_chars = default_chars,
-                filter_rules = {
-                    autoselect_one = false,
-                    include_current_win = true,
-                    bo = {
-                        -- Don't skip anything
-                        buftype = {},
-                        filetype = {},
+                })
+            end,
+        },
+        {
+            "<leader>wd",
+            function()
+                require("nvim_winpick").pick_close_window({
+                    selection_chars = default_chars,
+                    filter_rules = {
+                        autoselect_one = false,
+                        include_current_win = true,
+                        bo = {
+                            -- Don't skip anything
+                            buftype = {},
+                            filetype = {},
+                        },
                     },
-                },
-            })
-        end)
-
-        key.mapnfn("<leader>wu", function()
-            require("nvim_winpick").pick_win_relative({
-                path = vim.fn.expand("%"),
-                focus_new = false,
-            })
-        end)
-        -- Swap a window
-        key.mapnfn("<leader>ws", function()
-            require("nvim_winpick").pick_swap_window()
-        end)
-
-        return vim.tbl_deep_extend("force", opts or {}, {
-            selection_chars = default_chars,
-            multiselect = {
-                trigger_char = "m",
-                commit_char = "c",
-            },
-        })
-    end,
+                })
+            end,
+        },
+        {
+            "<leader>wu",
+            function()
+                require("nvim_winpick").pick_win_relative({
+                    path = vim.fn.expand("%"),
+                    focus_new = false,
+                })
+            end,
+        },
+        {
+            "<leader>ws",
+            function()
+                require("nvim_winpick").pick_swap_window()
+            end,
+        },
+    },
     specs = {
         {
             "folke/snacks.nvim",

@@ -195,137 +195,206 @@ return {
     "folke/snacks.nvim",
     priority = 1000,
     lazy = false,
-    opts = function(_, opts)
-        local key = require("util.keymap")
-        key.mapnfn("<leader>tdo", function()
-            snacks_diff_file_picker("~/.local/bin/difft", true, false)
-        end)
-        key.mapnfn("<leader>tde", function()
-            snacks_diff_file_picker("~/.local/bin/difft", false, false)
-        end)
-        key.mapnfn("<leader>tdu", function()
-            snacks_diff_file_picker("~/.local/bin/difft", false, true)
-        end)
-        key.mapnfn("<leader>tgo", function()
-            snacks_diff_file_picker(nil, true, false)
-        end)
-        key.mapnfn("<leader>tge", function()
-            snacks_diff_file_picker(nil, false, false)
-        end)
-        key.mapnfn("<leader>tgu", function()
-            snacks_diff_file_picker(nil, false, true)
-        end)
-        key.mapnfn("<leader>fc", function()
-            git_log_file_picker()
-        end)
-        key.mapn("<leader>fr", ':lua Snacks.picker.pick("resume")<CR>')
-        -- Open snacks grep (Ctrl+Shift+f)
-        key.mapn("<C-S-f>", ':lua Snacks.picker.pick("grep")<CR>')
-
-        -- Open snacks file finder
-        key.mapn("<leader>ff", ':lua Snacks.picker.pick("files")<CR>')
-        -- Open snacks git file finder (when there's a bunch of files in e.g. ./target), could restrict to cwd
-        key.mapn("<leader>fg", ':lua Snacks.picker.pick("git_files")<CR>')
-        -- Open snacks buffer finder
-        key.mapn("<leader>fb", ':lua Snacks.picker.pick("buffers")<CR>')
-        key.mapnfn("<leader>pc", function()
-            snacks_cargo_cmd_picker()
-        end)
-        -- Toggle terminal
-        key.mapn("<leader>gt", ":lua Snacks.terminal.toggle()<CR>")
-        key.mapn("<C-S-t>", ":lua Snacks.terminal.toggle()<CR>")
-        key.mapn("<C-c>", ":lua Snacks.bufdelete.delete()<CR>")
-        key.mapn("<leader>bd", ":lua Snacks.bufdelete.other()<CR>")
-        -- Picker search for word under cursor
-        key.mapn("gs", ':lua Snacks.picker.pick("grep_word")<CR>')
-        key.map("x", "gs", '<ESC>:lua Snacks.picker.pick("grep_word")<CR>')
-
-        return vim.tbl_deep_extend("force", opts or {}, {
-            -- your configuration comes here
-            -- or leave it empty to use the default settings
-            -- refer to the configuration section below
-            bigfile = { enabled = false },
-            dashboard = {
-                enabled = true,
-                sections = {
-                    { section = "header" },
-                    { section = "keys", gap = 1, padding = 1 },
-                    { section = "startup" },
-                    {
-                        pane = 2,
-                        icon = " ",
-                        key = "s",
-                        title = "Sessions",
-                        section = "session",
-                        action = ":lua require('persistence').select()",
-                        indent = 2,
-                        padding = 1,
-                    },
-                    { pane = 2, icon = " ", title = "Projects", section = "projects", indent = 2, padding = 1 },
-                    {
-                        pane = 2,
-                        icon = " ",
-                        title = "Git Status",
-                        section = "terminal",
-                        enabled = function()
-                            return require("snacks").git.get_root() ~= nil
-                        end,
-                        cmd = "git status --short --branch --renames",
-                        height = 5,
-                        padding = 1,
-                        ttl = 5 * 60,
-                        indent = 3,
-                    },
+    opts = {
+        bigfile = { enabled = false },
+        dashboard = {
+            enabled = true,
+            sections = {
+                { section = "header" },
+                { section = "keys", gap = 1, padding = 1 },
+                { section = "startup" },
+                {
+                    pane = 2,
+                    icon = " ",
+                    key = "s",
+                    title = "Sessions",
+                    section = "session",
+                    action = ":lua require('persistence').select()",
+                    indent = 2,
+                    padding = 1,
+                },
+                { pane = 2, icon = " ", title = "Projects", section = "projects", indent = 2, padding = 1 },
+                {
+                    pane = 2,
+                    icon = " ",
+                    title = "Git Status",
+                    section = "terminal",
+                    enabled = function()
+                        return require("snacks").git.get_root() ~= nil
+                    end,
+                    cmd = "git status --short --branch --renames",
+                    height = 5,
+                    padding = 1,
+                    ttl = 5 * 60,
+                    indent = 3,
                 },
             },
-            indent = { enabled = false },
-            input = { enabled = true },
-            picker = {
-                enabled = true,
+        },
+        indent = { enabled = false },
+        input = { enabled = true },
+        picker = {
+            enabled = true,
+        },
+        terminal = {
+            enabled = true,
+            win = {
+                wo = {
+                    winbar = "",
+                },
             },
+        },
+        notifier = {
+            enabled = true,
+            timeout = 10000,
+        },
+        quickfile = { enabled = false },
+        scroll = { enabled = false },
+        statuscolumn = { enabled = false },
+        words = { enabled = false },
+        styles = {
             terminal = {
-                enabled = true,
-                win = {
-                    wo = {
-                        winbar = "",
+                keys = {
+                    term_normal = {
+                        "<esc>",
+                        function(self)
+                            self.esc_timer = self.esc_timer or vim.uv.new_timer()
+                            if self.esc_timer:is_active() then
+                                self.esc_timer:stop()
+                                vim.cmd("stopinsert")
+                            else
+                                self.esc_timer:start(750, 0, function() end)
+                                return "<esc>"
+                            end
+                        end,
+                        mode = "t",
+                        expr = true,
+                        desc = "Double escape to normal mode",
                     },
                 },
             },
-            notifier = {
-                enabled = true,
-                timeout = 10000,
-            },
-            quickfile = { enabled = false },
-            scroll = { enabled = false },
-            statuscolumn = { enabled = false },
-            words = { enabled = false },
-            styles = {
-                terminal = {
-                    keys = {
-                        term_normal = {
-                            "<esc>",
-                            function(self)
-                                self.esc_timer = self.esc_timer or vim.uv.new_timer()
-                                if self.esc_timer:is_active() then
-                                    self.esc_timer:stop()
-                                    vim.cmd("stopinsert")
-                                else
-                                    self.esc_timer:start(750, 0, function() end)
-                                    return "<esc>"
-                                end
-                            end,
-                            mode = "t",
-                            expr = true,
-                            desc = "Double escape to normal mode",
-                        },
-                    },
-                },
-                notification = {
-                    wo = {
-                        wrap = true,
-                    },
+            notification = {
+                wo = {
+                    wrap = true,
                 },
             },
-        })
-    end,
+        },
+    },
+    keys = {
+        {
+            "<leader>tdo",
+            function()
+                snacks_diff_file_picker("~/.local/bin/difft", true, false)
+            end,
+        },
+        {
+            "<leader>tde",
+            function()
+                snacks_diff_file_picker("~/.local/bin/difft", false, false)
+            end,
+        },
+        {
+            "<leader>tdu",
+            function()
+                snacks_diff_file_picker("~/.local/bin/difft", false, true)
+            end,
+        },
+        {
+            "<leader>tgo",
+            function()
+                snacks_diff_file_picker(nil, true, false)
+            end,
+        },
+        {
+            "<leader>tge",
+            function()
+                snacks_diff_file_picker(nil, false, false)
+            end,
+        },
+        {
+            "<leader>tgu",
+            function()
+                snacks_diff_file_picker(nil, false, true)
+            end,
+        },
+        {
+            "<leader>fc",
+            function()
+                git_log_file_picker()
+            end,
+        },
+        {
+            "<leader>fr",
+            ':lua Snacks.picker.pick("resume")<CR>',
+        },
+        {
+            "<C-S-f>",
+            ':lua Snacks.picker.pick("grep")<CR>',
+        },
+        {
+
+            "<leader>ff",
+            ':lua Snacks.picker.pick("files")<CR>',
+        },
+        {
+            "<leader>fg",
+            ':lua Snacks.picker.pick("git_files")<CR>',
+        },
+        {
+
+            "<leader>fb",
+            ':lua Snacks.picker.pick("buffers")<CR>',
+        },
+        {
+            "<leader>pc",
+            function()
+                snacks_cargo_cmd_picker()
+            end,
+        },
+        {
+
+            "<leader>gt",
+            ":lua Snacks.terminal.toggle()<CR>",
+        },
+        {
+
+            "<C-S-t>",
+            ":lua Snacks.terminal.toggle()<CR>",
+        },
+        {
+
+            "<C-c>",
+            ":lua Snacks.bufdelete.delete()<CR>",
+        },
+        {
+            "<leader>bd",
+            ":lua Snacks.bufdelete.other()<CR>",
+        },
+        {
+            "gs",
+            ':lua Snacks.picker.pick("grep_word")<CR>',
+        },
+
+        {
+            "gs",
+            mode = { "x" },
+            '<ESC>:lua Snacks.picker.pick("grep_word")<CR>',
+        },
+    },
+    specs = {
+        {
+            "nvim-neo-tree/neo-tree.nvim",
+            opts = function(_, opts)
+                local function on_move(data)
+                    require("snacks").rename.on_rename_file(data.source, data.destination)
+                end
+                local events = require("neo-tree.events")
+                opts.event_handlers = opts.event_handlers or {}
+                vim.list_extend(opts.event_handlers, {
+                    { event = events.FILE_MOVED, handler = on_move },
+                    { event = events.FILE_RENAMED, handler = on_move },
+                })
+                return opts
+            end,
+        },
+    },
 }
