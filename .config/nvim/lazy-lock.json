@@ -22,7 +22,7 @@
   "neogit": { "branch": "master", "commit": "333968f8222fda475d3e4545a9b15fe9912ca26a" },
   "nui.nvim": { "branch": "main", "commit": "8d3bce9764e627b62b07424e0df77f680d47ffdb" },
   "nvim-autopairs": { "branch": "master", "commit": "6522027785b305269fa17088395dfc0f456cedd2" },
-  "nvim-lspconfig": { "branch": "master", "commit": "fd3b61b5f8be3c8d26f23faff8949661daa57980" },
+  "nvim-lspconfig": { "branch": "master", "commit": "fb733ac734249ccf293e5c8018981d4d8f59fa8f" },
   "nvim-scrollbar": { "branch": "main", "commit": "6994eb9f73d5fdc36ee2c8717940e8c853e51a49" },
   "nvim-spectre": { "branch": "master", "commit": "ddd7383e856a7c939cb4f5143278fe041bbb8cb9" },
   "nvim-surround": { "branch": "main", "commit": "6c54643ef42016b744888b06d2381abd23f9b7ea" },
