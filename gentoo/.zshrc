@@ -14,6 +14,17 @@ export XDG_CACHE_HOME="$HOME/.cache/"
 export XZ_DEFAULTS="-T0"
 export HELIX_RUNTIME="$HOME/code/rust/helix/runtime"
 
+### --- History settings ---
+
+# Don't display dups in history if they're present
+setopt HIST_FIND_NO_DUPS
+
+# Don't add any dups to history
+setopt HIST_IGNORE_ALL_DUPS
+
+# Trim useless blanks from history when saving
+setopt HIST_REDUCE_BLANKS
+
 # Big hist
 HISTFILE=~/.zsh_histfile
 HISTSIZE=10000
