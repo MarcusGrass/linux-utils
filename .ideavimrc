@@ -1,6 +1,7 @@
 let mapleader=" "
 set clipboard=unnamed,unnamedplus
 set matchpairs+=<:>
+set smartcase
 
 
 nnoremap ]d :action GotoNextError<CR>
@@ -25,21 +26,32 @@ nnoremap <leader>gl :action Vcs.Show.Log<CR>
 nnoremap <leader>ge :action EditSource<CR>
 nnoremap <leader>gs :action Switcher<CR>
 nnoremap <leader>gg :action Generate<CR>
-nnoremap ]c :action VcsShowNextChangeMarker<CR>
-nnoremap [c :action VcsShowPrevChangeMarker<CR>
+nnoremap ]g :action VcsShowNextChangeMarker<CR>
+nnoremap [g :action VcsShowPrevChangeMarker<CR>
 nnoremap <leader>cr :action Vcs.RollbackChangedLines<CR>
 
-" Opts
+" Layout/nav
 nnoremap <leader>fc :action ActivateFindToolWindow<CR>
 nnoremap <leader>to :action ActivateTerminalToolWindow<CR>
 nnoremap <leader>co :action Vcs.Show.Local.Changes<CR>
-nnoremap <leader>so :action ACtivateStructureToolWindow<CR>
+nnoremap <leader>so :action ActivateStructureToolWindow<CR>
 nnoremap <leader>hw :action HideActiveWindow<CR>
 nnoremap <leader>hs :action HideSideWindows<CR>
 nnoremap <leader>ha :action HideAllWindows<CR>
-nnoremap <esc> :action EditorEscape<CR>
 nnoremap <leader>ss :action WelcomeScreen.Settings<CR>
 nnoremap <leader>sp :action WelcomeScreen.Plugins<CR>
+
+" Tabs
+" Tabs are referred to as editors (open files)
+nnoremap <leader>da :action CloseAllEditorsButActive<CR>
+nnoremap <leader>dt :action CloseEditor<CR>
+
+" Opts
+
+nnoremap <esc> :action EditorEscape<CR>
+
+nnoremap <leader>gi :action AIAssistant.Editor.AskAiAssistantInEditor<CR>                                                                ..
+vnoremap <leader>gi :action AIAssistant.Editor.AskAiAssistantInEditor<CR>
 
 " Easymotion is integrated into JetBrains stuff https://github.com/AlexPl292/IdeaVim-EasyMotion#supported-commands
 " requires AceJump and IdeaVim-EasyMotion
