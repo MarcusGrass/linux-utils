@@ -40,11 +40,16 @@ nnoremap <leader>hs :action HideSideWindows<CR>
 nnoremap <leader>ha :action HideAllWindows<CR>
 nnoremap <leader>ss :action WelcomeScreen.Settings<CR>
 nnoremap <leader>sp :action WelcomeScreen.Plugins<CR>
+nnoremap <leader>sn :action NextSplitter<CR>
 
 " Tabs
 " Tabs are referred to as editors (open files)
 nnoremap <leader>da :action CloseAllEditorsButActive<CR>
 nnoremap <leader>dt :action CloseEditor<CR>
+
+" Popup
+" Pop a prompt for copying a path for the current file
+nnoremap <leader>cfp :action CopyReferencePopupGroup<CR>
 
 " Opts
 
@@ -76,6 +81,7 @@ nnoremap <leader>nt :NERDTree<CR>
 " Open current file in NERDTree
 nnoremap <leader>no :NERDTreeFind<CR>
 nnoremap <leader>nr :NERDTreeRefreshRoot<CR>
+let g:NERDTreeMapOpenVSplit = "<C-ENTER>"
 
 " Comment out chunks
 set commentary
