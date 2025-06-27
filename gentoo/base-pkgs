@@ -12,8 +12,6 @@ app-emulation/virt-manager
 app-eselect/eselect-repository
 app-portage/gentoolkit
 app-shells/bash-completion
-app-shells/zsh
-app-shells/zsh-completions
 dev-db/postgresql
 dev-db/redis
 dev-debug/gdb

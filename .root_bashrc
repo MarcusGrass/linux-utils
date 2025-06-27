@@ -1,15 +1,30 @@
-#
-# ~/.bashrc
-#
-
-# If not running interactively, don't do anything
-[[ $- != *i* ]] && return
-
 export VISUAL=nvim
 export EDITOR="$VISUAL"
-export PATH="$HOME/.local/bin:$PATH"
-shopt -s cdspell
+export TERM=xterm-256color
+export PATH="$PATH:/usr/lib/llvm/20/bin"
+
+export HISTSIZE=
+export HISTFILESIZE=
+export HISTFILE="$HOME/.bash_hist_unlimited"
+
 # System
 alias off='shutdown -h now'
-alias syyuu='emerge-webrsync && emerge --sync && emerge -avuDNU @world && emerge --depclean'
-PS1='[\u@\h \W]\$ '
+
+# Convenience
+alias vim='nvim'
+alias dirsize='du -hs * | sort -hr'
+alias nvim_edit='nvim ~/.config/nvim/init.vim'
+alias bash_edit='nvim ~/.bashrc'
+alias ls='ls -lah --color=auto'
+alias xclip='xclip -se c'
+alias ss='maim -s -u | xclip -selection clipboard -t image/png -i'
+
+alias kclean="make LLVM=1 CC=clang -j$(nproc) clean"
+alias kmenuconfig="make LLVM=1 CC=clang -j$(nproc) menuconfig"
+alias kbuild="time sh -c 'make LLVM=1 CC=clang -j32 && make LLVM=1 CC=clang -j32 modules_install'"
+alias sync_update="emerge-webrsync && emerge --sync && emerge -avuDNU @world"
+
+# Set up fzf completions
+eval "$(fzf --bash)"
+
+export PS1="\[\e[01;31m\][\u@\h\[\e[m\] \[\e[01;34m\]\$PWD]#\[\e[m\] "

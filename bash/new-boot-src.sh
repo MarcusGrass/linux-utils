@@ -93,7 +93,7 @@ fi
 
 # Build boot-strap
 REPO="/home/$USER/code/rust/boot-rs"
-runuser -l "$USER" -c "source /home/$USER/.zshrc && cd $REPO && ./build_strap.sh --profile lto"
+runuser -l "$USER" -c "source /home/$USER/.bashrc && cd $REPO && ./build_strap.sh --profile lto"
 
 # Make sure it was built
 if stat "$REPO/target/x86_64-unknown-linux-gnu/lto/boot-strap" >> /dev/null ; then
@@ -114,7 +114,7 @@ else
 fi
 
 # Build boot image
-runuser -l "$USER" -c "source /home/$USER/.zshrc && cd $REPO && ./build_boot.sh --profile lto"
+runuser -l "$USER" -c "source /home/$USER/.bashrc && cd $REPO && ./build_boot.sh --profile lto"
 
 NEW_BOOT_IMG="$REPO/target/x86_64-unknown-uefi/lto/boot-rs.efi"
 
