@@ -42,6 +42,9 @@ alias git_reset_main='git fetch origin && git reset --hard origin/main'
 alias git_rebase_main='git fetch origin && git rebase -i origin/main'
 alias git_merge_ff='git merge --ff-only'
 
+# Set up fzf completions
+eval "$(fzf --bash)"
+
 # PS1='[\u@\h $PWD]\$ '
 
 export PS1="\[\e[01;32m\][\u@\h\[\e[m\] \[\e[01;34m\]\$PWD]#\[\e[m\] "
