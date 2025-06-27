@@ -1,7 +1,7 @@
 [user]
         email = marcus.grass@protonmail.com
         name = MarcusGrass
-        signingkey = 9069E1A25A239665045BAA62B3F995FE064E3AA9!
+        signingkey = FACCA2251A22CE22C9F1ACD5E62BD8820A76962F!
 [pull]
         rebase = true
 [push]
